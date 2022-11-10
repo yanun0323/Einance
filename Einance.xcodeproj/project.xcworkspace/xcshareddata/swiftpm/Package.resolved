@@ -1,0 +1,14 @@
+{
+  "pins" : [
+    {
+      "identity" : "uicomponent",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/yanun0323/UIComponent.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "0be8c0c0e16a592462fc6554b5074f00f1b68521"
+      }
+    }
+  ],
+  "version" : 2
+}

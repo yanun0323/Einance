@@ -1,0 +1,13 @@
+/* 
+  Localizable.strings
+  Einance
+
+  Created by YanunYang on 2022/11/11.
+  
+*/
+
+/* Card span display tag */
+"card.display.day" = "本日";
+"card.display.week" = "本週";
+"card.display.month" = "本月";
+"card.display.forever" = "永久";

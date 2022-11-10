@@ -1,0 +1,13 @@
+/* 
+  Localizable.strings
+  Einance
+
+  Created by YanunYang on 2022/11/11.
+  
+*/
+
+/* Card span display tag */
+"card.display.day" = "Today";
+"card.display.week" = "Week";
+"card.display.month" = "Month";
+"card.display.forever" = "Forever";
