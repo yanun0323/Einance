@@ -1,5 +1,5 @@
 //
-//  BudgetSlice.swift
+//  BudgetPage.swift
 //  Einance
 //
 //  Created by YanunYang on 2022/11/11.
@@ -8,7 +8,7 @@
 import SwiftUI
 import UIComponent
 
-struct BudgetSlice: View {
+struct BudgetPage: View {
     @State var budget: Budget
     @State var current: Card
     
@@ -16,32 +16,44 @@ struct BudgetSlice: View {
         VStack {
             TabView(selection: $current) {
                 ForEach(budget.book) { card in
-                    CardRectangle(card: card)
+                    CardRect(card: card)
                         .padding()
                         .tag(card)
                 }
             }
             .tabViewStyle(.page(indexDisplayMode: .always))
-            .background(Color.section.gradient)
             .frame(maxHeight: Device.screen.height*0.36)
             .padding(.vertical)
             
-            ForEach(current.records) { record in
-                Text(record.cost.description)
+            VStack {
+                ForEach(current.records) { record in
+                    if current.dateDict[record.date]?.uuid == record.uuid {
+                        Text(record.date.String(.Date))
+                    }
+                    HStack {
+                        Text(record.date.String(.Date))
+                        Spacer()
+                        Text(record.memo)
+                        Spacer()
+                        Text(record.cost.description)
+                    }
                     .background()
+                }
             }
+            .monospacedDigit()
+            .padding(.horizontal)
             Spacer()
         }
     }
 }
 
 // MARK: - Function
-extension BudgetSlice {
+extension BudgetPage {
 }
 
 struct BudgetSlice_Previews: PreviewProvider {
     static var previews: some View {
-        BudgetSlice(budget: .preview, current: .preview)
+        BudgetPage(budget: .preview, current: .preview)
             .background(Color.gray)
     }
 }

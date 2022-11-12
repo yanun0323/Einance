@@ -21,9 +21,9 @@
 		A8A75B11291CF25000EF9D8A /* Record.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8A75B10291CF25000EF9D8A /* Record.swift */; };
 		A8B09022291CFF2B008D9B33 /* Mock.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8B09021291CFF2B008D9B33 /* Mock.swift */; };
 		A8B09024291CFF65008D9B33 /* MockDao.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8B09023291CFF65008D9B33 /* MockDao.swift */; };
-		A8B09029291D6A01008D9B33 /* CardRectangle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8B09028291D6A01008D9B33 /* CardRectangle.swift */; };
+		A8B09029291D6A01008D9B33 /* CardRect.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8B09028291D6A01008D9B33 /* CardRect.swift */; };
 		A8B0902E291D6BFF008D9B33 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = A8B09030291D6BFF008D9B33 /* Localizable.strings */; };
-		A8B09033291D73F3008D9B33 /* BudgetSlice.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8B09032291D73F3008D9B33 /* BudgetSlice.swift */; };
+		A8B09033291D73F3008D9B33 /* BudgetPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8B09032291D73F3008D9B33 /* BudgetPage.swift */; };
 		A8C0A101291D88B800AD5E97 /* DataDao.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8C0A100291D88B800AD5E97 /* DataDao.swift */; };
 		A8C0A103291D892700AD5E97 /* DataInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8C0A102291D892700AD5E97 /* DataInteractor.swift */; };
 /* End PBXBuildFile section */
@@ -43,10 +43,10 @@
 		A8A75B10291CF25000EF9D8A /* Record.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Record.swift; sourceTree = "<group>"; };
 		A8B09021291CFF2B008D9B33 /* Mock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mock.swift; sourceTree = "<group>"; };
 		A8B09023291CFF65008D9B33 /* MockDao.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDao.swift; sourceTree = "<group>"; };
-		A8B09028291D6A01008D9B33 /* CardRectangle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardRectangle.swift; sourceTree = "<group>"; };
+		A8B09028291D6A01008D9B33 /* CardRect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardRect.swift; sourceTree = "<group>"; };
 		A8B0902F291D6BFF008D9B33 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		A8B09031291D6C19008D9B33 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		A8B09032291D73F3008D9B33 /* BudgetSlice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgetSlice.swift; sourceTree = "<group>"; };
+		A8B09032291D73F3008D9B33 /* BudgetPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgetPage.swift; sourceTree = "<group>"; };
 		A8C0A100291D88B800AD5E97 /* DataDao.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataDao.swift; sourceTree = "<group>"; };
 		A8C0A102291D892700AD5E97 /* DataInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataInteractor.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -178,8 +178,8 @@
 		A8B09025291D69CC008D9B33 /* Component */ = {
 			isa = PBXGroup;
 			children = (
-				A8B09032291D73F3008D9B33 /* BudgetSlice.swift */,
-				A8B09028291D6A01008D9B33 /* CardRectangle.swift */,
+				A8B09032291D73F3008D9B33 /* BudgetPage.swift */,
+				A8B09028291D6A01008D9B33 /* CardRect.swift */,
 			);
 			path = Component;
 			sourceTree = "<group>";
@@ -266,14 +266,14 @@
 				A8B09022291CFF2B008D9B33 /* Mock.swift in Sources */,
 				A8C0A101291D88B800AD5E97 /* DataDao.swift in Sources */,
 				A8A75B03291CCE4300EF9D8A /* DependencyInjector.swift in Sources */,
-				A8B09033291D73F3008D9B33 /* BudgetSlice.swift in Sources */,
+				A8B09033291D73F3008D9B33 /* BudgetPage.swift in Sources */,
 				A8A75B11291CF25000EF9D8A /* Record.swift in Sources */,
 				A8A75B0B291CD1E700EF9D8A /* Dao.swift in Sources */,
 				A8A75B09291CD1D800EF9D8A /* Repository.swift in Sources */,
 				A8A75AE9291CCCBC00EF9D8A /* EinanceApp.swift in Sources */,
 				A8A75B0D291CF07100EF9D8A /* Budget.swift in Sources */,
 				A8A75B05291CCE7E00EF9D8A /* AppState.swift in Sources */,
-				A8B09029291D6A01008D9B33 /* CardRectangle.swift in Sources */,
+				A8B09029291D6A01008D9B33 /* CardRect.swift in Sources */,
 				A8A75B0F291CF24A00EF9D8A /* Card.swift in Sources */,
 				A8B09024291CFF65008D9B33 /* MockDao.swift in Sources */,
 			);

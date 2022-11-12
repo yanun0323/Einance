@@ -1,5 +1,5 @@
 //
-//  CardRectangle.swift
+//  CardRect.swift
 //  Einance
 //
 //  Created by YanunYang on 2022/11/11.
@@ -8,7 +8,7 @@
 import SwiftUI
 import UIComponent
 
-struct CardRectangle: View {
+struct CardRect: View {
     let card: Card
     var body: some View {
         GeometryReader { p in
@@ -39,12 +39,26 @@ struct CardRectangle: View {
             .frame(width: size(p), height: size(p)*0.66)
             .background(card.color)
             .cornerRadius(15)
+            .contextMenu {
+                Button {
+                    
+                } label: {
+                    Label("edit", systemImage: "square.and.pencil")
+                }
+                
+                Button(role: .destructive) {
+                    
+                } label: {
+                    Label("delete", systemImage: "trash")
+                }
+            }
+            .shadow(radius: 5)
         }
     }
 }
 
 // MARK: - Function
-extension CardRectangle {
+extension CardRect {
     func size(_ proxy: GeometryProxy) -> CGFloat {
         return proxy.size.width
     }
@@ -53,13 +67,13 @@ extension CardRectangle {
 struct CardSpan_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
-            CardRectangle(card: .preview)
+            CardRect(card: .preview)
                 .frame(width: Device.screen.width, height: Device.screen.width*0.66)
                 .padding()
-            CardRectangle(card: .preview)
+            CardRect(card: .preview)
                 .frame(width: Device.screen.width*1.3, height: Device.screen.width*0.66*1.3)
                 .padding()
-            CardRectangle(card: .preview2)
+            CardRect(card: .preview2)
                 .frame(width: Device.screen.width, height: Device.screen.width*0.66)
                 .padding()
         }

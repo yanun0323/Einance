@@ -20,7 +20,7 @@ struct ContentView: View {
     
     var body: some View {
         VStack {
-            BudgetSlice(budget: budget, current: current)
+            BudgetPage(budget: budget, current: current)
                 .onAppear {
                     print("Budget book: \(Budget.preview.book.count)")
                 }

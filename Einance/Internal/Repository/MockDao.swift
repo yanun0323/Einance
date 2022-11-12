@@ -18,6 +18,7 @@ extension MockDao: Repository {
     }
     
     func GetCurrentCard() -> Card {
+        current.records = current.records.sorted(by: { $0.date > $1.date })
         return current
     }
 }
