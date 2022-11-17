@@ -11,3 +11,7 @@
 "card.display.week" = "Week";
 "card.display.month" = "Month";
 "card.display.forever" = "Forever";
+
+"label.cost" = "Cost";
+"label.balance" = "Balance";
+"label.amount" = "Amount";

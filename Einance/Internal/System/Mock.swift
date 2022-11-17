@@ -25,7 +25,7 @@ extension Budget {
 
 extension Card {
     static var preview: Card {
-        Card(name: "伙食費", amount: 15000, records: [
+        Card(name: "伙食費", amount: 1500, records: [
             Record(date: Date(from: "20221110", .Numeric)!, cost: 50, memo: "早餐"),
             Record(date: Date(from: "20221110", .Numeric)!, cost: 120, memo: "雞腿便當"),
             Record(date: Date(from: "20221111", .Numeric)!, cost: 35, memo: "黑豆漿"),

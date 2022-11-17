@@ -29,7 +29,7 @@ final class Budget {
             amount += card.amount
             cost += card.cost
         }
-        balance = amount - balance
+        balance = amount - cost
     }
 }
 

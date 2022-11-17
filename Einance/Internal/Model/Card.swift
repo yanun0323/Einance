@@ -20,7 +20,7 @@ final class Card {
     /* Cache */
     var cost: Decimal
     var balance: Decimal
-    var dateDict: Dictionary<Date,Record>
+    var dateDict: Dictionary<Date,RecordSet>
     
     init(uuid: UUID = .init(), index: Int = 0, name: String, amount: Decimal, display: Card.Display = .month, records: [Record] = [], forever: Bool = false, color: Color) {
         self.uuid = uuid
@@ -36,9 +36,11 @@ final class Card {
         self.balance = 0
         self.dateDict = [:]
         for record in records {
-            if dateDict[record.date] == nil || record.date > dateDict[record.date]!.date{
-                dateDict[record.date] = record
+            if dateDict[record.date] == nil {
+                dateDict[record.date] = RecordSet(records: [], cost: 0)
             }
+            dateDict[record.date]?.records.append(record)
+            dateDict[record.date]?.cost += record.cost
             self.cost += record.cost
         }
         self.balance = self.amount - self.cost
@@ -86,5 +88,13 @@ extension Card {
                 return "card.display.month"
             }
         }
+    }
+}
+
+// MARK: - Card.RecordSet
+extension Card {
+    struct RecordSet {
+        var records: [Record]
+        var cost: Decimal
     }
 }

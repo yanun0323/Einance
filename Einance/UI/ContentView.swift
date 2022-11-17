@@ -21,9 +21,6 @@ struct ContentView: View {
     var body: some View {
         VStack {
             BudgetPage(budget: budget, current: current)
-                .onAppear {
-                    print("Budget book: \(Budget.preview.book.count)")
-                }
         }
         .background(Color.section.gradient)
     }

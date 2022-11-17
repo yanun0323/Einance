@@ -14,10 +14,9 @@ struct CardRect: View {
         GeometryReader { p in
             VStack(alignment: .trailing, spacing: size(p)*0.07) {
                 HStack(alignment: .top, spacing: 0) {
-                    
-                        Text(card.tag)
-                            .font(.system(size: size(p)*0.05, weight: .light, design: .rounded))
-                            .foregroundColor(.white)
+                    Text(card.tag)
+                        .font(.system(size: size(p)*0.05, weight: .light, design: .rounded))
+                        .foregroundColor(.white)
                     Spacer()
                     Text(card.name)
                         .font(.system(size: size(p)*0.11, weight: .medium, design: .rounded))
@@ -35,7 +34,7 @@ struct CardRect: View {
                 }
             }
             .monospacedDigit()
-            .padding(.horizontal, size(p)*0.09)
+            .padding(.horizontal, size(p)*0.06)
             .frame(width: size(p), height: size(p)*0.66)
             .background(card.color)
             .cornerRadius(15)
@@ -52,7 +51,6 @@ struct CardRect: View {
                     Label("delete", systemImage: "trash")
                 }
             }
-            .shadow(radius: 5)
         }
     }
 }
@@ -64,7 +62,7 @@ extension CardRect {
     }
 }
 
-struct CardSpan_Previews: PreviewProvider {
+struct CardRect_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
             CardRect(card: .preview)
