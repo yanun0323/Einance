@@ -20,6 +20,8 @@ struct ContentView: View {
     
     var body: some View {
         VStack {
+            HomeHeader()
+                .padding(.horizontal)
             BudgetPage(budget: budget, current: current)
         }
         .background(Color.section.gradient)

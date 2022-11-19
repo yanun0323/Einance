@@ -30,6 +30,7 @@
 		A8FF946C292248F700C628BD /* AddRecordButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8FF946B292248F700C628BD /* AddRecordButton.swift */; };
 		A8FF946E2922B74F00C628BD /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8FF946D2922B74F00C628BD /* Extension.swift */; };
 		A8FF94702922BCFB00C628BD /* Dashboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8FF946F2922BCFB00C628BD /* Dashboard.swift */; };
+		F62C884D2928C2960059F914 /* HomeHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = F62C884C2928C2960059F914 /* HomeHeader.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -57,6 +58,7 @@
 		A8FF946B292248F700C628BD /* AddRecordButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddRecordButton.swift; sourceTree = "<group>"; };
 		A8FF946D2922B74F00C628BD /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
 		A8FF946F2922BCFB00C628BD /* Dashboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dashboard.swift; sourceTree = "<group>"; };
+		F62C884C2928C2960059F914 /* HomeHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeHeader.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -192,6 +194,7 @@
 				A8B09028291D6A01008D9B33 /* CardRect.swift */,
 				A8FF946929222BFE00C628BD /* RecordRow.swift */,
 				A8FF946B292248F700C628BD /* AddRecordButton.swift */,
+				F62C884C2928C2960059F914 /* HomeHeader.swift */,
 			);
 			path = Component;
 			sourceTree = "<group>";
@@ -282,6 +285,7 @@
 				A8A75B03291CCE4300EF9D8A /* DependencyInjector.swift in Sources */,
 				A8B09033291D73F3008D9B33 /* BudgetPage.swift in Sources */,
 				A8A75B11291CF25000EF9D8A /* Record.swift in Sources */,
+				F62C884D2928C2960059F914 /* HomeHeader.swift in Sources */,
 				A8FF94702922BCFB00C628BD /* Dashboard.swift in Sources */,
 				A8FF946E2922B74F00C628BD /* Extension.swift in Sources */,
 				A8A75B0B291CD1E700EF9D8A /* Dao.swift in Sources */,
