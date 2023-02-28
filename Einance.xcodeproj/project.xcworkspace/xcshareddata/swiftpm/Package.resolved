@@ -1,12 +1,21 @@
 {
   "pins" : [
     {
+      "identity" : "swift-collections",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-collections.git",
+      "state" : {
+        "revision" : "f504716c27d2e5d4144fa4794b12129301d17729",
+        "version" : "1.0.3"
+      }
+    },
+    {
       "identity" : "uicomponent",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/yanun0323/UIComponent.git",
       "state" : {
         "branch" : "master",
-        "revision" : "0be8c0c0e16a592462fc6554b5074f00f1b68521"
+        "revision" : "2f94bf147ff14a897dff4740f9964086dadec4a1"
       }
     }
   ],

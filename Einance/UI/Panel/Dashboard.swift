@@ -1,10 +1,3 @@
-//
-//  Dashboard.swift
-//  Einance
-//
-//  Created by YanunYang on 2022/11/15.
-//
-
 import SwiftUI
 import UIComponent
 

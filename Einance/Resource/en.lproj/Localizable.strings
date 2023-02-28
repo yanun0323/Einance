@@ -1,17 +1,47 @@
-/* 
-  Localizable.strings
-  Einance
-
-  Created by YanunYang on 2022/11/11.
-  
-*/
-
-/* Card span display tag */
-"card.display.day" = "Today";
-"card.display.week" = "Week";
-"card.display.month" = "Month";
-"card.display.forever" = "Forever";
+/* global */
+"global.create" = "Create";
+"global.cancel" = "Cancel";
+"global.delete" = "Delete";
+"global.edit" = "Edit";
 
 "label.cost" = "Cost";
 "label.balance" = "Balance";
 "label.amount" = "Amount";
+
+/* card display */
+"card.display.day" = "Day";
+"card.display.week" = "Week";
+"card.display.month" = "Month";
+"card.display.forever" = "Forever";
+
+/* card display tag */
+"card.display.day.cardTag" = "Day";
+"card.display.week.cardTag" = "Week";
+"card.display.month.cardTag" = "Month";
+"card.display.forever.cardTag" = "Forever";
+
+/* create card */
+"panel.card.create.title" = "Create Card";
+"panel.card.create.name.label" = "Name";
+"panel.card.create.name.label.placeholder" = "New Card";
+"panel.card.create.amount.label" = "Budget";
+"panel.card.create.amount.label.placeholder" = "1000";
+"panel.card.create.color.label" = "Color";
+"panel.card.create.display.label" = "Type";
+"panel.card.create.fixed.label" = "Fixed";
+
+/* card context alert */
+"card.context.alert.title" = "Delete Card";
+"card.context.alert.content" = "Are you sure to delete this card?";
+
+/* create record */
+"panel.record.create.title" = "Create Record";
+"panel.record.create.cost.label" = "Cost";
+"panel.record.create.cost.placeholder" = "100";
+"panel.record.create.date.label" = "Date";
+"panel.record.create.memo.label" = "Memo";
+"panel.record.create.memo.placeholder" = "Dinner";
+"button.record.create" = "New Record";
+
+/* edit record */
+"panel.record.edit.title" = "Edit Record";

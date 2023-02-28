@@ -1,11 +1,4 @@
-//
-//  Record.swift
-//  Einance
-//
-//  Created by YanunYang on 2022/11/10.
-//
-
-import Foundation
+import SwiftUI
 
 final class Record {
     var uuid: UUID
@@ -18,6 +11,13 @@ final class Record {
         self.date = date
         self.cost = cost
         self.memo = memo
+    }
+    
+    init(_ mo: RecordMO) {
+        self.uuid = mo.uuid
+        self.date = mo.date
+        self.cost = mo.cost as Decimal
+        self.memo = mo.memo
     }
 }
 

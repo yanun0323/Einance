@@ -7,6 +7,22 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A8357FDA29293F010086720F /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8357FD929293F010086720F /* HomeView.swift */; };
+		A8357FDD292952230086720F /* OrderedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = A8357FDC292952230086720F /* OrderedCollections */; };
+		A87219ED2967F60700D52995 /* AddRecordButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A87219EC2967F60700D52995 /* AddRecordButton.swift */; };
+		A87219EF2968131F00D52995 /* SettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A87219EE2968131F00D52995 /* SettingView.swift */; };
+		A87219F12968144400D52995 /* UserSettingInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A87219F02968144400D52995 /* UserSettingInteractor.swift */; };
+		A87219F32968149C00D52995 /* UserSettingDao.swift in Sources */ = {isa = PBXBuildFile; fileRef = A87219F22968149C00D52995 /* UserSettingDao.swift */; };
+		A87219F5296830E600D52995 /* ViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = A87219F4296830E600D52995 /* ViewHeader.swift */; };
+		A87219F7296D67C200D52995 /* BudgetCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = A87219F6296D67C200D52995 /* BudgetCategory.swift */; };
+		A890D0F52942E03100D7267B /* SystemInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A890D0F42942E03100D7267B /* SystemInteractor.swift */; };
+		A89F58C229ABB39D004FB6E7 /* database.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A89F58C029ABB39D004FB6E7 /* database.xcdatamodeld */; };
+		A89F58E529ACFFEB004FB6E7 /* CardMO.swift in Sources */ = {isa = PBXBuildFile; fileRef = A89F58DF29ACFFEB004FB6E7 /* CardMO.swift */; };
+		A89F58E629ACFFEB004FB6E7 /* CardMO+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = A89F58E029ACFFEB004FB6E7 /* CardMO+CoreDataProperties.swift */; };
+		A89F58E929ACFFEB004FB6E7 /* RecordMO.swift in Sources */ = {isa = PBXBuildFile; fileRef = A89F58E329ACFFEB004FB6E7 /* RecordMO.swift */; };
+		A89F58EA29ACFFEB004FB6E7 /* RecordMO+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = A89F58E429ACFFEB004FB6E7 /* RecordMO+CoreDataProperties.swift */; };
+		A89F58ED29AD0048004FB6E7 /* BudgetMO.swift in Sources */ = {isa = PBXBuildFile; fileRef = A89F58EB29AD0048004FB6E7 /* BudgetMO.swift */; };
+		A89F58EE29AD0048004FB6E7 /* BudgetMO+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = A89F58EC29AD0048004FB6E7 /* BudgetMO+CoreDataProperties.swift */; };
 		A8A75AE9291CCCBC00EF9D8A /* EinanceApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8A75AE8291CCCBC00EF9D8A /* EinanceApp.swift */; };
 		A8A75AEB291CCCBC00EF9D8A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8A75AEA291CCCBC00EF9D8A /* ContentView.swift */; };
 		A8A75AED291CCCBD00EF9D8A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A8A75AEC291CCCBD00EF9D8A /* Assets.xcassets */; };
@@ -26,14 +42,37 @@
 		A8B09033291D73F3008D9B33 /* BudgetPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8B09032291D73F3008D9B33 /* BudgetPage.swift */; };
 		A8C0A101291D88B800AD5E97 /* DataDao.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8C0A100291D88B800AD5E97 /* DataDao.swift */; };
 		A8C0A103291D892700AD5E97 /* DataInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8C0A102291D892700AD5E97 /* DataInteractor.swift */; };
+		A8E52C68295B063F00AC80B0 /* ActionPanelCloseButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E52C67295B063F00AC80B0 /* ActionPanelCloseButton.swift */; };
+		A8E52C6A295B342E00AC80B0 /* CreateRecordPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E52C69295B342E00AC80B0 /* CreateRecordPanel.swift */; };
+		A8E52C6C295BE62E00AC80B0 /* ActionPanelConfirmButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E52C6B295BE62E00AC80B0 /* ActionPanelConfirmButton.swift */; };
+		A8E52C6E295BE91600AC80B0 /* DatePickerCustom.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E52C6D295BE91600AC80B0 /* DatePickerCustom.swift */; };
+		A8E52C74296477B400AC80B0 /* EditCardPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E52C73296477B400AC80B0 /* EditCardPanel.swift */; };
+		A8E52C76296477C200AC80B0 /* EditRecordPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E52C75296477C200AC80B0 /* EditRecordPanel.swift */; };
+		A8F43BFC2951600400C89EDE /* CreateCardPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8F43BFB2951600400C89EDE /* CreateCardPanel.swift */; };
+		A8F43BFF2951C52E00C89EDE /* Setting.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8F43BFE2951C52E00C89EDE /* Setting.swift */; };
+		A8F43C01295208DC00C89EDE /* FocusField.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8F43C00295208DB00C89EDE /* FocusField.swift */; };
 		A8FF946A29222BFE00C628BD /* RecordRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8FF946929222BFE00C628BD /* RecordRow.swift */; };
-		A8FF946C292248F700C628BD /* AddRecordButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8FF946B292248F700C628BD /* AddRecordButton.swift */; };
 		A8FF946E2922B74F00C628BD /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8FF946D2922B74F00C628BD /* Extension.swift */; };
 		A8FF94702922BCFB00C628BD /* Dashboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8FF946F2922BCFB00C628BD /* Dashboard.swift */; };
 		F62C884D2928C2960059F914 /* HomeHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = F62C884C2928C2960059F914 /* HomeHeader.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A8357FD929293F010086720F /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		A87219EC2967F60700D52995 /* AddRecordButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddRecordButton.swift; sourceTree = "<group>"; };
+		A87219EE2968131F00D52995 /* SettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingView.swift; sourceTree = "<group>"; };
+		A87219F02968144400D52995 /* UserSettingInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettingInteractor.swift; sourceTree = "<group>"; };
+		A87219F22968149C00D52995 /* UserSettingDao.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettingDao.swift; sourceTree = "<group>"; };
+		A87219F4296830E600D52995 /* ViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewHeader.swift; sourceTree = "<group>"; };
+		A87219F6296D67C200D52995 /* BudgetCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgetCategory.swift; sourceTree = "<group>"; };
+		A890D0F42942E03100D7267B /* SystemInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemInteractor.swift; sourceTree = "<group>"; };
+		A89F58C129ABB39D004FB6E7 /* database.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = database.xcdatamodel; sourceTree = "<group>"; };
+		A89F58DF29ACFFEB004FB6E7 /* CardMO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardMO.swift; sourceTree = "<group>"; };
+		A89F58E029ACFFEB004FB6E7 /* CardMO+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CardMO+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		A89F58E329ACFFEB004FB6E7 /* RecordMO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordMO.swift; sourceTree = "<group>"; };
+		A89F58E429ACFFEB004FB6E7 /* RecordMO+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RecordMO+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		A89F58EB29AD0048004FB6E7 /* BudgetMO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgetMO.swift; sourceTree = "<group>"; };
+		A89F58EC29AD0048004FB6E7 /* BudgetMO+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BudgetMO+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		A8A75AE5291CCCBC00EF9D8A /* Einance.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Einance.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A8A75AE8291CCCBC00EF9D8A /* EinanceApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EinanceApp.swift; sourceTree = "<group>"; };
 		A8A75AEA291CCCBC00EF9D8A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -54,8 +93,16 @@
 		A8B09032291D73F3008D9B33 /* BudgetPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgetPage.swift; sourceTree = "<group>"; };
 		A8C0A100291D88B800AD5E97 /* DataDao.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataDao.swift; sourceTree = "<group>"; };
 		A8C0A102291D892700AD5E97 /* DataInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataInteractor.swift; sourceTree = "<group>"; };
+		A8E52C67295B063F00AC80B0 /* ActionPanelCloseButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionPanelCloseButton.swift; sourceTree = "<group>"; };
+		A8E52C69295B342E00AC80B0 /* CreateRecordPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateRecordPanel.swift; sourceTree = "<group>"; };
+		A8E52C6B295BE62E00AC80B0 /* ActionPanelConfirmButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionPanelConfirmButton.swift; sourceTree = "<group>"; };
+		A8E52C6D295BE91600AC80B0 /* DatePickerCustom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatePickerCustom.swift; sourceTree = "<group>"; };
+		A8E52C73296477B400AC80B0 /* EditCardPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditCardPanel.swift; sourceTree = "<group>"; };
+		A8E52C75296477C200AC80B0 /* EditRecordPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditRecordPanel.swift; sourceTree = "<group>"; };
+		A8F43BFB2951600400C89EDE /* CreateCardPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateCardPanel.swift; sourceTree = "<group>"; };
+		A8F43BFE2951C52E00C89EDE /* Setting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Setting.swift; sourceTree = "<group>"; };
+		A8F43C00295208DB00C89EDE /* FocusField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocusField.swift; sourceTree = "<group>"; };
 		A8FF946929222BFE00C628BD /* RecordRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordRow.swift; sourceTree = "<group>"; };
-		A8FF946B292248F700C628BD /* AddRecordButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddRecordButton.swift; sourceTree = "<group>"; };
 		A8FF946D2922B74F00C628BD /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
 		A8FF946F2922BCFB00C628BD /* Dashboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dashboard.swift; sourceTree = "<group>"; };
 		F62C884C2928C2960059F914 /* HomeHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeHeader.swift; sourceTree = "<group>"; };
@@ -66,6 +113,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A8357FDD292952230086720F /* OrderedCollections in Frameworks */,
 				A8A75AFB291CCDFA00EF9D8A /* UIComponent in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -73,6 +121,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		A890D0F1293B017300D7267B /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				A8B09021291CFF2B008D9B33 /* Mock.swift */,
+				A8A75AEF291CCCBD00EF9D8A /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
 		A8A75ADC291CCCBC00EF9D8A = {
 			isa = PBXGroup;
 			children = (
@@ -96,6 +153,7 @@
 				A8A75AF7291CCCD300EF9D8A /* UI */,
 				A8A75AF8291CCCDB00EF9D8A /* Internal */,
 				A8A75AF6291CCCC500EF9D8A /* Resource */,
+				A890D0F1293B017300D7267B /* Preview Content */,
 			);
 			path = Einance;
 			sourceTree = "<group>";
@@ -104,7 +162,6 @@
 			isa = PBXGroup;
 			children = (
 				A8A75AEC291CCCBD00EF9D8A /* Assets.xcassets */,
-				A8A75AEF291CCCBD00EF9D8A /* Preview Assets.xcassets */,
 				A8B09030291D6BFF008D9B33 /* Localizable.strings */,
 			);
 			path = Resource;
@@ -114,6 +171,9 @@
 			isa = PBXGroup;
 			children = (
 				A8A75AEA291CCCBC00EF9D8A /* ContentView.swift */,
+				A8357FD929293F010086720F /* HomeView.swift */,
+				A87219EE2968131F00D52995 /* SettingView.swift */,
+				A8E52C66295AF2F100AC80B0 /* Panel */,
 				A8B09025291D69CC008D9B33 /* Component */,
 			);
 			path = UI;
@@ -122,6 +182,7 @@
 		A8A75AF8291CCCDB00EF9D8A /* Internal */ = {
 			isa = PBXGroup;
 			children = (
+				A8F43BFD2951C52100C89EDE /* Config */,
 				A8A75B01291CCE3000EF9D8A /* Util */,
 				A8A75B00291CCE2900EF9D8A /* Coredata */,
 				A8A75AFF291CCE2600EF9D8A /* System */,
@@ -138,6 +199,8 @@
 				A8A75B0C291CF07100EF9D8A /* Budget.swift */,
 				A8A75B0E291CF24A00EF9D8A /* Card.swift */,
 				A8A75B10291CF25000EF9D8A /* Record.swift */,
+				A8F43C00295208DB00C89EDE /* FocusField.swift */,
+				A87219F6296D67C200D52995 /* BudgetCategory.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -148,6 +211,7 @@
 				A8A75B08291CD1D800EF9D8A /* Repository.swift */,
 				A8A75B0A291CD1E700EF9D8A /* Dao.swift */,
 				A8C0A100291D88B800AD5E97 /* DataDao.swift */,
+				A87219F22968149C00D52995 /* UserSettingDao.swift */,
 				A8B09023291CFF65008D9B33 /* MockDao.swift */,
 			);
 			path = Repository;
@@ -156,7 +220,9 @@
 		A8A75AFE291CCE2000EF9D8A /* Interactor */ = {
 			isa = PBXGroup;
 			children = (
+				A890D0F42942E03100D7267B /* SystemInteractor.swift */,
 				A8C0A102291D892700AD5E97 /* DataInteractor.swift */,
+				A87219F02968144400D52995 /* UserSettingInteractor.swift */,
 			);
 			path = Interactor;
 			sourceTree = "<group>";
@@ -166,7 +232,6 @@
 			children = (
 				A8A75B02291CCE4300EF9D8A /* DependencyInjector.swift */,
 				A8A75B04291CCE7E00EF9D8A /* AppState.swift */,
-				A8B09021291CFF2B008D9B33 /* Mock.swift */,
 			);
 			path = System;
 			sourceTree = "<group>";
@@ -174,6 +239,13 @@
 		A8A75B00291CCE2900EF9D8A /* Coredata */ = {
 			isa = PBXGroup;
 			children = (
+				A89F58C029ABB39D004FB6E7 /* database.xcdatamodeld */,
+				A89F58EB29AD0048004FB6E7 /* BudgetMO.swift */,
+				A89F58EC29AD0048004FB6E7 /* BudgetMO+CoreDataProperties.swift */,
+				A89F58DF29ACFFEB004FB6E7 /* CardMO.swift */,
+				A89F58E029ACFFEB004FB6E7 /* CardMO+CoreDataProperties.swift */,
+				A89F58E329ACFFEB004FB6E7 /* RecordMO.swift */,
+				A89F58E429ACFFEB004FB6E7 /* RecordMO+CoreDataProperties.swift */,
 			);
 			path = Coredata;
 			sourceTree = "<group>";
@@ -189,14 +261,37 @@
 		A8B09025291D69CC008D9B33 /* Component */ = {
 			isa = PBXGroup;
 			children = (
+				A8FF946929222BFE00C628BD /* RecordRow.swift */,
+				A87219EC2967F60700D52995 /* AddRecordButton.swift */,
+				A8E52C67295B063F00AC80B0 /* ActionPanelCloseButton.swift */,
+				A8E52C6B295BE62E00AC80B0 /* ActionPanelConfirmButton.swift */,
+				A8E52C6D295BE91600AC80B0 /* DatePickerCustom.swift */,
+			);
+			path = Component;
+			sourceTree = "<group>";
+		};
+		A8E52C66295AF2F100AC80B0 /* Panel */ = {
+			isa = PBXGroup;
+			children = (
 				A8B09032291D73F3008D9B33 /* BudgetPage.swift */,
 				A8FF946F2922BCFB00C628BD /* Dashboard.swift */,
 				A8B09028291D6A01008D9B33 /* CardRect.swift */,
-				A8FF946929222BFE00C628BD /* RecordRow.swift */,
-				A8FF946B292248F700C628BD /* AddRecordButton.swift */,
 				F62C884C2928C2960059F914 /* HomeHeader.swift */,
+				A8F43BFB2951600400C89EDE /* CreateCardPanel.swift */,
+				A8E52C73296477B400AC80B0 /* EditCardPanel.swift */,
+				A8E52C69295B342E00AC80B0 /* CreateRecordPanel.swift */,
+				A8E52C75296477C200AC80B0 /* EditRecordPanel.swift */,
+				A87219F4296830E600D52995 /* ViewHeader.swift */,
 			);
-			path = Component;
+			path = Panel;
+			sourceTree = "<group>";
+		};
+		A8F43BFD2951C52100C89EDE /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				A8F43BFE2951C52E00C89EDE /* Setting.swift */,
+			);
+			path = Config;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -217,6 +312,7 @@
 			name = Einance;
 			packageProductDependencies = (
 				A8A75AFA291CCDFA00EF9D8A /* UIComponent */,
+				A8357FDC292952230086720F /* OrderedCollections */,
 			);
 			productName = Einance;
 			productReference = A8A75AE5291CCCBC00EF9D8A /* Einance.app */;
@@ -248,6 +344,7 @@
 			mainGroup = A8A75ADC291CCCBC00EF9D8A;
 			packageReferences = (
 				A8A75AF9291CCDFA00EF9D8A /* XCRemoteSwiftPackageReference "UIComponent" */,
+				A8357FDB292952230086720F /* XCRemoteSwiftPackageReference "swift-collections" */,
 			);
 			productRefGroup = A8A75AE6291CCCBC00EF9D8A /* Products */;
 			projectDirPath = "";
@@ -277,25 +374,48 @@
 			buildActionMask = 2147483647;
 			files = (
 				A8C0A103291D892700AD5E97 /* DataInteractor.swift in Sources */,
-				A8FF946C292248F700C628BD /* AddRecordButton.swift in Sources */,
 				A8FF946A29222BFE00C628BD /* RecordRow.swift in Sources */,
 				A8A75AEB291CCCBC00EF9D8A /* ContentView.swift in Sources */,
 				A8B09022291CFF2B008D9B33 /* Mock.swift in Sources */,
+				A87219F32968149C00D52995 /* UserSettingDao.swift in Sources */,
+				A89F58E929ACFFEB004FB6E7 /* RecordMO.swift in Sources */,
+				A8E52C76296477C200AC80B0 /* EditRecordPanel.swift in Sources */,
+				A8E52C6C295BE62E00AC80B0 /* ActionPanelConfirmButton.swift in Sources */,
+				A87219F5296830E600D52995 /* ViewHeader.swift in Sources */,
+				A87219F12968144400D52995 /* UserSettingInteractor.swift in Sources */,
+				A8F43BFC2951600400C89EDE /* CreateCardPanel.swift in Sources */,
 				A8C0A101291D88B800AD5E97 /* DataDao.swift in Sources */,
 				A8A75B03291CCE4300EF9D8A /* DependencyInjector.swift in Sources */,
 				A8B09033291D73F3008D9B33 /* BudgetPage.swift in Sources */,
 				A8A75B11291CF25000EF9D8A /* Record.swift in Sources */,
 				F62C884D2928C2960059F914 /* HomeHeader.swift in Sources */,
+				A89F58ED29AD0048004FB6E7 /* BudgetMO.swift in Sources */,
 				A8FF94702922BCFB00C628BD /* Dashboard.swift in Sources */,
+				A89F58C229ABB39D004FB6E7 /* database.xcdatamodeld in Sources */,
 				A8FF946E2922B74F00C628BD /* Extension.swift in Sources */,
 				A8A75B0B291CD1E700EF9D8A /* Dao.swift in Sources */,
+				A8F43BFF2951C52E00C89EDE /* Setting.swift in Sources */,
+				A8E52C68295B063F00AC80B0 /* ActionPanelCloseButton.swift in Sources */,
+				A89F58EA29ACFFEB004FB6E7 /* RecordMO+CoreDataProperties.swift in Sources */,
+				A8E52C74296477B400AC80B0 /* EditCardPanel.swift in Sources */,
+				A89F58E629ACFFEB004FB6E7 /* CardMO+CoreDataProperties.swift in Sources */,
+				A8E52C6E295BE91600AC80B0 /* DatePickerCustom.swift in Sources */,
+				A87219ED2967F60700D52995 /* AddRecordButton.swift in Sources */,
+				A87219EF2968131F00D52995 /* SettingView.swift in Sources */,
+				A87219F7296D67C200D52995 /* BudgetCategory.swift in Sources */,
 				A8A75B09291CD1D800EF9D8A /* Repository.swift in Sources */,
+				A89F58E529ACFFEB004FB6E7 /* CardMO.swift in Sources */,
 				A8A75AE9291CCCBC00EF9D8A /* EinanceApp.swift in Sources */,
+				A8357FDA29293F010086720F /* HomeView.swift in Sources */,
+				A89F58EE29AD0048004FB6E7 /* BudgetMO+CoreDataProperties.swift in Sources */,
 				A8A75B0D291CF07100EF9D8A /* Budget.swift in Sources */,
+				A8F43C01295208DC00C89EDE /* FocusField.swift in Sources */,
 				A8A75B05291CCE7E00EF9D8A /* AppState.swift in Sources */,
 				A8B09029291D6A01008D9B33 /* CardRect.swift in Sources */,
+				A8E52C6A295B342E00AC80B0 /* CreateRecordPanel.swift in Sources */,
 				A8A75B0F291CF24A00EF9D8A /* Card.swift in Sources */,
 				A8B09024291CFF65008D9B33 /* MockDao.swift in Sources */,
+				A890D0F52942E03100D7267B /* SystemInteractor.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -518,6 +638,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		A8357FDB292952230086720F /* XCRemoteSwiftPackageReference "swift-collections" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-collections.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 		A8A75AF9291CCDFA00EF9D8A /* XCRemoteSwiftPackageReference "UIComponent" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/yanun0323/UIComponent.git";
@@ -529,12 +657,30 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		A8357FDC292952230086720F /* OrderedCollections */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A8357FDB292952230086720F /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = OrderedCollections;
+		};
 		A8A75AFA291CCDFA00EF9D8A /* UIComponent */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = A8A75AF9291CCDFA00EF9D8A /* XCRemoteSwiftPackageReference "UIComponent" */;
 			productName = UIComponent;
 		};
 /* End XCSwiftPackageProductDependency section */
+
+/* Begin XCVersionGroup section */
+		A89F58C029ABB39D004FB6E7 /* database.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				A89F58C129ABB39D004FB6E7 /* database.xcdatamodel */,
+			);
+			currentVersion = A89F58C129ABB39D004FB6E7 /* database.xcdatamodel */;
+			path = database.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = A8A75ADD291CCCBC00EF9D8A /* Project object */;
 }

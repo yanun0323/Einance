@@ -1,11 +1,4 @@
-//
-//  DependencyInjector.swift
-//  Einance
-//
-//  Created by YanunYang on 2022/11/10.
-//
-
-import Foundation
+import SwiftUI
 
 class DIContainer: ObservableObject {
     var appstate: AppState
@@ -23,9 +16,13 @@ class DIContainer: ObservableObject {
 
 struct Interactor {
     var data: DataInteractor
+    var system: SystemInteractor
+    var setting: UserSettingInteractor
     
     init(isMock: Bool, appstate: AppState) {
-        let dao: Repository = isMock ? MockDao() : Dao()
-        self.data = DataInteractor(appstate: appstate, repo: dao)
+        let repo: Repository = isMock ? MockDao() : Dao()
+        self.data = DataInteractor(appstate: appstate, repo: repo)
+        self.system = SystemInteractor(appstate: appstate, repo: repo)
+        self.setting = UserSettingInteractor(appstate: appstate, repo: repo)
     }
 }

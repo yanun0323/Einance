@@ -1,12 +1,5 @@
-//
-//  Dao.swift
-//  Einance
-//
-//  Created by YanunYang on 2022/11/10.
-//
+import SwiftUI
 
-import Foundation
-
-struct Dao: DataDao {}
+struct Dao: DataDao, UserSettingDao {}
 
 extension Dao: Repository {}

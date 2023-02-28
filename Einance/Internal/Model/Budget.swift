@@ -1,11 +1,4 @@
-//
-//  Budget.swift
-//  Einance
-//
-//  Created by YanunYang on 2022/11/10.
-//
-
-import Foundation
+import SwiftUI
 
 final class Budget {
     var uuid: UUID
@@ -34,3 +27,5 @@ final class Budget {
 }
 
 extension Budget: Identifiable {}
+
+extension Budget {}

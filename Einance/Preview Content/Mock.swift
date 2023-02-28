@@ -1,11 +1,4 @@
-//
-//  Mock.swift
-//  Einance
-//
-//  Created by YanunYang on 2022/11/10.
-//
-
-import Foundation
+import SwiftUI
 import UIComponent
 
 extension DIContainer {
@@ -34,11 +27,11 @@ extension Card {
     }
     
     static var preview2: Card {
-        Card(name: "債務", amount: 0, records: [
+        Card(name: "債務", amount: 0, display: .forever, records: [
             Record(date: Date(from: "20221106", .Numeric)!, cost: 70, memo: "五十嵐"),
             Record(date: Date(from: "20221108", .Numeric)!, cost: 113, memo: "7-11"),
             Record(date: Date(from: "20221117", .Numeric)!, cost: 183, memo: "摩斯漢堡"),
-        ], forever: true, color: .orange)
+        ], color: .orange)
     }
 }
 

@@ -10,11 +10,23 @@ import UIComponent
 
 @main
 struct EinanceApp: App {
+    @State private var appearance: ColorScheme? = nil
     private let container: DIContainer = .init(isMock: true)
     var body: some Scene {
         WindowGroup {
-            ContentView(injector: container)
+            ContentView()
                 .inject(container)
+                .preferredColorScheme(appearance)
+                .onReceive(container.appstate.appearancePublisher) { output in
+                    withAnimation {
+                        appearance = output
+                    }
+                }
+                .onAppear {
+                    withAnimation {
+                        appearance = container.interactor.setting.GetAppearance()
+                    }
+                }
         }
     }
 }

@@ -1,11 +1,5 @@
-//
-//  Extension.swift
-//  Einance
-//
-//  Created by YanunYang on 2022/11/15.
-//
-
 import SwiftUI
+import UIComponent
 
 extension View {
     func previewDeviceSet() -> some View {
@@ -18,10 +12,30 @@ extension View {
                 .previewDisplayName("iPhone 14 Pro")
         }
     }
+    
+    func modifyPanelBackground() -> some View {
+        self
+            .monospacedDigit()
+            .backgroundColor(.background)
+            .clipShape(RoundedRectangle(cornerRadius: Setting.panelCornerRadius))
+            .shadow(radius: 5)
+    }
+    
+    func backgroundColor(_ color: Color) -> some View {
+        self.background(color)
+    }
 }
 
 extension Animation {
     static var quick: Animation = .easeInOut(duration: 0.2)
     static var medium: Animation = .easeInOut(duration: 0.6)
     static var slow: Animation = .easeInOut(duration: 1)
+}
+
+extension Color {
+    static var background: Color = .init("Background")
+}
+
+extension Date {
+    static var zero: Date = .init(timeIntervalSince1970: 0)
 }

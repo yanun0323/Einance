@@ -1,11 +1,4 @@
-//
-//  DataInteractor.swift
-//  Einance
-//
-//  Created by YanunYang on 2022/11/11.
-//
-
-import Foundation
+import SwiftUI
 
 struct DataInteractor {
     private var appstate: AppState

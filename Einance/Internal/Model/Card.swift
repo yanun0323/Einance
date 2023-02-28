@@ -1,11 +1,5 @@
-//
-//  Card.swift
-//  Einance
-//
-//  Created by YanunYang on 2022/11/10.
-//
-
 import SwiftUI
+import OrderedCollections
 
 final class Card {
     var uuid: UUID
@@ -14,23 +8,23 @@ final class Card {
     var amount: Decimal
     var display: Card.Display
     var records: [Record]
-    var forever: Bool
     var color: Color
+    var fixed: Bool
     
     /* Cache */
     var cost: Decimal
     var balance: Decimal
-    var dateDict: Dictionary<Date,RecordSet>
+    var dateDict: OrderedDictionary<Date,RecordSet>
     
-    init(uuid: UUID = .init(), index: Int = 0, name: String, amount: Decimal, display: Card.Display = .month, records: [Record] = [], forever: Bool = false, color: Color) {
+    init(uuid: UUID = .init(), index: Int = 0, name: String, amount: Decimal, display: Card.Display = .month, records: [Record] = [], color: Color, fixed: Bool = true) {
         self.uuid = uuid
         self.index = index
         self.name = name
         self.amount = amount
         self.display = display
         self.records = records
-        self.forever = forever
         self.color = color
+        self.fixed = fixed
         
         self.cost = 0
         self.balance = 0
@@ -44,6 +38,14 @@ final class Card {
             self.cost += record.cost
         }
         self.balance = self.amount - self.cost
+    }
+    
+    init(_ mo: CardMO) {
+        self.uuid = mo.uuid
+        self.index = Int(mo.index)
+        self.name = mo.name
+        self.amount = mo.amount as Decimal
+        self.display = Card.Display(rawValue: mo.display)
     }
 }
 
@@ -63,10 +65,7 @@ extension Card: Hashable {
 // MARK: - Property
 extension Card {
     var tag: LocalizedStringKey {
-        if forever {
-            return "card.display.forever"
-        }
-        return display.string
+        return display.cardTag
     }
 }
 
@@ -75,8 +74,13 @@ extension Card {}
 
 // MARK: - Card.Display
 extension Card {
-    enum Display: Int {
-        case day, week, month
+    enum Display: Int, CaseIterable, Identifiable {
+        case day, week, month, forever
+        var id: Self { self }
+        
+        init(_ int: Int16) {
+            self = Display(rawValue: Int(int)) ?? .forever
+        }
         
         var string: LocalizedStringKey {
             switch self {
@@ -86,6 +90,21 @@ extension Card {
                 return "card.display.week"
             case .month:
                 return "card.display.month"
+            case .forever:
+                return "card.display.forever"
+            }
+        }
+        
+        var cardTag: LocalizedStringKey {
+            switch self {
+            case .day:
+                return "card.display.day.cardTag"
+            case .week:
+                return "card.display.week.cardTag"
+            case .month:
+                return "card.display.month.cardTag"
+            case .forever:
+                return "card.display.forever.cardTag"
             }
         }
     }

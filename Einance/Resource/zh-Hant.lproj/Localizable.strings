@@ -1,17 +1,47 @@
-/* 
-  Localizable.strings
-  Einance
-
-  Created by YanunYang on 2022/11/11.
-  
-*/
-
-/* Card span display tag */
-"card.display.day" = "本日";
-"card.display.week" = "本週";
-"card.display.month" = "本月";
-"card.display.forever" = "永久";
+/* global */
+"global.create" = "新增";
+"global.cancel" = "取消";
+"global.delete" = "刪除";
+"global.edit" = "修改";
 
 "label.cost" = "花費";
 "label.balance" = "餘額";
 "label.amount" = "預算";
+
+/* card display */
+"card.display.day" = "日";
+"card.display.week" = "週";
+"card.display.month" = "月";
+"card.display.forever" = "永久";
+
+/* card display tag */
+"card.display.day.cardTag" = "本日";
+"card.display.week.cardTag" = "本週";
+"card.display.month.cardTag" = "本月";
+"card.display.forever.cardTag" = "永久";
+
+/* create card */
+"panel.card.create.title" = "新增預算卡片";
+"panel.card.create.name.label" = "名稱";
+"panel.card.create.name.label.placeholder" = "新卡片";
+"panel.card.create.amount.label" = "預算";
+"panel.card.create.amount.label.placeholder" = "1000";
+"panel.card.create.color.label" = "顏色";
+"panel.card.create.display.label" = "週期";
+"panel.card.create.fixed.label" = "固定卡片";
+
+/* card context alert */
+"card.context.alert.title" = "刪除預算卡片";
+"card.context.alert.content" = "確定要刪除這張卡片?";
+
+/* create record */
+"panel.record.create.title" = "新增花費";
+"panel.record.create.cost.label" = "花費";
+"panel.record.create.cost.placeholder" = "100";
+"panel.record.create.date.label" = "日期";
+"panel.record.create.memo.label" = "備註";
+"panel.record.create.memo.placeholder" = "晚餐";
+"button.record.create" = "新增花費";
+
+/* edit record */
+"panel.record.edit.title" = "編輯花費";
