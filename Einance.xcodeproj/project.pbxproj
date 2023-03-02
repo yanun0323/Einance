@@ -16,13 +16,6 @@
 		A87219F5296830E600D52995 /* ViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = A87219F4296830E600D52995 /* ViewHeader.swift */; };
 		A87219F7296D67C200D52995 /* BudgetCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = A87219F6296D67C200D52995 /* BudgetCategory.swift */; };
 		A890D0F52942E03100D7267B /* SystemInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A890D0F42942E03100D7267B /* SystemInteractor.swift */; };
-		A89F58C229ABB39D004FB6E7 /* database.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A89F58C029ABB39D004FB6E7 /* database.xcdatamodeld */; };
-		A89F58E529ACFFEB004FB6E7 /* CardMO.swift in Sources */ = {isa = PBXBuildFile; fileRef = A89F58DF29ACFFEB004FB6E7 /* CardMO.swift */; };
-		A89F58E629ACFFEB004FB6E7 /* CardMO+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = A89F58E029ACFFEB004FB6E7 /* CardMO+CoreDataProperties.swift */; };
-		A89F58E929ACFFEB004FB6E7 /* RecordMO.swift in Sources */ = {isa = PBXBuildFile; fileRef = A89F58E329ACFFEB004FB6E7 /* RecordMO.swift */; };
-		A89F58EA29ACFFEB004FB6E7 /* RecordMO+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = A89F58E429ACFFEB004FB6E7 /* RecordMO+CoreDataProperties.swift */; };
-		A89F58ED29AD0048004FB6E7 /* BudgetMO.swift in Sources */ = {isa = PBXBuildFile; fileRef = A89F58EB29AD0048004FB6E7 /* BudgetMO.swift */; };
-		A89F58EE29AD0048004FB6E7 /* BudgetMO+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = A89F58EC29AD0048004FB6E7 /* BudgetMO+CoreDataProperties.swift */; };
 		A8A75AE9291CCCBC00EF9D8A /* EinanceApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8A75AE8291CCCBC00EF9D8A /* EinanceApp.swift */; };
 		A8A75AEB291CCCBC00EF9D8A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8A75AEA291CCCBC00EF9D8A /* ContentView.swift */; };
 		A8A75AED291CCCBD00EF9D8A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A8A75AEC291CCCBD00EF9D8A /* Assets.xcassets */; };
@@ -36,7 +29,6 @@
 		A8A75B0F291CF24A00EF9D8A /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8A75B0E291CF24A00EF9D8A /* Card.swift */; };
 		A8A75B11291CF25000EF9D8A /* Record.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8A75B10291CF25000EF9D8A /* Record.swift */; };
 		A8B09022291CFF2B008D9B33 /* Mock.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8B09021291CFF2B008D9B33 /* Mock.swift */; };
-		A8B09024291CFF65008D9B33 /* MockDao.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8B09023291CFF65008D9B33 /* MockDao.swift */; };
 		A8B09029291D6A01008D9B33 /* CardRect.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8B09028291D6A01008D9B33 /* CardRect.swift */; };
 		A8B0902E291D6BFF008D9B33 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = A8B09030291D6BFF008D9B33 /* Localizable.strings */; };
 		A8B09033291D73F3008D9B33 /* BudgetPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8B09032291D73F3008D9B33 /* BudgetPage.swift */; };
@@ -55,6 +47,10 @@
 		A8FF946E2922B74F00C628BD /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8FF946D2922B74F00C628BD /* Extension.swift */; };
 		A8FF94702922BCFB00C628BD /* Dashboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8FF946F2922BCFB00C628BD /* Dashboard.swift */; };
 		F62C884D2928C2960059F914 /* HomeHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = F62C884C2928C2960059F914 /* HomeHeader.swift */; };
+		F691B86A29AE02DF00E05E05 /* SQLite in Frameworks */ = {isa = PBXBuildFile; productRef = F691B86929AE02DF00E05E05 /* SQLite */; };
+		F691B86C29AE043700E05E05 /* Sql.swift in Sources */ = {isa = PBXBuildFile; fileRef = F691B86B29AE043700E05E05 /* Sql.swift */; };
+		F691B87029AE233F00E05E05 /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F691B86F29AE233F00E05E05 /* Helper.swift */; };
+		F6EA06A029AFEDC2005D08D7 /* DebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6EA069F29AFEDC2005D08D7 /* DebugView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -66,13 +62,6 @@
 		A87219F4296830E600D52995 /* ViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewHeader.swift; sourceTree = "<group>"; };
 		A87219F6296D67C200D52995 /* BudgetCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgetCategory.swift; sourceTree = "<group>"; };
 		A890D0F42942E03100D7267B /* SystemInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemInteractor.swift; sourceTree = "<group>"; };
-		A89F58C129ABB39D004FB6E7 /* database.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = database.xcdatamodel; sourceTree = "<group>"; };
-		A89F58DF29ACFFEB004FB6E7 /* CardMO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardMO.swift; sourceTree = "<group>"; };
-		A89F58E029ACFFEB004FB6E7 /* CardMO+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CardMO+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		A89F58E329ACFFEB004FB6E7 /* RecordMO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordMO.swift; sourceTree = "<group>"; };
-		A89F58E429ACFFEB004FB6E7 /* RecordMO+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RecordMO+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		A89F58EB29AD0048004FB6E7 /* BudgetMO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgetMO.swift; sourceTree = "<group>"; };
-		A89F58EC29AD0048004FB6E7 /* BudgetMO+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BudgetMO+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		A8A75AE5291CCCBC00EF9D8A /* Einance.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Einance.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A8A75AE8291CCCBC00EF9D8A /* EinanceApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EinanceApp.swift; sourceTree = "<group>"; };
 		A8A75AEA291CCCBC00EF9D8A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -86,7 +75,6 @@
 		A8A75B0E291CF24A00EF9D8A /* Card.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
 		A8A75B10291CF25000EF9D8A /* Record.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Record.swift; sourceTree = "<group>"; };
 		A8B09021291CFF2B008D9B33 /* Mock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mock.swift; sourceTree = "<group>"; };
-		A8B09023291CFF65008D9B33 /* MockDao.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDao.swift; sourceTree = "<group>"; };
 		A8B09028291D6A01008D9B33 /* CardRect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardRect.swift; sourceTree = "<group>"; };
 		A8B0902F291D6BFF008D9B33 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		A8B09031291D6C19008D9B33 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -106,6 +94,10 @@
 		A8FF946D2922B74F00C628BD /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
 		A8FF946F2922BCFB00C628BD /* Dashboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dashboard.swift; sourceTree = "<group>"; };
 		F62C884C2928C2960059F914 /* HomeHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeHeader.swift; sourceTree = "<group>"; };
+		F691B86B29AE043700E05E05 /* Sql.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sql.swift; sourceTree = "<group>"; };
+		F691B86F29AE233F00E05E05 /* Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
+		F6EA069F29AFEDC2005D08D7 /* DebugView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugView.swift; sourceTree = "<group>"; };
+		F6EA06A129B0AC83005D08D7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,6 +105,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F691B86A29AE02DF00E05E05 /* SQLite in Frameworks */,
 				A8357FDD292952230086720F /* OrderedCollections in Frameworks */,
 				A8A75AFB291CCDFA00EF9D8A /* UIComponent in Frameworks */,
 			);
@@ -149,6 +142,7 @@
 		A8A75AE7291CCCBC00EF9D8A /* Einance */ = {
 			isa = PBXGroup;
 			children = (
+				F6EA06A129B0AC83005D08D7 /* Info.plist */,
 				A8A75AE8291CCCBC00EF9D8A /* EinanceApp.swift */,
 				A8A75AF7291CCCD300EF9D8A /* UI */,
 				A8A75AF8291CCCDB00EF9D8A /* Internal */,
@@ -173,6 +167,7 @@
 				A8A75AEA291CCCBC00EF9D8A /* ContentView.swift */,
 				A8357FD929293F010086720F /* HomeView.swift */,
 				A87219EE2968131F00D52995 /* SettingView.swift */,
+				F6EA069F29AFEDC2005D08D7 /* DebugView.swift */,
 				A8E52C66295AF2F100AC80B0 /* Panel */,
 				A8B09025291D69CC008D9B33 /* Component */,
 			);
@@ -184,7 +179,7 @@
 			children = (
 				A8F43BFD2951C52100C89EDE /* Config */,
 				A8A75B01291CCE3000EF9D8A /* Util */,
-				A8A75B00291CCE2900EF9D8A /* Coredata */,
+				A8A75B00291CCE2900EF9D8A /* Sqlite */,
 				A8A75AFF291CCE2600EF9D8A /* System */,
 				A8A75AFE291CCE2000EF9D8A /* Interactor */,
 				A8A75AFD291CCE1600EF9D8A /* Repository */,
@@ -212,7 +207,6 @@
 				A8A75B0A291CD1E700EF9D8A /* Dao.swift */,
 				A8C0A100291D88B800AD5E97 /* DataDao.swift */,
 				A87219F22968149C00D52995 /* UserSettingDao.swift */,
-				A8B09023291CFF65008D9B33 /* MockDao.swift */,
 			);
 			path = Repository;
 			sourceTree = "<group>";
@@ -236,18 +230,13 @@
 			path = System;
 			sourceTree = "<group>";
 		};
-		A8A75B00291CCE2900EF9D8A /* Coredata */ = {
+		A8A75B00291CCE2900EF9D8A /* Sqlite */ = {
 			isa = PBXGroup;
 			children = (
-				A89F58C029ABB39D004FB6E7 /* database.xcdatamodeld */,
-				A89F58EB29AD0048004FB6E7 /* BudgetMO.swift */,
-				A89F58EC29AD0048004FB6E7 /* BudgetMO+CoreDataProperties.swift */,
-				A89F58DF29ACFFEB004FB6E7 /* CardMO.swift */,
-				A89F58E029ACFFEB004FB6E7 /* CardMO+CoreDataProperties.swift */,
-				A89F58E329ACFFEB004FB6E7 /* RecordMO.swift */,
-				A89F58E429ACFFEB004FB6E7 /* RecordMO+CoreDataProperties.swift */,
+				F691B86B29AE043700E05E05 /* Sql.swift */,
+				F691B86F29AE233F00E05E05 /* Helper.swift */,
 			);
-			path = Coredata;
+			path = Sqlite;
 			sourceTree = "<group>";
 		};
 		A8A75B01291CCE3000EF9D8A /* Util */ = {
@@ -313,6 +302,7 @@
 			packageProductDependencies = (
 				A8A75AFA291CCDFA00EF9D8A /* UIComponent */,
 				A8357FDC292952230086720F /* OrderedCollections */,
+				F691B86929AE02DF00E05E05 /* SQLite */,
 			);
 			productName = Einance;
 			productReference = A8A75AE5291CCCBC00EF9D8A /* Einance.app */;
@@ -345,6 +335,7 @@
 			packageReferences = (
 				A8A75AF9291CCDFA00EF9D8A /* XCRemoteSwiftPackageReference "UIComponent" */,
 				A8357FDB292952230086720F /* XCRemoteSwiftPackageReference "swift-collections" */,
+				F691B86829AE02DF00E05E05 /* XCRemoteSwiftPackageReference "SQLite.swift" */,
 			);
 			productRefGroup = A8A75AE6291CCCBC00EF9D8A /* Products */;
 			projectDirPath = "";
@@ -373,12 +364,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F691B87029AE233F00E05E05 /* Helper.swift in Sources */,
 				A8C0A103291D892700AD5E97 /* DataInteractor.swift in Sources */,
 				A8FF946A29222BFE00C628BD /* RecordRow.swift in Sources */,
 				A8A75AEB291CCCBC00EF9D8A /* ContentView.swift in Sources */,
 				A8B09022291CFF2B008D9B33 /* Mock.swift in Sources */,
 				A87219F32968149C00D52995 /* UserSettingDao.swift in Sources */,
-				A89F58E929ACFFEB004FB6E7 /* RecordMO.swift in Sources */,
 				A8E52C76296477C200AC80B0 /* EditRecordPanel.swift in Sources */,
 				A8E52C6C295BE62E00AC80B0 /* ActionPanelConfirmButton.swift in Sources */,
 				A87219F5296830E600D52995 /* ViewHeader.swift in Sources */,
@@ -389,32 +380,27 @@
 				A8B09033291D73F3008D9B33 /* BudgetPage.swift in Sources */,
 				A8A75B11291CF25000EF9D8A /* Record.swift in Sources */,
 				F62C884D2928C2960059F914 /* HomeHeader.swift in Sources */,
-				A89F58ED29AD0048004FB6E7 /* BudgetMO.swift in Sources */,
+				F6EA06A029AFEDC2005D08D7 /* DebugView.swift in Sources */,
 				A8FF94702922BCFB00C628BD /* Dashboard.swift in Sources */,
-				A89F58C229ABB39D004FB6E7 /* database.xcdatamodeld in Sources */,
+				F691B86C29AE043700E05E05 /* Sql.swift in Sources */,
 				A8FF946E2922B74F00C628BD /* Extension.swift in Sources */,
 				A8A75B0B291CD1E700EF9D8A /* Dao.swift in Sources */,
 				A8F43BFF2951C52E00C89EDE /* Setting.swift in Sources */,
 				A8E52C68295B063F00AC80B0 /* ActionPanelCloseButton.swift in Sources */,
-				A89F58EA29ACFFEB004FB6E7 /* RecordMO+CoreDataProperties.swift in Sources */,
 				A8E52C74296477B400AC80B0 /* EditCardPanel.swift in Sources */,
-				A89F58E629ACFFEB004FB6E7 /* CardMO+CoreDataProperties.swift in Sources */,
 				A8E52C6E295BE91600AC80B0 /* DatePickerCustom.swift in Sources */,
 				A87219ED2967F60700D52995 /* AddRecordButton.swift in Sources */,
 				A87219EF2968131F00D52995 /* SettingView.swift in Sources */,
 				A87219F7296D67C200D52995 /* BudgetCategory.swift in Sources */,
 				A8A75B09291CD1D800EF9D8A /* Repository.swift in Sources */,
-				A89F58E529ACFFEB004FB6E7 /* CardMO.swift in Sources */,
 				A8A75AE9291CCCBC00EF9D8A /* EinanceApp.swift in Sources */,
 				A8357FDA29293F010086720F /* HomeView.swift in Sources */,
-				A89F58EE29AD0048004FB6E7 /* BudgetMO+CoreDataProperties.swift in Sources */,
 				A8A75B0D291CF07100EF9D8A /* Budget.swift in Sources */,
 				A8F43C01295208DC00C89EDE /* FocusField.swift in Sources */,
 				A8A75B05291CCE7E00EF9D8A /* AppState.swift in Sources */,
 				A8B09029291D6A01008D9B33 /* CardRect.swift in Sources */,
 				A8E52C6A295B342E00AC80B0 /* CreateRecordPanel.swift in Sources */,
 				A8A75B0F291CF24A00EF9D8A /* Card.swift in Sources */,
-				A8B09024291CFF65008D9B33 /* MockDao.swift in Sources */,
 				A890D0F52942E03100D7267B /* SystemInteractor.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -471,6 +457,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -532,6 +519,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -555,13 +543,18 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 0E0AA;
 				DEVELOPMENT_ASSET_PATHS = "\"Einance/Resource\"";
 				DEVELOPMENT_TEAM = Y366CJ66L6;
+				ENABLE_APP_SANDBOX = NO;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SELECTED_FILES = "";
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Einance/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Einance;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -575,7 +568,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
-				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -587,13 +580,18 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 0E0AA;
 				DEVELOPMENT_ASSET_PATHS = "\"Einance/Resource\"";
 				DEVELOPMENT_TEAM = Y366CJ66L6;
+				ENABLE_APP_SANDBOX = NO;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SELECTED_FILES = "";
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Einance/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Einance;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -607,7 +605,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
-				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -654,6 +652,14 @@
 				kind = branch;
 			};
 		};
+		F691B86829AE02DF00E05E05 /* XCRemoteSwiftPackageReference "SQLite.swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/stephencelis/SQLite.swift.git";
+			requirement = {
+				kind = exactVersion;
+				version = 0.14.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -667,20 +673,12 @@
 			package = A8A75AF9291CCDFA00EF9D8A /* XCRemoteSwiftPackageReference "UIComponent" */;
 			productName = UIComponent;
 		};
-/* End XCSwiftPackageProductDependency section */
-
-/* Begin XCVersionGroup section */
-		A89F58C029ABB39D004FB6E7 /* database.xcdatamodeld */ = {
-			isa = XCVersionGroup;
-			children = (
-				A89F58C129ABB39D004FB6E7 /* database.xcdatamodel */,
-			);
-			currentVersion = A89F58C129ABB39D004FB6E7 /* database.xcdatamodel */;
-			path = database.xcdatamodeld;
-			sourceTree = "<group>";
-			versionGroupType = wrapper.xcdatamodel;
+		F691B86929AE02DF00E05E05 /* SQLite */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F691B86829AE02DF00E05E05 /* XCRemoteSwiftPackageReference "SQLite.swift" */;
+			productName = SQLite;
 		};
-/* End XCVersionGroup section */
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = A8A75ADD291CCCBC00EF9D8A /* Project object */;
 }

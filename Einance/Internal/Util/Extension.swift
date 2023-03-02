@@ -39,3 +39,14 @@ extension Color {
 extension Date {
     static var zero: Date = .init(timeIntervalSince1970: 0)
 }
+
+extension System {
+    static func Invoke<T>(_ log: String, _ action: () throws -> T?) -> T? where T: Any {
+        do {
+            return try action()
+        } catch {
+            print("[ERROR] \(log) failed, err: \(error)")
+        }
+        return nil
+    }
+}

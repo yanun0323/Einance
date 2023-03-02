@@ -12,6 +12,14 @@ extension UserSettingDao where Self: UserSettingRepository {
         UserDefaults.appearance = appearance
     }
     
+    func GetBaseDateNumber() -> Int? {
+        return UserDefaults.baseDateNumber
+    }
+    
+    func SetBaseDateNumber(_ number: Int?) {
+        UserDefaults.baseDateNumber = number
+    }
+    
     func GetCardBudgetCategoryAbove() -> Int? {
         return UserDefaults.cardBudgetCategoryAbove
     }

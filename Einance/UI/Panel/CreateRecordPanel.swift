@@ -103,7 +103,6 @@ extension CreateRecordPanel {
                 .textFieldStyle(.plain)
                 .font(Setting.cardPanelInputFont)
                 .multilineTextAlignment(.trailing)
-                .focused($focus, equals: .input)
         }
     }
     

@@ -1,33 +1,45 @@
 import SwiftUI
 import OrderedCollections
+import UIComponent
+import SQLite
 
 final class Card {
-    var uuid: UUID
+    var id: Int64
+    var budgetID: Int64
     var index: Int
     var name: String
     var amount: Decimal
-    var display: Card.Display
-    var records: [Record]
-    var color: Color
-    var fixed: Bool
-    
-    /* Cache */
     var cost: Decimal
     var balance: Decimal
+    var display: Card.Display
+    var color: Color
+    var fixed: Bool
     var dateDict: OrderedDictionary<Date,RecordSet>
     
-    init(uuid: UUID = .init(), index: Int = 0, name: String, amount: Decimal, display: Card.Display = .month, records: [Record] = [], color: Color, fixed: Bool = true) {
-        self.uuid = uuid
+    init(
+        id: Int64 = 0,
+        budgetID: Int64 = 0,
+        index: Int = 0,
+        name: String,
+        amount: Decimal,
+        cost: Decimal = 0,
+        balance: Decimal = 0,
+        display: Card.Display = .month,
+        records: [Record] = [],
+        color: Color,
+        fixed: Bool = true
+    ) {
+        self.id = id
+        self.budgetID = budgetID
         self.index = index
         self.name = name
         self.amount = amount
         self.display = display
-        self.records = records
         self.color = color
         self.fixed = fixed
         
-        self.cost = 0
-        self.balance = 0
+        self.cost = cost
+        self.balance = balance
         self.dateDict = [:]
         for record in records {
             if dateDict[record.date] == nil {
@@ -39,24 +51,17 @@ final class Card {
         }
         self.balance = self.amount - self.cost
     }
-    
-    init(_ mo: CardMO) {
-        self.uuid = mo.uuid
-        self.index = Int(mo.index)
-        self.name = mo.name
-        self.amount = mo.amount as Decimal
-        self.display = Card.Display(rawValue: mo.display)
-    }
 }
 
 extension Card: Identifiable {}
+
 extension Card: Hashable {
     static func == (lhs: Card, rhs: Card) -> Bool {
-        return lhs.uuid == rhs.uuid
+        return lhs.id == rhs.id
     }
     
     var hashValue: Int {
-        return uuid.hashValue
+        return id.hashValue
     }
     
     func hash(into hasher: inout Hasher) {}
@@ -80,6 +85,10 @@ extension Card {
         
         init(_ int: Int16) {
             self = Display(rawValue: Int(int)) ?? .forever
+        }
+        
+        init(_ int64: Int64) {
+            self = Display(rawValue: Int(int64)) ?? .forever
         }
         
         var string: LocalizedStringKey {
@@ -115,5 +124,35 @@ extension Card {
     struct RecordSet {
         var records: [Record]
         var cost: Decimal
+    }
+}
+
+extension Card {
+    static func GetTable() -> SQLite.Table { .init("cards") }
+    
+    static let id = Expression<Int64>("id")
+    static let budgetID = Expression<Int64>("budget_id")
+    static let index = Expression<Int>("index")
+    static let name = Expression<String>("name")
+    static let amount = Expression<Decimal>("amount")
+    static let cost = Expression<Decimal>("cost")
+    static let balance = Expression<Decimal>("balance")
+    static let display = Expression<Card.Display>("display")
+    static let fixed = Expression<Bool>("fixed")
+    static let color = Expression<Color>("color")
+    
+    static func migrate(_ conn: Connection) throws {
+        try conn.run(GetTable().create { t in
+            t.column(id, primaryKey: .autoincrement)
+            t.column(budgetID)
+            t.column(index)
+            t.column(name)
+            t.column(amount)
+            t.column(cost)
+            t.column(balance)
+            t.column(display)
+            t.column(fixed)
+            t.column(color)
+        })
     }
 }

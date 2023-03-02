@@ -1,6 +1,15 @@
 {
   "pins" : [
     {
+      "identity" : "sqlite.swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/stephencelis/SQLite.swift.git",
+      "state" : {
+        "revision" : "7a2e3cd27de56f6d396e84f63beefd0267b55ccb",
+        "version" : "0.14.1"
+      }
+    },
+    {
       "identity" : "swift-collections",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-collections.git",
@@ -15,7 +24,7 @@
       "location" : "https://github.com/yanun0323/UIComponent.git",
       "state" : {
         "branch" : "master",
-        "revision" : "2f94bf147ff14a897dff4740f9964086dadec4a1"
+        "revision" : "353ec225e55c3ea6fa45202b2c7ae622de9da4b6"
       }
     }
   ],

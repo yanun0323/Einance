@@ -20,7 +20,9 @@ struct Interactor {
     var setting: UserSettingInteractor
     
     init(isMock: Bool, appstate: AppState) {
-        let repo: Repository = isMock ? MockDao() : Dao()
+        let repo: Repository = Dao()
+        _ = Sql.Init(isMock: isMock)
+        
         self.data = DataInteractor(appstate: appstate, repo: repo)
         self.system = SystemInteractor(appstate: appstate, repo: repo)
         self.setting = UserSettingInteractor(appstate: appstate, repo: repo)

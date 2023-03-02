@@ -13,12 +13,20 @@ struct HomeHeader: View {
                     .font(.title2)
             }
             ButtonCustom(width: buttonSize, height: buttonSize) {
-                
             } content: {
                 Image(systemName: "chart.xyaxis.line")
                     .font(.title2)
             }
             Spacer()
+#if DEBUG
+            ButtonCustom(width: buttonSize, height: buttonSize) {
+                container.interactor.system.PushRouterView(DebugView())
+            } content: {
+                Image(systemName: "hammer.fill")
+                    .font(.title2)
+            }
+            Spacer()
+#endif
             ButtonCustom(width: buttonSize, height: buttonSize) {
                 
             } content: {
@@ -38,8 +46,7 @@ struct HomeHeader: View {
 }
 
 // MARK: - View Block
-extension HomeHeader {
-}
+extension HomeHeader {}
 
 struct HomeHeader_Previews: PreviewProvider {
     static var previews: some View {

@@ -53,6 +53,17 @@ struct BudgetPage: View {
             UIPageControl.appearance().currentPageIndicatorTintColor = .darkGray
             UIPageControl.appearance().pageIndicatorTintColor = .lightGray
             UIPageControl.appearance().tintColor = .lightGray
+#if DEBUG
+            print("[DEBUG] Budget ID: \(budget.id), Card Count: \(budget.book.count)")
+            print("[DEBUG] Current Card ID: \(current.id), Name: \(current.name), Color: \(current.color)")
+#endif
+        }
+        .onReceive(container.appstate.updateBudgetIDPublisher) { id in
+            withAnimation {
+                if budget.id == id, let b = container.interactor.data.GetBudget(id) {
+                    budget = b
+                }
+            }
         }
     }
 }

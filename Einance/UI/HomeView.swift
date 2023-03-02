@@ -1,14 +1,15 @@
 import SwiftUI
+import UIComponent
 
 struct HomeView: View {
     @EnvironmentObject var container: DIContainer
     @State private var budget: Budget
-    @State private var current: Card
+    @State private var card: Card = .preview
+    @State private var cardExist: Bool = false
     @State private var hideAddButton: Bool = false
     
     init(injector: DIContainer) {
         self.budget = injector.interactor.data.CurrentBudget()
-        self.current = injector.interactor.data.CurrentCard()
     }
     
     var body: some View {
@@ -16,12 +17,24 @@ struct HomeView: View {
             VStack {
                 HomeHeader()
                     .padding(.horizontal)
-                BudgetPage(budget: budget, current: $current)
+                
+                if cardExist {
+                    BudgetPage(budget: budget, current: $card)
+                } else {
+                    Spacer()
+                    ButtonCustom(width: 100, height: 100) {
+                        container.interactor.system.PushActionView(CreateCardPanel())
+                    } content: {
+                        Image(systemName: "rectangle.fill.badge.plus")
+                            .font(.title)
+                    }
+                    Spacer()
+                }
             }
             VStack {
                 Spacer()
-                if !hideAddButton {
-                    AddRecordButton(current: $current, color: $current.color)
+                if cardExist && !hideAddButton {
+                    AddRecordButton(current: $card, color: $card.color)
                         .transition(.move(edge: .bottom))
                 }
             }
@@ -31,6 +44,15 @@ struct HomeView: View {
         .onReceive(container.appstate.actionViewPublisher) { output in
             withAnimation {
                 hideAddButton = (output != nil)
+            }
+        }
+        .onReceive(container.appstate.updateBudgetIDPublisher) { id in
+            withAnimation {
+                if let b = container.interactor.data.GetBudget(id) {
+                    cardExist = b.book.count != 0
+                    if cardExist { card = b.book[0] }
+                    budget = b
+                }
             }
         }
     }

@@ -4,12 +4,12 @@ import UIComponent
 struct CreateCardPanel: View {
     @EnvironmentObject private var container: DIContainer
     @FocusState private var focus: FocusField?
-    @State private var card = Card(name: "", amount: 0, color: .blue)
     @State private var nameInput = ""
     @State private var amountInput = ""
     @State private var displayInput: Card.Display = .month
     @State private var colorInput: Color = .blue
     @State private var fixedInput = false
+    @State private var creating = false
     
     var body: some View {
         VStack {
@@ -25,6 +25,29 @@ struct CreateCardPanel: View {
             .padding(.horizontal)
             ActionPanelConfirmButton(color: $colorInput, text: "global.create") {
                 withAnimation {
+                    if creating { return }
+                    creating = true
+                    
+                    let b = container.interactor.data.CurrentBudget()
+                    let card = Card(
+                        budgetID: b.id,
+                        index: b.book.count,
+                        name: nameInput,
+                        amount: Decimal(string: amountInput) ?? 0,
+                        display: displayInput,
+                        color: colorInput,
+                        fixed: fixedInput
+                    )
+                    let cardID = container.interactor.data.CreateCard(card)
+                    card.id = cardID
+                    
+                    b.book.append(card)
+                    b.amount += card.amount
+                    b.book.sort { c1, c2 in
+                        c1.index < c2.index
+                    }
+                    
+                    container.interactor.data.SetCurrentBudget(b)
                     container.interactor.system.ClearActionView()
                 }
             }
@@ -33,7 +56,6 @@ struct CreateCardPanel: View {
         .modifyPanelBackground()
         .padding()
         .onAppear {
-            card = Card(name: "", amount: 0, color: .blue)
             displayInput = .month
             focus = .input
             amountInput = ""
