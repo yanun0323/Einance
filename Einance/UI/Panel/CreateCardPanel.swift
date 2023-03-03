@@ -28,6 +28,14 @@ struct CreateCardPanel: View {
                     if creating { return }
                     creating = true
                     
+                    if nameInput.isEmpty {
+                        nameInput = String(localized: "panel.card.create.name.label.placeholder")
+                    }
+                    
+                    if amountInput.isEmpty {
+                        amountInput = String(localized: "panel.card.create.amount.label.placeholder")
+                    }
+                    
                     let b = container.interactor.data.CurrentBudget()
                     let card = Card(
                         budgetID: b.id,
@@ -142,6 +150,7 @@ extension CreateCardPanel {
 // MARK: - Property
 extension CreateCardPanel {
     var invalid: Bool {
+        return false
         nameInput.count == 0 || Decimal(string: amountInput) == nil
     }
 }

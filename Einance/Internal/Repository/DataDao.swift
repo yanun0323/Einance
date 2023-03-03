@@ -126,7 +126,8 @@ extension DataDao where Self: DataRepository {
             Record.cardID <- r.cardID,
             Record.date <- r.date,
             Record.cost <- r.cost,
-            Record.memo <- r.memo
+            Record.memo <- r.memo,
+            Record.fixed <- r.fixed
         )
         return try Sql.GetDriver().run(insert)
     }
@@ -136,7 +137,8 @@ extension DataDao where Self: DataRepository {
             Record.cardID <- r.cardID,
             Record.date <- r.date,
             Record.cost <- r.cost,
-            Record.memo <- r.memo
+            Record.memo <- r.memo,
+            Record.fixed <- r.fixed
         )
         try Sql.GetDriver().run(update)
     }
@@ -167,11 +169,11 @@ extension DataDao {
         let result = try Sql.GetDriver().prepare(query)
         for row in result {
             let r = try parseRecord(row)
-            if c.dateDict[r.date] == nil {
-                c.dateDict[r.date] = .init(records: [], cost: 0)
+            if c.dateDict[r.date.unixDay] == nil {
+                c.dateDict[r.date.unixDay] = .init(records: [], cost: 0)
             }
-            c.dateDict[r.date]?.records.append(r)
-            c.dateDict[r.date]?.cost += r.cost
+            c.dateDict[r.date.unixDay]?.records.append(r)
+            c.dateDict[r.date.unixDay]?.cost += r.cost
         }
         return c
     }
@@ -207,7 +209,8 @@ extension DataDao {
             cardID: try row.get(Record.cardID),
             date: try row.get(Record.date),
             cost: try row.get(Record.cost),
-            memo: try row.get(Record.memo)
+            memo: try row.get(Record.memo),
+            fixed: try row.get(Record.fixed)
         )
     }
 }

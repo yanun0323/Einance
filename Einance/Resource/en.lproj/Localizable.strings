@@ -25,7 +25,7 @@
 "panel.card.create.name.label" = "Name";
 "panel.card.create.name.label.placeholder" = "New Card";
 "panel.card.create.amount.label" = "Budget";
-"panel.card.create.amount.label.placeholder" = "1000";
+"panel.card.create.amount.label.placeholder" = "5000";
 "panel.card.create.color.label" = "Color";
 "panel.card.create.display.label" = "Type";
 "panel.card.create.fixed.label" = "Fixed";

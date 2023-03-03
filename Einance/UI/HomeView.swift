@@ -34,7 +34,7 @@ struct HomeView: View {
             VStack {
                 Spacer()
                 if cardExist && !hideAddButton {
-                    AddRecordButton(current: $card, color: $card.color)
+                    AddRecordButton(budget: budget, card: $card, color: $card.color)
                         .transition(.move(edge: .bottom))
                 }
             }

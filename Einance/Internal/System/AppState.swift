@@ -3,6 +3,7 @@ import Combine
 
 struct AppState {
     var updateBudgetIDPublisher: PassthroughSubject<Int64, Never> = .init()
+    var updateCardIDPublisher: PassthroughSubject<Int64, Never> = .init()
     
     var routerViewPublisher: PassthroughSubject<AnyView?, Never> = .init()
     var actionViewPublisher: PassthroughSubject<AnyView?, Never> = .init()

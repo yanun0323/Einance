@@ -4,15 +4,17 @@ import UIComponent
 struct CreateRecordPanel: View {
     @EnvironmentObject private var container: DIContainer
     @FocusState private var focus: FocusField?
-    @State private var record = Record()
     @State private var costInput = ""
     @State private var dateInput: Date = .now
     @State private var memoInput = ""
     @State private var showDatePicker = false
     @State private var dateStart: Date = .zero
     @State private var dateEnd: Date? = nil
+    @State private var creating: Bool = false
     @State var today: Date
     @State var isForever: Bool
+    @State var budget: Budget
+    @Binding var card: Card
     
     var body: some View {
         ZStack {
@@ -29,6 +31,30 @@ struct CreateRecordPanel: View {
                     
                     ActionPanelConfirmButton(color: .constant(.blue), text: "global.create") {
                         withAnimation {
+                            if creating { return }
+                            creating = true
+                            
+                            guard let cost = Decimal(string: costInput) else {
+                                print("[ERROR] transform cost input to decimal failed")
+                                creating = false
+                                return
+                            }
+                            let r = Record(cardID: card.id, date: dateInput, cost: cost, memo: memoInput)
+                            let id = container.interactor.data.CreateRecord(r)
+                            r.id = id
+                            card.cost += r.cost
+                            card.balance -= r.cost
+                            if card.dateDict[r.date.unixDay] == nil {
+                                card.dateDict[r.date.unixDay] = Card.RecordSet()
+                            }
+                            card.dateDict[r.date.unixDay]?.records.append(r)
+                            card.dateDict[r.date.unixDay]?.cost += r.cost
+                            
+                            budget.cost += r.cost
+                            budget.balance -= r.cost
+                            
+                            container.interactor.data.UpdateCard(card)
+                            container.interactor.data.UpdateBudget(budget)
                             container.interactor.system.ClearActionView()
                         }
                     }
@@ -57,7 +83,6 @@ struct CreateRecordPanel: View {
                 }
             }
             .onAppear {
-                record = Record()
                 focus = .input
                 costInput = ""
                 dateInput = today
@@ -136,7 +161,7 @@ extension CreateRecordPanel {
 
 struct CreateRecordPanel_Previews: PreviewProvider {
     static var previews: some View {
-        CreateRecordPanel(today: .now, isForever: false)
+        CreateRecordPanel(today: .now, isForever: false, budget: .preview, card: .constant(.preview))
             .inject(DIContainer.preview)
     }
 }

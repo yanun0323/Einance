@@ -7,19 +7,22 @@ class Record {
     var date: Date
     var cost: Decimal
     var memo: String
+    var fixed: Bool
     
     init(
         id: Int64 = 0,
         cardID: Int64 = 0,
         date: Date = .now,
         cost: Decimal = 0,
-        memo: String = ""
+        memo: String = "",
+        fixed: Bool = false
     ) {
         self.id = id
         self.cardID = cardID
         self.date = date
         self.cost = cost
         self.memo = memo
+        self.fixed = fixed
     }
 }
 
@@ -33,6 +36,7 @@ extension Record {
     static let date = Expression<Date>("date")
     static let cost = Expression<Decimal>("cost")
     static let memo = Expression<String>("memo")
+    static let fixed = Expression<Bool>("fixed")
     
     static func migrate(_ conn: Connection) throws {
         try conn.run(GetTable().create(ifNotExists: true) { t in
@@ -41,6 +45,7 @@ extension Record {
             t.column(date)
             t.column(cost)
             t.column(memo)
+            t.column(fixed)
         })
     }
 }

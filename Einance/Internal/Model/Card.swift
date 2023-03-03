@@ -14,7 +14,7 @@ final class Card {
     var display: Card.Display
     var color: Color
     var fixed: Bool
-    var dateDict: OrderedDictionary<Date,RecordSet>
+    var dateDict: OrderedDictionary<Int,RecordSet>
     
     init(
         id: Int64 = 0,
@@ -42,11 +42,11 @@ final class Card {
         self.balance = balance
         self.dateDict = [:]
         for record in records {
-            if dateDict[record.date] == nil {
-                dateDict[record.date] = RecordSet(records: [], cost: 0)
+            if dateDict[record.date.unixDay] == nil {
+                dateDict[record.date.unixDay] = RecordSet()
             }
-            dateDict[record.date]?.records.append(record)
-            dateDict[record.date]?.cost += record.cost
+            dateDict[record.date.unixDay]?.records.append(record)
+            dateDict[record.date.unixDay]?.cost += record.cost
             self.cost += record.cost
         }
         self.balance = self.amount - self.cost
@@ -122,8 +122,8 @@ extension Card {
 // MARK: - Card.RecordSet
 extension Card {
     struct RecordSet {
-        var records: [Record]
-        var cost: Decimal
+        var records: [Record] = []
+        var cost: Decimal = 0
     }
 }
 

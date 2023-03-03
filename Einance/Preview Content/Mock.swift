@@ -12,6 +12,7 @@ extension Budget {
         Budget(id: -1, start: Date(from: "20221105", .Numeric)!, book: [
             .preview,
             .preview2,
+            .preview3,
         ])
     }
 }
@@ -32,6 +33,10 @@ extension Card {
             Record(id: -6, date: Date(from: "20221108", .Numeric)!, cost: 113, memo: "7-11"),
             Record(id: -7, date: Date(from: "20221117", .Numeric)!, cost: 183, memo: "摩斯漢堡"),
         ], color: .orange)
+    }
+    
+    static var preview3: Card {
+        Card(id: -3, name: "空的", amount: 10000, display: .forever, records: [], color: .cyan)
     }
 }
 
