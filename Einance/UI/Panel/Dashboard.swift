@@ -2,7 +2,7 @@ import SwiftUI
 import UIComponent
 
 struct Dashboard: View {
-    @State var budget: Budget
+    @ObservedObject var current: Current
     var body: some View {
         VStack(spacing: 10) {
             HStack {
@@ -10,11 +10,11 @@ struct Dashboard: View {
                 Spacer()
                 Text("label.cost")
             }
-            BarBlock
+            _BarBlock
             HStack {
-                Text(budget.balance.description)
+                Text(current.budget.balance.description)
                 Spacer()
-                Text(budget.cost.description)
+                Text(current.budget.cost.description)
             }
         }
         .font(.system(size: 20, weight: .regular, design: .rounded))
@@ -25,13 +25,13 @@ struct Dashboard: View {
 
 // MARK: - View Block
 extension Dashboard {
-    var BarBlock: some View {
+    var _BarBlock: some View {
         GeometryReader { bounds in
             HStack(spacing: 0) {
                 Spacer()
-                ForEach(budget.book) { card in
+                ForEach(current.budget.book) { card in
                     Rectangle()
-                        .frame(width: (card.cost/budget.amount).ToCGFloat()*bounds.size.width)
+                        .frame(width: (card.cost/current.budget.amount).ToCGFloat()*bounds.size.width)
                         .foregroundColor(card.color)
                 }
             }
@@ -44,6 +44,6 @@ extension Dashboard {
 
 struct Dashboard_Previews: PreviewProvider {
     static var previews: some View {
-        Dashboard(budget: .preview)
+        Dashboard(current: .preview)
     }
 }

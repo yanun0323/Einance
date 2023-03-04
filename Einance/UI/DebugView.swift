@@ -43,7 +43,7 @@ struct DebugView: View {
     
     func anyButton(_ title: String, _ color: Color = .gray, _ action: @escaping () -> Void) -> some View {
         ButtonCustom(width: 200, height: 50, color: color, radius: 5, shadow: 3) {
-            withAnimation {
+            withAnimation(.quick) {
                 trigger.toggle()
                 action()
             }
@@ -54,7 +54,7 @@ struct DebugView: View {
     }
     
     func refreshInfo() {
-        System.Invoke("[DEBUG] refresh info") {
+        System.Catch("[DEBUG] refresh info") {
             let db = Sql.GetDriver()
             
             recordCount = try db.scalar(Record.GetTable().count)

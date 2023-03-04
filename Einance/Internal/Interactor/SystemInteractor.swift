@@ -37,7 +37,7 @@ extension SystemInteractor {
     }
     
     func DismissKeyboard() {
-        withAnimation {
+        withAnimation(.quick) {
             UIApplication.shared.DismissKeyboard()
         }
     }

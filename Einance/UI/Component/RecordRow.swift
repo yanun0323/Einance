@@ -3,13 +3,13 @@ import UIComponent
 
 struct RecordRow: View {
     @EnvironmentObject private var container: DIContainer
-    @State var record: Record
-    @State var color: Color
-    @State var isForever: Bool
+    @ObservedObject var current: Current
+    @ObservedObject var card: Card
+    @ObservedObject var record: Record
     
     var body: some View {
         HStack {
-            Block(width: 4, color: color)
+            Block(width: 4, color: card.color)
                 .padding(.trailing, 10)
             Text(record.memo)
                 .foregroundColor(.primary50)
@@ -23,7 +23,7 @@ struct RecordRow: View {
         .swipeActions(edge: .trailing, allowsFullSwipe: false) {
             HStack {
                 Button(role: .destructive) {
-                    withAnimation {
+                    withAnimation(.quick) {
                         print("record deleted")
                     }
                 } label: {
@@ -31,7 +31,7 @@ struct RecordRow: View {
                 }
                 
                 Button(role: .none) {
-                    container.interactor.system.PushActionView(EditRecordPanel(record: record, isForever: isForever))
+                    container.interactor.system.PushActionView(EditRecordPanel(current: current, card: card, record: record))
                 } label: {
                     Label("Edit", systemImage: "square.and.pencil")
                 }
@@ -42,7 +42,7 @@ struct RecordRow: View {
 
 struct RecordRow_Previews: PreviewProvider {
     static var previews: some View {
-        RecordRow(record: .preview, color: .green, isForever: false)
+        RecordRow(budget: .preview, card: .preview, record: .preview)
             .inject(DIContainer.preview)
             .previewLayout(.sizeThatFits)
     }

@@ -4,28 +4,53 @@ import UIComponent
 struct EditCardPanel: View {
     @EnvironmentObject private var container: DIContainer
     @FocusState private var focus: FocusField?
-    @State private var nameInput = ""
-    @State private var amountInput = ""
-    @State private var displayInput: Card.Display = .month
-    @State private var colorInput: Color = .blue
-    @State private var fixedInput = false
-    @State var card: Card
+    @State private var nameInput: String
+    @State private var amountInput: String
+    @State private var displayInput: Card.Display
+    @State private var colorInput: Color
+    @State private var fixedInput: Bool
+    
+    @State private var updating: Bool = false
+    
+    @ObservedObject var current: Current
+    @ObservedObject var card: Card
+    
+    init(current: Current, card: Card) {
+        self._current = .init(wrappedValue: current)
+        self._card = .init(wrappedValue: card)
+        self._nameInput = .init(wrappedValue: card.name)
+        self._amountInput = .init(wrappedValue: card.amount.description)
+        self._displayInput = .init(wrappedValue: card.display)
+        self._colorInput = .init(wrappedValue: card.color)
+        self._fixedInput = .init(wrappedValue: card.fixed)
+    }
+    
     var body: some View {
         VStack {
-            TitleBlock
+            _TitleBlock
                 .padding()
             VStack {
-                CardNameBlock
-                CardAmountBlock
-                CardColorBlock
+                _CardNameBlock
+                _CardAmountBlock
+                _CardColorBlock
                 if card.display != .forever {
-                    CardDisplayBlock
-                    CardFixedBlock
+                    _CardDisplayBlock
+                    _CardFixedBlock
                 }
             }
             .padding(.horizontal)
             ActionPanelConfirmButton(color: $colorInput, text: "global.edit") {
-                withAnimation {
+                withAnimation(.quick) {
+                    if updating { return }
+                    updating = true
+                    
+                    guard let amount = Decimal(string: amountInput) else {
+                        print("[ERROR] transform amount input to decimal failed")
+                        updating = false
+                        return
+                    }
+                    
+                    container.interactor.data.UpdateCard(budget, card, name: nameInput, amount: amount, color: colorInput, display: displayInput, fixed: fixedInput)
                     container.interactor.system.ClearActionView()
                 }
             }
@@ -34,19 +59,16 @@ struct EditCardPanel: View {
         .modifyPanelBackground()
         .padding()
         .onAppear {
-            focus = .input
-            nameInput = card.name
-            amountInput = card.amount.description
-            displayInput = card.display
-            colorInput = card.color
-            fixedInput = card.fixed
+            withAnimation(.quick) {
+                focus = .input
+            }
         }
     }
 }
 
 // MARK: - View Block
 extension EditCardPanel {
-    var TitleBlock: some View {
+    var _TitleBlock: some View {
         HStack {
             Text("panel.card.create.title")
                 .font(Setting.panelTitleFont)
@@ -55,7 +77,7 @@ extension EditCardPanel {
         }
     }
     
-    var CardNameBlock: some View {
+    var _CardNameBlock: some View {
         HStack {
             Text("panel.card.create.name.label")
                 .font(Setting.cardPanelLabelFont)
@@ -67,7 +89,7 @@ extension EditCardPanel {
         }
     }
     
-    var CardAmountBlock: some View {
+    var _CardAmountBlock: some View {
         HStack {
             Text("panel.card.create.amount.label")
                 .font(Setting.cardPanelLabelFont)
@@ -79,7 +101,7 @@ extension EditCardPanel {
         }
     }
     
-    var CardColorBlock: some View {
+    var _CardColorBlock: some View {
         HStack {
             Text("panel.card.create.color.label")
                 .font(Setting.cardPanelLabelFont)
@@ -88,7 +110,7 @@ extension EditCardPanel {
         }
     }
     
-    var CardDisplayBlock: some View {
+    var _CardDisplayBlock: some View {
         HStack {
             Text("panel.card.create.display.label")
                 .font(Setting.cardPanelLabelFont)
@@ -112,7 +134,7 @@ extension EditCardPanel {
         }
     }
     
-    var CardFixedBlock: some View {
+    var _CardFixedBlock: some View {
         HStack {
             Text("panel.card.create.fixed.label")
                 .font(Setting.cardPanelLabelFont)
@@ -131,7 +153,7 @@ extension EditCardPanel {
 
 struct EditCardPanel_Previews: PreviewProvider {
     static var previews: some View {
-        EditCardPanel(card: .preview)
+        EditCardPanel(current: .preview, card: .preview)
             .inject(DIContainer.preview)
     }
 }

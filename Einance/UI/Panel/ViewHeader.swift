@@ -2,7 +2,7 @@ import SwiftUI
 import UIComponent
 
 struct ViewHeader: View {
-    @EnvironmentObject var container: DIContainer
+    @EnvironmentObject private var container: DIContainer
     let title: String
     let length: CGFloat = 45
     

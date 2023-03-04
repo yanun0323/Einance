@@ -41,7 +41,7 @@ extension Date {
 }
 
 extension System {
-    static func Invoke<T>(_ log: String, _ action: () throws -> T?) -> T? where T: Any {
+    static func Catch<T>(_ log: String, _ action: () throws -> T?) -> T? where T: Any {
         do {
             return try action()
         } catch {

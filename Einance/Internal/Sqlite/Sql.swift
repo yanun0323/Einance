@@ -1,5 +1,6 @@
 import SwiftUI
 import SQLite
+import UIComponent
 
 struct Sql {
     static private var db: Connection? = nil
@@ -14,8 +15,9 @@ extension Sql {
     }
     
     static func Init(isMock: Bool) -> Connection {
-        let path = "file:///Users/yanun/Desktop/Project/Xcode/database.sqlite"
-        print("[DEBUG] database file path: \(path)")
+#if DEBUG
+        print("[DEBUG] database file path: \(filePath("database").absoluteString)")
+#endif
         var conn = try! Connection()
         if !isMock {
             conn = try! Connection(filePath("database").absoluteString)
@@ -31,23 +33,14 @@ extension Sql {
         return try! FileManager.default.url(for: .applicationSupportDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
             .appendingPathComponent("\(filename).sqlite")
     }
-    
-    static private func mockFilePath(_ filename: String) -> URL {
-        return try! FileManager.default.url(for: .userDirectory, in: .allDomainsMask, appropriateFor: nil, create: true)
-            .appendingPathComponent("yanun/Desktop/Project/Xcode/\(filename).sqlite")
-    }
 }
 
 extension Connection {
     func Init() {
-        do {
-            
+        System.Catch("migrate tables") {
             try Record.migrate(self)
             try Card.migrate(self)
             try Budget.migrate(self)
-            
-        } catch {
-            print("[ERROR] migrate tables failed, err: \(error)")
         }
     }
 }

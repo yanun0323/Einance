@@ -11,20 +11,28 @@ struct CreateCardPanel: View {
     @State private var fixedInput = false
     @State private var creating = false
     
+    @ObservedObject var current: Current
+    
+    init(current: Current) {
+        self._current = .init(wrappedValue: current)
+        self.displayInput = .month
+        self.amountInput = ""
+    }
+    
     var body: some View {
         VStack {
-            TitleBlock
+            _TitleBlock
                 .padding()
-            VStack {
-                CardNameBlock
-                CardAmountBlock
-                CardColorBlock
-                CardDisplayBlock
-                CardFixedBlock
+            VStack(spacing: 10) {
+                _CardNameBlock
+                _CardAmountBlock
+                _CardColorBlock
+                _CardDisplayBlock
+                _CardFixedBlock
             }
             .padding(.horizontal)
             ActionPanelConfirmButton(color: $colorInput, text: "global.create") {
-                withAnimation {
+                withAnimation(.quick) {
                     if creating { return }
                     creating = true
                     
@@ -36,44 +44,30 @@ struct CreateCardPanel: View {
                         amountInput = String(localized: "panel.card.create.amount.label.placeholder")
                     }
                     
-                    let b = container.interactor.data.CurrentBudget()
-                    let card = Card(
-                        budgetID: b.id,
-                        index: b.book.count,
-                        name: nameInput,
-                        amount: Decimal(string: amountInput) ?? 0,
-                        display: displayInput,
-                        color: colorInput,
-                        fixed: fixedInput
-                    )
-                    let cardID = container.interactor.data.CreateCard(card)
-                    card.id = cardID
-                    
-                    b.book.append(card)
-                    b.amount += card.amount
-                    b.book.sort { c1, c2 in
-                        c1.index < c2.index
+                    guard let amount = Decimal(string: amountInput) else {
+                        print("[ERROR] transform amount input to decimal failed")
+                        creating = false
+                        return
                     }
                     
-                    container.interactor.data.SetCurrentBudget(b)
+                    container.interactor.data.CreateCard(current.budget, name: nameInput, amount: amount, display: displayInput, color: colorInput, fixed: fixedInput)
                     container.interactor.system.ClearActionView()
                 }
             }
-            .disabled(invalid)
         }
         .modifyPanelBackground()
         .padding()
         .onAppear {
-            displayInput = .month
-            focus = .input
-            amountInput = ""
+            withAnimation(.quick) {
+                focus = .input
+            }
         }
     }
 }
 
 // MARK: - View Block
 extension CreateCardPanel {
-    var TitleBlock: some View {
+    var _TitleBlock: some View {
         HStack {
             Text("panel.card.create.title")
                 .font(Setting.panelTitleFont)
@@ -82,7 +76,7 @@ extension CreateCardPanel {
         }
     }
     
-    var CardNameBlock: some View {
+    var _CardNameBlock: some View {
         HStack {
             Text("panel.card.create.name.label")
                 .font(Setting.cardPanelLabelFont)
@@ -94,7 +88,7 @@ extension CreateCardPanel {
         }
     }
     
-    var CardAmountBlock: some View {
+    var _CardAmountBlock: some View {
         HStack {
             Text("panel.card.create.amount.label")
                 .font(Setting.cardPanelLabelFont)
@@ -106,7 +100,7 @@ extension CreateCardPanel {
         }
     }
     
-    var CardColorBlock: some View {
+    var _CardColorBlock: some View {
         HStack {
             Text("panel.card.create.color.label")
                 .font(Setting.cardPanelLabelFont)
@@ -115,7 +109,7 @@ extension CreateCardPanel {
         }
     }
     
-    var CardDisplayBlock: some View {
+    var _CardDisplayBlock: some View {
         HStack {
             Text("panel.card.create.display.label")
                 .font(Setting.cardPanelLabelFont)
@@ -137,7 +131,7 @@ extension CreateCardPanel {
         }
     }
     
-    var CardFixedBlock: some View {
+    var _CardFixedBlock: some View {
         HStack {
             Text("panel.card.create.fixed.label")
                 .font(Setting.cardPanelLabelFont)
@@ -148,16 +142,11 @@ extension CreateCardPanel {
 }
 
 // MARK: - Property
-extension CreateCardPanel {
-    var invalid: Bool {
-        return false
-        nameInput.count == 0 || Decimal(string: amountInput) == nil
-    }
-}
+extension CreateCardPanel {}
 
 struct CreateCardPanel_Previews: PreviewProvider {
     static var previews: some View {
-        CreateCardPanel()
+        CreateCardPanel(current: .preview)
             .inject(DIContainer.preview)
     }
 }

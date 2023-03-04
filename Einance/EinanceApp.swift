@@ -18,16 +18,16 @@ struct EinanceApp: App {
 #endif
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(injector: container)
                 .inject(container)
                 .preferredColorScheme(appearance)
                 .onReceive(container.appstate.appearancePublisher) { output in
-                    withAnimation {
+                    withAnimation(.quick) {
                         appearance = output
                     }
                 }
                 .onAppear {
-                    withAnimation {
+                    withAnimation(.quick) {
                         appearance = container.interactor.setting.GetAppearance()
                     }
                 }

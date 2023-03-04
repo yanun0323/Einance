@@ -7,30 +7,41 @@ struct CreateRecordPanel: View {
     @State private var costInput = ""
     @State private var dateInput: Date = .now
     @State private var memoInput = ""
+    @State private var fixedInput: Bool = false
     @State private var showDatePicker = false
     @State private var dateStart: Date = .zero
     @State private var dateEnd: Date? = nil
     @State private var creating: Bool = false
-    @State var today: Date
-    @State var isForever: Bool
-    @State var budget: Budget
-    @Binding var card: Card
+    
+    @ObservedObject var current: Current
+    @ObservedObject var card: Card
+    
+    init(current: Current, card: Card, today: Date = .now) {
+        self._current = .init(wrappedValue: current)
+        self._card = .init(wrappedValue: card)
+        self.costInput = ""
+        self.dateInput = today
+        self.memoInput = ""
+        if card.display.isForever { return }
+        dateStart = today.firstDayOfMonth
+        self.dateEnd = today.AddMonth(1).AddDay(-1)
+    }
     
     var body: some View {
         ZStack {
             VStack {
                 VStack {
-                    TitleBlock
+                    _TitleBlock
                         .padding()
                     VStack {
-                        RecordCostBlock
-                        RecordMemoBlock
-                        RecordDateBlock
+                        _RecordCostBlock
+                        _RecordMemoBlock
+                        _RecordDateBlock
                     }
                     .padding(.horizontal)
                     
-                    ActionPanelConfirmButton(color: .constant(.blue), text: "global.create") {
-                        withAnimation {
+                    ActionPanelConfirmButton(color: $card.color, text: "global.create") {
+                        withAnimation(.quick) {
                             if creating { return }
                             creating = true
                             
@@ -39,22 +50,8 @@ struct CreateRecordPanel: View {
                                 creating = false
                                 return
                             }
-                            let r = Record(cardID: card.id, date: dateInput, cost: cost, memo: memoInput)
-                            let id = container.interactor.data.CreateRecord(r)
-                            r.id = id
-                            card.cost += r.cost
-                            card.balance -= r.cost
-                            if card.dateDict[r.date.unixDay] == nil {
-                                card.dateDict[r.date.unixDay] = Card.RecordSet()
-                            }
-                            card.dateDict[r.date.unixDay]?.records.append(r)
-                            card.dateDict[r.date.unixDay]?.cost += r.cost
                             
-                            budget.cost += r.cost
-                            budget.balance -= r.cost
-                            
-                            container.interactor.data.UpdateCard(card)
-                            container.interactor.data.UpdateBudget(budget)
+                            container.interactor.data.CreateRecord(current.budget, card, date: dateInput, cost: cost, memo: memoInput, fixed: fixedInput)
                             container.interactor.system.ClearActionView()
                         }
                     }
@@ -71,25 +68,21 @@ struct CreateRecordPanel: View {
             }
             .onReceive(container.appstate.keyboardPublisher) { output in
                 if output {
-                    withAnimation {
+                    withAnimation(.quick) {
                         container.interactor.system.PushPickerState(isOn: false)
                     }
                 }
             }
             .onReceive(container.appstate.pickerPublisher) { output in
                 if output { return }
-                withAnimation {
+                withAnimation(.quick) {
                     showDatePicker = output
                 }
             }
             .onAppear {
-                focus = .input
-                costInput = ""
-                dateInput = today
-                memoInput = ""
-                if isForever { return }
-                dateStart = today.firstDayOfMonth
-                dateEnd = today.AddMonth(1).AddDay(-1)
+                withAnimation(.quick) {
+                    focus = .input
+                }
             }
         }
         
@@ -97,7 +90,7 @@ struct CreateRecordPanel: View {
 }
 
 extension CreateRecordPanel {
-    var TitleBlock: some View {
+    var _TitleBlock: some View {
         HStack {
             Text("panel.record.create.title")
                 .font(Setting.panelTitleFont)
@@ -107,7 +100,7 @@ extension CreateRecordPanel {
     }
     
     
-    var RecordCostBlock: some View {
+    var _RecordCostBlock: some View {
         HStack {
             Text("panel.record.create.cost.label")
                 .font(Setting.cardPanelLabelFont)
@@ -120,7 +113,7 @@ extension CreateRecordPanel {
         }
     }
     
-    var RecordMemoBlock: some View {
+    var _RecordMemoBlock: some View {
         HStack {
             Text("panel.record.create.memo.label")
                 .font(Setting.cardPanelLabelFont)
@@ -131,7 +124,7 @@ extension CreateRecordPanel {
         }
     }
     
-    var RecordDateBlock: some View {
+    var _RecordDateBlock: some View {
         HStack {
             Text("panel.record.create.date.label")
                 .font(Setting.cardPanelLabelFont)
@@ -139,14 +132,14 @@ extension CreateRecordPanel {
             Button {
                 container.interactor.system.DismissKeyboard()
                 container.interactor.system.PushPickerState(isOn: true)
-                withAnimation {
+                withAnimation(.quick) {
                     showDatePicker = true
                 }
             } label: {
                 Text(dateInput.String("yyyy.MM.dd hh:mm"))
                     .monospacedDigit()
                     .kerning(1)
-                    .foregroundColor(.blue)
+                    .foregroundColor(card.color)
             }
 
         }
@@ -161,7 +154,7 @@ extension CreateRecordPanel {
 
 struct CreateRecordPanel_Previews: PreviewProvider {
     static var previews: some View {
-        CreateRecordPanel(today: .now, isForever: false, budget: .preview, card: .constant(.preview))
+        CreateRecordPanel(current: .preview, card: .preview, today: .now)
             .inject(DIContainer.preview)
     }
 }

@@ -50,7 +50,10 @@
 		F691B86A29AE02DF00E05E05 /* SQLite in Frameworks */ = {isa = PBXBuildFile; productRef = F691B86929AE02DF00E05E05 /* SQLite */; };
 		F691B86C29AE043700E05E05 /* Sql.swift in Sources */ = {isa = PBXBuildFile; fileRef = F691B86B29AE043700E05E05 /* Sql.swift */; };
 		F691B87029AE233F00E05E05 /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F691B86F29AE233F00E05E05 /* Helper.swift */; };
+		F6BD3EB529B3378800DA5669 /* Current.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6BD3EB429B3378800DA5669 /* Current.swift */; };
 		F6EA06A029AFEDC2005D08D7 /* DebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6EA069F29AFEDC2005D08D7 /* DebugView.swift */; };
+		F6EA06A329B200F5005D08D7 /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6EA06A229B200F5005D08D7 /* WelcomeView.swift */; };
+		F6EA06A929B2276E005D08D7 /* Table.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6EA06A829B2276E005D08D7 /* Table.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -96,8 +99,11 @@
 		F62C884C2928C2960059F914 /* HomeHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeHeader.swift; sourceTree = "<group>"; };
 		F691B86B29AE043700E05E05 /* Sql.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sql.swift; sourceTree = "<group>"; };
 		F691B86F29AE233F00E05E05 /* Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
+		F6BD3EB429B3378800DA5669 /* Current.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Current.swift; sourceTree = "<group>"; };
 		F6EA069F29AFEDC2005D08D7 /* DebugView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugView.swift; sourceTree = "<group>"; };
 		F6EA06A129B0AC83005D08D7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		F6EA06A229B200F5005D08D7 /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
+		F6EA06A829B2276E005D08D7 /* Table.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Table.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -168,6 +174,7 @@
 				A8357FD929293F010086720F /* HomeView.swift */,
 				A87219EE2968131F00D52995 /* SettingView.swift */,
 				F6EA069F29AFEDC2005D08D7 /* DebugView.swift */,
+				F6EA06A229B200F5005D08D7 /* WelcomeView.swift */,
 				A8E52C66295AF2F100AC80B0 /* Panel */,
 				A8B09025291D69CC008D9B33 /* Component */,
 			);
@@ -179,11 +186,11 @@
 			children = (
 				A8F43BFD2951C52100C89EDE /* Config */,
 				A8A75B01291CCE3000EF9D8A /* Util */,
+				A8A75AFC291CCE1200EF9D8A /* Model */,
 				A8A75B00291CCE2900EF9D8A /* Sqlite */,
 				A8A75AFF291CCE2600EF9D8A /* System */,
 				A8A75AFE291CCE2000EF9D8A /* Interactor */,
 				A8A75AFD291CCE1600EF9D8A /* Repository */,
-				A8A75AFC291CCE1200EF9D8A /* Model */,
 			);
 			path = Internal;
 			sourceTree = "<group>";
@@ -191,6 +198,7 @@
 		A8A75AFC291CCE1200EF9D8A /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				F6BD3EB429B3378800DA5669 /* Current.swift */,
 				A8A75B0C291CF07100EF9D8A /* Budget.swift */,
 				A8A75B0E291CF24A00EF9D8A /* Card.swift */,
 				A8A75B10291CF25000EF9D8A /* Record.swift */,
@@ -235,6 +243,7 @@
 			children = (
 				F691B86B29AE043700E05E05 /* Sql.swift */,
 				F691B86F29AE233F00E05E05 /* Helper.swift */,
+				F6EA06A829B2276E005D08D7 /* Table.swift */,
 			);
 			path = Sqlite;
 			sourceTree = "<group>";
@@ -370,7 +379,9 @@
 				A8A75AEB291CCCBC00EF9D8A /* ContentView.swift in Sources */,
 				A8B09022291CFF2B008D9B33 /* Mock.swift in Sources */,
 				A87219F32968149C00D52995 /* UserSettingDao.swift in Sources */,
+				F6EA06A929B2276E005D08D7 /* Table.swift in Sources */,
 				A8E52C76296477C200AC80B0 /* EditRecordPanel.swift in Sources */,
+				F6EA06A329B200F5005D08D7 /* WelcomeView.swift in Sources */,
 				A8E52C6C295BE62E00AC80B0 /* ActionPanelConfirmButton.swift in Sources */,
 				A87219F5296830E600D52995 /* ViewHeader.swift in Sources */,
 				A87219F12968144400D52995 /* UserSettingInteractor.swift in Sources */,
@@ -387,6 +398,7 @@
 				A8A75B0B291CD1E700EF9D8A /* Dao.swift in Sources */,
 				A8F43BFF2951C52E00C89EDE /* Setting.swift in Sources */,
 				A8E52C68295B063F00AC80B0 /* ActionPanelCloseButton.swift in Sources */,
+				F6BD3EB529B3378800DA5669 /* Current.swift in Sources */,
 				A8E52C74296477B400AC80B0 /* EditCardPanel.swift in Sources */,
 				A8E52C6E295BE91600AC80B0 /* DatePickerCustom.swift in Sources */,
 				A87219ED2967F60700D52995 /* AddRecordButton.swift in Sources */,

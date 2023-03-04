@@ -4,30 +4,58 @@ import UIComponent
 struct EditRecordPanel: View {
     @EnvironmentObject private var container: DIContainer
     @FocusState private var focus: FocusField?
-    @State private var costInput = ""
-    @State private var dateInput: Date = .now
-    @State private var memoInput = ""
+    @State private var costInput: String
+    @State private var dateInput: Date
+    @State private var memoInput: String
+    @State private var fixedInput: Bool
+    
     @State private var showDatePicker = false
     @State private var dateStart: Date = .zero
     @State private var dateEnd: Date? = nil
-    @State var record: Record
-    @State var isForever: Bool
+    @State private var updating: Bool = false
+    
+    @ObservedObject var current: Current
+    @ObservedObject var card: Card
+    @ObservedObject var record: Record
+    
+    init(current: Current, card: Card, record: Record) {
+        self._current = .init(wrappedValue: current)
+        self._card = .init(wrappedValue: card)
+        self._record = .init(wrappedValue: record)
+        self._costInput = .init(wrappedValue:record.cost.description)
+        self._dateInput = .init(wrappedValue:record.date)
+        self._memoInput = .init(wrappedValue:record.memo)
+        self._fixedInput = .init(wrappedValue: record.fixed)
+        if card.display.isForever { return }
+        self.dateStart = record.date.firstDayOfMonth
+        self.dateEnd = record.date.AddMonth(1).AddDay(-1)
+    }
     
     var body: some View {
         ZStack {
             VStack {
                 VStack {
-                    TitleBlock
+                    _TitleBlock
                         .padding()
                     VStack {
-                        RecordCostBlock
-                        RecordMemoBlock
-                        RecordDateBlock
+                        _RecordCostBlock
+                        _RecordMemoBlock
+                        _RecordDateBlock
                     }
                     .padding(.horizontal)
                     
-                    ActionPanelConfirmButton(color: .constant(.blue), text: "global.edit") {
-                        withAnimation {
+                    ActionPanelConfirmButton(color: $card.color, text: "global.edit") {
+                        withAnimation(.quick) {
+                            if updating { return }
+                            updating = true
+                            
+                            guard let cost = Decimal(string: costInput) else {
+                                print("[ERROR] transform cost input to decimal failed")
+                                updating = false
+                                return
+                            }
+                            
+                            container.interactor.data.UpdateRecord(current.budget, card, record, date: dateInput, cost: cost, memo: memoInput, fixed: fixedInput)
                             container.interactor.system.ClearActionView()
                         }
                     }
@@ -44,32 +72,28 @@ struct EditRecordPanel: View {
             }
             .onReceive(container.appstate.keyboardPublisher) { output in
                 if output {
-                    withAnimation {
+                    withAnimation(.quick) {
                         container.interactor.system.PushPickerState(isOn: false)
                     }
                 }
             }
             .onReceive(container.appstate.pickerPublisher) { output in
                 if output { return }
-                withAnimation {
+                withAnimation(.quick) {
                     showDatePicker = output
                 }
             }
             .onAppear {
-                focus = .input
-                costInput = record.cost.description
-                dateInput = record.date
-                memoInput = record.memo
-                if isForever { return }
-                dateStart = record.date.firstDayOfMonth
-                dateEnd = record.date.AddMonth(1).AddDay(-1)
+                withAnimation(.quick) {
+                    focus = .input
+                }
             }
         }
     }
 }
 
 extension EditRecordPanel {
-    var TitleBlock: some View {
+    var _TitleBlock: some View {
         HStack {
             Text("panel.record.edit.title")
                 .font(Setting.panelTitleFont)
@@ -79,7 +103,7 @@ extension EditRecordPanel {
     }
     
     
-    var RecordCostBlock: some View {
+    var _RecordCostBlock: some View {
         HStack {
             Text("panel.record.create.cost.label")
                 .font(Setting.cardPanelLabelFont)
@@ -92,7 +116,7 @@ extension EditRecordPanel {
         }
     }
     
-    var RecordMemoBlock: some View {
+    var _RecordMemoBlock: some View {
         HStack {
             Text("panel.record.create.memo.label")
                 .font(Setting.cardPanelLabelFont)
@@ -100,11 +124,10 @@ extension EditRecordPanel {
                 .textFieldStyle(.plain)
                 .font(Setting.cardPanelInputFont)
                 .multilineTextAlignment(.trailing)
-                .focused($focus, equals: .input)
         }
     }
     
-    var RecordDateBlock: some View {
+    var _RecordDateBlock: some View {
         HStack {
             Text("panel.record.create.date.label")
                 .font(Setting.cardPanelLabelFont)
@@ -112,14 +135,14 @@ extension EditRecordPanel {
             Button {
                 container.interactor.system.DismissKeyboard()
                 container.interactor.system.PushPickerState(isOn: true)
-                withAnimation {
+                withAnimation(.quick) {
                     showDatePicker = true
                 }
             } label: {
                 Text(dateInput.String("yyyy.MM.dd hh:mm"))
                     .monospacedDigit()
                     .kerning(1)
-                    .foregroundColor(.blue)
+                    .foregroundColor(card.color)
             }
 
         }
@@ -134,7 +157,7 @@ extension EditRecordPanel {
 
 struct EditRecordPanel_Previews: PreviewProvider {
     static var previews: some View {
-        EditRecordPanel(record: .preview, isForever: false)
+        EditRecordPanel(current: .preview, card: .preview, record: .preview)
             .inject(DIContainer.preview)
     }
 }

@@ -6,17 +6,24 @@ struct BudgetPage: View {
     @State private var aboveBudgetCategory: BudgetCategory = .Cost
     @State private var belowBudgetCategory: BudgetCategory = .Amount
     @State private var recordsExist: Bool = false
-    @State var budget: Budget
-    @Binding var current: Card
+    
+    @ObservedObject var current: Current
+    
+    init(current cc: Current) {
+        self._current = .init(wrappedValue: cc)
+        UIPageControl.appearance().currentPageIndicatorTintColor = .darkGray
+        UIPageControl.appearance().pageIndicatorTintColor = .lightGray
+        UIPageControl.appearance().tintColor = .lightGray
+    }
     
     var body: some View {
         VStack(spacing: 0) {
-            Dashboard(budget: budget)
+            Dashboard(current: current)
                 .padding(.horizontal)
             
-            TabView(selection: $current) {
-                ForEach(budget.book) { card in
-                    CardRect(card: card)
+            TabView(selection: $current.card) {
+                ForEach(current.budget.book) { card in
+                    CardRect(current: current, card: card)
                         .padding()
                         .tag(card)
                 }
@@ -24,73 +31,48 @@ struct BudgetPage: View {
             .tabViewStyle(.page(indexDisplayMode: .always))
             .frame(height: System.device.screen.height*0.36)
             
-            if recordsExist {
+            if !current.card.dateDict.isEmpty {
                 List {
-                    ForEach(current.dateDict.keys.reversed(), id: \.self) { unixDay in
+                    ForEach(current.card.dateDict.keys.reversed(), id: \.self) { unixDay in
                         HStack {
                             Text(Date(unixDay).String("MM/dd EEEE", .init(identifier: Locale.preferredLanguages[0])))
                             Block(height: 1, color: .section)
                             Text("\(current.dateDict[unixDay]!.cost.description) $")
                         }
+                        .animation(.none, value: current)
                         .foregroundColor(.gray)
                         .font(.caption)
-                        ForEach(current.dateDict[unixDay]!.records, id: \.id) { record in
-                            RecordRow(record: record, color: current.color, isForever: current.display == .forever)
+                        ForEach(current.card.dateDict[unixDay]!.records, id: \.id) { record in
+                            RecordRow(current: current, record: record)
                         }
                     }
                     .navigationBarHidden(true)
                     .listRowSeparator(.hidden)
                     .listRowBackground(Color.clear)
                 }
+                .animation(.none, value: current)
                 .scrollContentBackground(.hidden)
                 .environment(\.defaultMinListRowHeight, 0)
                 .listStyle(.plain)
                 .backgroundColor(.clear)
                 .monospacedDigit()
                 .padding(.horizontal)
+                
             }
+            
             Spacer()
         }
         .transition(.opacity)
         .animation(.quick, value: current)
-        .onAppear {
-            UIPageControl.appearance().currentPageIndicatorTintColor = .darkGray
-            UIPageControl.appearance().pageIndicatorTintColor = .lightGray
-            UIPageControl.appearance().tintColor = .lightGray
-#if DEBUG
-            print("[DEBUG] Budget ID: \(budget.id), Card Count: \(budget.book.count)")
-            print("[DEBUG] Current Card ID: \(current.id), Name: \(current.name), Color: \(current.color)")
-#endif
-        }
-        .onReceive(container.appstate.updateBudgetIDPublisher) { id in
-            withAnimation {
-                if budget.id == id, let b = container.interactor.data.GetBudget(id) {
-                    for c in b.book {
-                        if c.id == current.id {
-                            current = c
-                            recordsExist = !c.dateDict.isEmpty
-                            break
-                        }
-                    }
-                    budget = b
-                }
-            }
-        }
-        .onChange(of: current) { value in
-            withAnimation {
-                recordsExist = !value.dateDict.isEmpty
-            }
-        }
     }
 }
 
 // MARK: - Function
-extension BudgetPage {
-}
+extension BudgetPage {}
 
 struct BudgetPage_Previews: PreviewProvider {
     static var previews: some View {
-        BudgetPage(budget: .preview, current: .constant(.preview3))
+        BudgetPage(current: .preview)
             .inject(DIContainer.preview)
             .preferredColorScheme(.dark)
     }

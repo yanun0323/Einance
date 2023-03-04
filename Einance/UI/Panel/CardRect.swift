@@ -4,7 +4,8 @@ import UIComponent
 struct CardRect: View {
     @EnvironmentObject private var container: DIContainer
     @State private var showAlert = false
-    @State var card: Card
+    @ObservedObject var current: Current
+    @ObservedObject var card: Card
     @State var aboveCategory: BudgetCategory = .Cost
     @State var belowCategory: BudgetCategory = .Amount
     var isPreview: Bool = false
@@ -24,13 +25,13 @@ struct CardRect: View {
                 .frame(height: size(p)*0.11)
                 if isPreview {
                     VStack(alignment: .trailing, spacing: 5) {
-                        PreviewAboveDecimalButton(p)
-                        PreviewBelowDecimalButton(p)
+                        _PreviewAboveDecimalButton(p)
+                        _PreviewBelowDecimalButton(p)
                     }
                 } else {
                     VStack(alignment: .trailing, spacing: -size(p)*0.02) {
-                        AboveDecimalLabel(p)
-                        BelowDecimalLabel(p)
+                        _AboveDecimalLabel(p)
+                        _BelowDecimalLabel(p)
                     }
                 }
             }
@@ -40,9 +41,11 @@ struct CardRect: View {
             .background(cardBackgroundColor())
             .cornerRadius(15)
             .contextMenu {
-                ContextButtons
+                if !isPreview {
+                    _ContextButtons
+                }
             }
-            .alert("card.context.alert.title", isPresented: $showAlert, actions: { AlertButton }, message: {
+            .alert("card.context.alert.title", isPresented: $showAlert, actions: { _AlertButton }, message: {
                 Text("card.context.alert.content")
             })
             .onAppear {
@@ -69,20 +72,20 @@ struct CardRect: View {
 
 // MARK: - View Block
 extension CardRect {
-    func AboveDecimalLabel(_ p: GeometryProxy) -> some View {
+    func _AboveDecimalLabel(_ p: GeometryProxy) -> some View {
         Text(getCardMoney(aboveCategory).description)
             .font(.system(size: size(p)*0.13, weight: .semibold, design: .rounded))
             .foregroundColor(.white)
     }
     
-    func BelowDecimalLabel(_ p: GeometryProxy) -> some View {
+    func _BelowDecimalLabel(_ p: GeometryProxy) -> some View {
         Text(getCardMoney(belowCategory).description)
             .font(.system(size: size(p)*0.13, weight: .semibold, design: .rounded))
             .foregroundColor(.white)
             .opacity(0.3)
     }
     
-    func PreviewAboveDecimalButton(_ p: GeometryProxy) -> some View {
+    func _PreviewAboveDecimalButton(_ p: GeometryProxy) -> some View {
         Menu {
             Picker("", selection: $aboveCategory) {
                 ForEach(BudgetCategory.allCases) { category in
@@ -103,7 +106,7 @@ extension CardRect {
         .cornerRadius(Setting.panelCornerRadius)
     }
     
-    func PreviewBelowDecimalButton(_ p: GeometryProxy) -> some View {
+    func _PreviewBelowDecimalButton(_ p: GeometryProxy) -> some View {
         Menu {
             Picker("", selection: $belowCategory) {
                 ForEach(BudgetCategory.allCases, id: \.self) { category in
@@ -124,16 +127,16 @@ extension CardRect {
         .cornerRadius(Setting.panelCornerRadius)
     }
     
-    var ContextButtons: some View {
+    var _ContextButtons: some View {
         VStack {
             Button {
-                container.interactor.system.PushActionView(EditCardPanel(card: card))
+                container.interactor.system.PushActionView(EditCardPanel(current: current))
             } label: {
                 Label("global.edit", systemImage: "square.and.pencil")
             }
             
             Button(role: .destructive) {
-                withAnimation {
+                withAnimation(.quick) {
                     showAlert = true
                 }
             } label: {
@@ -142,9 +145,9 @@ extension CardRect {
         }
     }
     
-    var AlertButton: some View {
+    var _AlertButton: some View {
         Button(role: .destructive) {
-            withAnimation {
+            withAnimation(.quick) {
                 print("card deleted")
             }
         } label: {
@@ -190,15 +193,15 @@ extension CardRect {
 struct CardRect_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
-            CardRect(card: .preview, isPreview: true)
+            CardRect(current: .preview, card: .preview, isPreview: true)
                 .frame(width: System.device.screen.width, height: System.device.screen.width*0.66)
                 .padding()
                 .inject(DIContainer.preview)
-            CardRect(card: .preview)
+            CardRect(current: .preview, card: .preview)
                 .frame(width: System.device.screen.width*1.3, height: System.device.screen.width*0.66*1.3)
                 .padding()
                 .inject(DIContainer.preview)
-            CardRect(card: .preview2)
+            CardRect(current: .preview, card: .preview2)
                 .frame(width: System.device.screen.width, height: System.device.screen.width*0.66)
                 .padding()
                 .inject(DIContainer.preview)

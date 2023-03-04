@@ -3,18 +3,18 @@ import OrderedCollections
 import UIComponent
 import SQLite
 
-final class Card {
+final class Card: ObservableObject {
     var id: Int64
     var budgetID: Int64
-    var index: Int
-    var name: String
-    var amount: Decimal
-    var cost: Decimal
-    var balance: Decimal
-    var display: Card.Display
-    var color: Color
-    var fixed: Bool
-    var dateDict: OrderedDictionary<Int,RecordSet>
+    @Published var index: Int
+    @Published var name: String
+    @Published var amount: Decimal
+    @Published var cost: Decimal
+    @Published var balance: Decimal
+    @Published var display: Card.Display
+    @Published var color: Color
+    @Published var fixed: Bool
+    @Published var dateDict: OrderedDictionary<Int, RecordSet>
     
     init(
         id: Int64 = 0,
@@ -22,8 +22,6 @@ final class Card {
         index: Int = 0,
         name: String,
         amount: Decimal,
-        cost: Decimal = 0,
-        balance: Decimal = 0,
         display: Card.Display = .month,
         records: [Record] = [],
         color: Color,
@@ -38,8 +36,8 @@ final class Card {
         self.color = color
         self.fixed = fixed
         
-        self.cost = cost
-        self.balance = balance
+        self.cost = 0
+        self.balance = 0
         self.dateDict = [:]
         for record in records {
             if dateDict[record.date.unixDay] == nil {
@@ -116,6 +114,10 @@ extension Card {
                 return "card.display.forever.cardTag"
             }
         }
+        
+        var isForever: Bool {
+            self == .forever
+        }
     }
 }
 
@@ -127,32 +129,8 @@ extension Card {
     }
 }
 
+// MARK: - Card Extension
 extension Card {
-    static func GetTable() -> SQLite.Table { .init("cards") }
-    
-    static let id = Expression<Int64>("id")
-    static let budgetID = Expression<Int64>("budget_id")
-    static let index = Expression<Int>("index")
-    static let name = Expression<String>("name")
-    static let amount = Expression<Decimal>("amount")
-    static let cost = Expression<Decimal>("cost")
-    static let balance = Expression<Decimal>("balance")
-    static let display = Expression<Card.Display>("display")
-    static let fixed = Expression<Bool>("fixed")
-    static let color = Expression<Color>("color")
-    
-    static func migrate(_ conn: Connection) throws {
-        try conn.run(GetTable().create { t in
-            t.column(id, primaryKey: .autoincrement)
-            t.column(budgetID)
-            t.column(index)
-            t.column(name)
-            t.column(amount)
-            t.column(cost)
-            t.column(balance)
-            t.column(display)
-            t.column(fixed)
-            t.column(color)
-        })
-    }
+    static let empty = Card(id: -1, budgetID: -1, index: -1, name: "", amount: 0, color: .blue)
+    var isZero: Bool { self.id == -1 }
 }

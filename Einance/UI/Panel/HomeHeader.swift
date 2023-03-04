@@ -3,11 +3,13 @@ import UIComponent
 
 struct HomeHeader: View {
     @EnvironmentObject private var container: DIContainer
+    @ObservedObject var current: Current
+    
     let buttonSize: CGFloat = 40
     var body: some View {
         HStack {
             ButtonCustom(width: buttonSize, height: buttonSize) {
-                container.interactor.system.PushRouterView(SettingView())
+                container.interactor.system.PushRouterView(SettingView(current: current))
             } content: {
                 Image(systemName: "gearshape")
                     .font(.title2)
@@ -35,7 +37,7 @@ struct HomeHeader: View {
             }
 
             ButtonCustom(width: buttonSize, height: buttonSize) {
-                container.interactor.system.PushActionView(CreateCardPanel())
+                container.interactor.system.PushActionView(CreateCardPanel(current: current))
             } content: {
                 Image(systemName: "rectangle.fill.badge.plus")
                     .font(.title2)
@@ -50,7 +52,7 @@ extension HomeHeader {}
 
 struct HomeHeader_Previews: PreviewProvider {
     static var previews: some View {
-        HomeHeader()
+        HomeHeader(current: .preview)
             .inject(DIContainer.preview)
     }
 }

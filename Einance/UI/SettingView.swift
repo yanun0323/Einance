@@ -6,15 +6,18 @@ struct SettingView: View {
     @State private var aboveBudgetCategory: BudgetCategory = .Cost
     @State private var belowBudgetCategory: BudgetCategory = .Amount
     @State private var appearance: ColorScheme? = nil
+    
+    @ObservedObject var current: Current
+    
     var body: some View {
         VStack(spacing: 0) {
             ViewHeader(title: "設定")
                 .padding(.horizontal)
             ScrollView(.vertical, showsIndicators: false) {
                 VStack(spacing: 30) {
-                    AppearanceBlock
-                    DashboardStyleSample
-                    CardShapeStyleSample
+                    _AppearanceBlock
+                    _DashboardStyleSample
+                    _CardShapeStyleSample
                     Spacer()
                 }
                 .padding(.horizontal)
@@ -30,7 +33,7 @@ struct SettingView: View {
 // MARK: - ViewBlock
 extension SettingView {
     
-    var DashboardStyleSample: some View {
+    var _DashboardStyleSample: some View {
         VStack(alignment: .leading, spacing: 5) {
             Text("儀表板樣式")
                 .foregroundColor(.primary25)
@@ -46,13 +49,13 @@ extension SettingView {
         }
     }
     
-    var CardShapeStyleSample: some View {
+    var _CardShapeStyleSample: some View {
         VStack(alignment: .leading, spacing: 5) {
             Text("卡片樣式")
                 .foregroundColor(.primary25)
                 .font(.caption)
                 .padding(.leading)
-            CardRect(card: .preview, isPreview: true)
+            CardRect(budget: .preview, card: .preview, isPreview: true)
                 .frame(
                     width: widthWithPadding,
                     height: widthWithPadding*0.66
@@ -60,7 +63,7 @@ extension SettingView {
         }
     }
     
-    var AppearanceBlock: some View {
+    var _AppearanceBlock: some View {
         VStack(spacing: 5) {
             Section {
                 RoundedRectangle(cornerRadius: Setting.globalCornerRadius)
@@ -70,31 +73,31 @@ extension SettingView {
                         HStack(spacing: 0) {
                             Spacer()
                             ButtonCustom(width: 80, height: 200) {
-                                withAnimation {
+                                withAnimation(.quick) {
                                     appearance = nil
                                     container.interactor.setting.SetAppearance(nil)
                                 }
                             } content: {
-                                ScreenSystem
+                                _ScreenSystem
                             }
                             
                             Spacer()
                             ButtonCustom(width: 80, height: 200) {
-                                withAnimation {
+                                withAnimation(.quick) {
                                     appearance = .light
                                     container.interactor.setting.SetAppearance(.light)
                                 }
                             } content: {
-                                ScreenLight
+                                _ScreenLight
                             }
                             Spacer()
                             ButtonCustom(width: 80, height: 200) {
-                                withAnimation {
+                                withAnimation(.quick) {
                                     appearance = .dark
                                     container.interactor.setting.SetAppearance(.dark)
                                 }
                             } content: {
-                                ScreenDark
+                                _ScreenDark
                             }
                             Spacer()
                         }
@@ -111,10 +114,10 @@ extension SettingView {
         }
     }
     
-    var ScreenSystem: some View {
+    var _ScreenSystem: some View {
         VStack {
             ZStack {
-                AppearanceImage(.light)
+                _AppearanceImage(.light)
                     .mask {
                         HStack {
                             Rectangle()
@@ -122,7 +125,7 @@ extension SettingView {
                             Spacer()
                         }
                     }
-                AppearanceImage(.dark)
+                _AppearanceImage(.dark)
                     .mask {
                         HStack {
                             Spacer()
@@ -134,7 +137,7 @@ extension SettingView {
             .cornerRadius(10, antialiased: true)
             .overlay(
                 RoundedRectangle(cornerRadius: 10)
-                    .stroke(Color.accentColor, style: StrokeStyle(lineWidth: 3))
+                    .stroke(current.card.color, style: StrokeStyle(lineWidth: 3))
                     .opacity(appearance == nil ? 1 : 0)
             )
             Text("系統")
@@ -145,20 +148,20 @@ extension SettingView {
                     .font(.title3)
                 if appearance == nil {
                     Image(systemName: "checkmark.circle.fill")
-                        .foregroundColor(.accentColor)
+                        .foregroundColor(current.card.color)
                         .font(.title3)
                 }
             }
         }
     }
     
-    var ScreenLight: some View {
+    var _ScreenLight: some View {
         VStack {
-            AppearanceImage(.light)
+            _AppearanceImage(.light)
                 .cornerRadius(10, antialiased: true)
                 .overlay(
                     RoundedRectangle(cornerRadius: 10)
-                        .stroke(Color.accentColor, style: StrokeStyle(lineWidth: 3))
+                        .stroke(current.card.color, style: StrokeStyle(lineWidth: 3))
                         .opacity(appearance == .light ? 1 : 0)
                 )
             Text("淺色")
@@ -169,20 +172,20 @@ extension SettingView {
                     .font(.title3)
                 if appearance == .light {
                     Image(systemName: "checkmark.circle.fill")
-                        .foregroundColor(.accentColor)
+                        .foregroundColor(current.card.color)
                         .font(.title3)
                 }
             }
         }
     }
     
-    var ScreenDark: some View {
+    var _ScreenDark: some View {
         VStack {
-            AppearanceImage(.dark)
+            _AppearanceImage(.dark)
                 .cornerRadius(10, antialiased: true)
                 .overlay(
                     RoundedRectangle(cornerRadius: 10)
-                        .stroke(Color.accentColor, style: StrokeStyle(lineWidth: 3))
+                        .stroke(current.card.color, style: StrokeStyle(lineWidth: 3))
                         .opacity(appearance == .dark ? 1 : 0)
                 )
             Text("深色")
@@ -193,7 +196,7 @@ extension SettingView {
                     .font(.title3)
                 if appearance == .dark {
                     Image(systemName: "checkmark.circle.fill")
-                        .foregroundColor(.accentColor)
+                        .foregroundColor(current.card.color)
                         .font(.title3)
                 }
             }
@@ -215,7 +218,7 @@ extension SettingView {
 
 // MARK: - Function
 extension SettingView {
-    func AppearanceImage(_ theme: ColorScheme) -> some View {
+    func _AppearanceImage(_ theme: ColorScheme) -> some View {
         ZStack {
             Image(theme == .dark ? "ScreenDark" : "ScreenLight")
                 .resizable()
@@ -225,18 +228,18 @@ extension SettingView {
                 Text(Date.now.String("HH:mm"))
                     .foregroundColor(.white)
                 RoundedRectangle(cornerRadius: 3)
-                    .foregroundColor(AppearanceColor(theme))
+                    .foregroundColor(_AppearanceColor(theme))
                     .frame(width: 50, height: 16)
                     .opacity(0.8)
                 RoundedRectangle(cornerRadius: 3)
-                    .foregroundColor(AppearanceColor(theme))
+                    .foregroundColor(_AppearanceColor(theme))
                     .frame(width: 50, height: 16)
                     .opacity(0.8)
             }
         }
     }
     
-    func AppearanceColor(_ theme: ColorScheme) -> Color {
+    func _AppearanceColor(_ theme: ColorScheme) -> Color {
         let light = 0.8
         let dark = 0.2
         switch theme {
@@ -252,7 +255,7 @@ extension SettingView {
 
 struct SettingView_Previews: PreviewProvider {
     static var previews: some View {
-        SettingView()
+        SettingView(current: .preview)
             .inject(DIContainer.preview)
     }
 }

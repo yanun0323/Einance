@@ -1,13 +1,13 @@
 import SwiftUI
 import SQLite
 
-class Record {
+class Record: ObservableObject {
     var id: Int64
     var cardID: Int64
-    var date: Date
-    var cost: Decimal
-    var memo: String
-    var fixed: Bool
+    @Published var date: Date
+    @Published var cost: Decimal
+    @Published var memo: String
+    @Published var fixed: Bool
     
     init(
         id: Int64 = 0,
@@ -27,25 +27,3 @@ class Record {
 }
 
 extension Record: Identifiable {}
-
-extension Record {
-    static func GetTable() -> SQLite.Table { .init("records") }
-    
-    static let id = Expression<Int64>("id")
-    static let cardID = Expression<Int64>("card_id")
-    static let date = Expression<Date>("date")
-    static let cost = Expression<Decimal>("cost")
-    static let memo = Expression<String>("memo")
-    static let fixed = Expression<Bool>("fixed")
-    
-    static func migrate(_ conn: Connection) throws {
-        try conn.run(GetTable().create(ifNotExists: true) { t in
-            t.column(id, primaryKey: .autoincrement)
-            t.column(cardID)
-            t.column(date)
-            t.column(cost)
-            t.column(memo)
-            t.column(fixed)
-        })
-    }
-}

@@ -2,28 +2,23 @@ import SwiftUI
 import UIComponent
 
 struct HomeView: View {
-    @EnvironmentObject var container: DIContainer
-    @State private var budget: Budget
-    @State private var card: Card = .preview
-    @State private var cardExist: Bool = false
+    @EnvironmentObject private var container: DIContainer
     @State private var hideAddButton: Bool = false
     
-    init(injector: DIContainer) {
-        self.budget = injector.interactor.data.CurrentBudget()
-    }
+    @ObservedObject var current: Current
     
     var body: some View {
         ZStack {
             VStack {
-                HomeHeader()
+                HomeHeader(current: current)
                     .padding(.horizontal)
                 
-                if cardExist {
-                    BudgetPage(budget: budget, current: $card)
+                if hasCards {
+                    BudgetPage(current: current)
                 } else {
                     Spacer()
                     ButtonCustom(width: 100, height: 100) {
-                        container.interactor.system.PushActionView(CreateCardPanel())
+                        container.interactor.system.PushActionView(current: current)
                     } content: {
                         Image(systemName: "rectangle.fill.badge.plus")
                             .font(.title)
@@ -33,8 +28,8 @@ struct HomeView: View {
             }
             VStack {
                 Spacer()
-                if cardExist && !hideAddButton {
-                    AddRecordButton(budget: budget, card: $card, color: $card.color)
+                if hasCards && !hideAddButton {
+                    AddRecordButton(current: current)
                         .transition(.move(edge: .bottom))
                 }
             }
@@ -42,25 +37,22 @@ struct HomeView: View {
         }
         .backgroundColor(.background)
         .onReceive(container.appstate.actionViewPublisher) { output in
-            withAnimation {
+            withAnimation(.quick) {
                 hideAddButton = (output != nil)
-            }
-        }
-        .onReceive(container.appstate.updateBudgetIDPublisher) { id in
-            withAnimation {
-                if let b = container.interactor.data.GetBudget(id) {
-                    cardExist = b.book.count != 0
-                    if cardExist { card = b.book[0] }
-                    budget = b
-                }
             }
         }
     }
 }
 
+extension HomeView {
+    var hasCards: Bool {
+        current.budget.book.count != 0
+    }
+}
+
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
-        HomeView(injector: .preview)
+        HomeView(current: .preview)
             .inject(DIContainer.preview)
     }
 }

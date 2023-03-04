@@ -2,61 +2,84 @@ import SwiftUI
 import UIComponent
 import SQLite
 
-class DataDaoCache {
-    static var currentBudget: Budget? = nil
-}
+class DataDaoCache {}
 
 protocol DataDao {}
 
 extension DataDao where Self: DataRepository {
     
-    func GetCurrentBudget(_ day: Int) throws -> Budget {
-        if let b = DataDaoCache.currentBudget {
-            return b
-        }
-        
-        if try countBudget() != 0, let b = try GetLastBudget() {
-            DataDaoCache.currentBudget = b
-            return b
-        }
-        
-        let b = Budget(start: .now.firstDayOfMonth.AddDay(day-1))
-        let id = try CreateBudget(b)
-        b.id = id
-        DataDaoCache.currentBudget = b
-        return b
-    }
+    // MARK: - Budgets
     
-    
-    func SetCurrentBudget(_ b :Budget) {
-        DataDaoCache.currentBudget = b
-    }
-    
-    func GetLastBudget() throws -> Budget? {
-        let query = Budget.GetTable().limit(1).order(Budget.id.desc)
-        let result = try Sql.GetDriver().prepare(query)
-        for row in result {
-            return try queryBudget(try parseBudget(row))
-        }
-        return nil
-    }
-    
-    func GetBudget(_ id: Int64) throws -> Budget? {
-        let query = Budget.GetTable().filter(Budget.id == id)
-        let result = try Sql.GetDriver().prepare(query)
-        for row in result {
-            return try queryBudget(try parseBudget(row))
-        }
-        return nil
+    func GetBudgetCount() throws -> Int {
+        return try countBudget()
     }
     
     func GetBudgets() throws -> [Budget] {
         var budgets: [Budget] = []
         let result = try Sql.GetDriver().prepare(Budget.GetTable().order(Budget.id.desc))
         for row in result {
-            budgets.append(try queryBudget(try parseBudget(row)))
+            let b = try queryBudget(try parseBudget(row))
+            b.book.sort { c1, c2 in
+                c1.index < c2.index
+            }
+            budgets.append(b)
         }
         return budgets
+    }
+    
+    func GetBudgetsWithoutChildren(_:Int64) throws -> [Budget] {
+        var budgets: [Budget] = []
+        let result = try Sql.GetDriver().prepare(Budget.GetTable().order(Budget.id.desc))
+        for row in result {
+            budgets.append(try parseBudget(row))
+        }
+        return budgets
+    }
+    
+    // MARK: - Budget
+    
+    func GetBudget(_ id: Int64) throws -> Budget? {
+        let query = Budget.GetTable().filter(Budget.id == id)
+        let result = try Sql.GetDriver().prepare(query)
+        for row in result {
+            let b = try queryBudget(try parseBudget(row))
+            b.book.sort { c1, c2 in
+                c1.index < c2.index
+            }
+            return b
+        }
+        return nil
+    }
+    
+    func GetLastBudget() throws -> Budget? {
+        let query = Budget.GetTable().limit(1).order(Budget.id.desc)
+        let result = try Sql.GetDriver().prepare(query)
+        for row in result {
+            let b = try queryBudget(try parseBudget(row))
+            b.book.sort { c1, c2 in
+                c1.index < c2.index
+            }
+            return b
+        }
+        return nil
+    }
+    
+    func GetBudgetWithoutChildren(_ id: Int64) throws -> Budget? {
+        let query = Budget.GetTable().filter(Budget.id == id)
+        let result = try Sql.GetDriver().prepare(query)
+        for row in result {
+            return try parseBudget(row)
+        }
+        return nil
+    }
+    
+    func GetLastBudgetWithoutChildren() throws -> Budget? {
+        let query = Budget.GetTable().limit(1).order(Budget.id.desc)
+        let result = try Sql.GetDriver().prepare(query)
+        for row in result {
+            return try parseBudget(row)
+        }
+        return nil
     }
     
     func CreateBudget(_ b: Budget) throws -> Int64 {
@@ -72,11 +95,11 @@ extension DataDao where Self: DataRepository {
     
     func UpdateBudget(_ b: Budget) throws {
         let update = Budget.GetTable().filter(Budget.id == b.id).update(
-                Budget.start <- b.start,
-                Budget.amount <- b.amount,
-                Budget.cost <- b.cost,
-                Budget.balance <- b.balance
-            )
+            Budget.start <- b.start,
+            Budget.amount <- b.amount,
+            Budget.cost <- b.cost,
+            Budget.balance <- b.balance
+        )
         try Sql.GetDriver().run(update)
     }
     
@@ -84,6 +107,30 @@ extension DataDao where Self: DataRepository {
         try Sql.GetDriver().run(Budget.GetTable().filter(Budget.id == id).delete())
     }
     
+    // MARK: - Card
+    
+    func GetCard(_ id: Int64) throws -> Card? {
+        let query = Card.GetTable().filter(Card.id == id)
+        let result = try Sql.GetDriver().prepare(query)
+        for row in result {
+            return try queryCard(try parseCard(row))
+        }
+        return nil
+    }
+    
+    func GetCardWithoutChildren(_ id: Int64) throws -> Card? {
+        let query = Card.GetTable().filter(Card.id == id)
+        let result = try Sql.GetDriver().prepare(query)
+        for row in result {
+            return try parseCard(row)
+        }
+        return nil
+    }
+    
+    func GetCardCountOfBudget(_ id: Int64) throws -> Int? {
+        let query = Card.GetTable().filter(Card.budgetID == id).count
+        return try Sql.GetDriver().scalar(query)
+    }
     
     func CreateCard(_ c: Card) throws -> Int64 {
         print("[DEBUG] Card ID: \(c.id), Color: \(c.color), Color descripton: \(c.color.description)")
@@ -120,6 +167,16 @@ extension DataDao where Self: DataRepository {
         try Sql.GetDriver().run(Card.GetTable().filter(Card.id == id).delete())
     }
     
+    // MARK: - Record
+    
+    func GetRecord(_ id: Int64) throws -> Record? {
+        let query = Record.GetTable().filter(Record.id == id)
+        let result = try Sql.GetDriver().prepare(query)
+        for row in result {
+            return try parseRecord(row)
+        }
+        return nil
+    }
     
     func CreateRecord(_ r: Record) throws -> Int64 {
         let insert = Record.GetTable().insert(
@@ -149,6 +206,7 @@ extension DataDao where Self: DataRepository {
     
 }
 
+// MARK: - Private Function
 extension DataDao {
     
     private func countBudget() throws -> Int {
@@ -159,8 +217,12 @@ extension DataDao {
         let query = Card.GetTable().filter(Card.budgetID == b.id).order(Card.index.desc)
         let result = try Sql.GetDriver().prepare(query)
         for row in result {
-            b.book.append(try queryCard(try parseCard(row)))
+            let c = try queryCard(try parseCard(row))
+            b.book.append(c)
+            b.amount += c.amount
+            b.cost += c.cost
         }
+        b.balance = b.amount - b.cost
         return b
     }
     
@@ -170,21 +232,20 @@ extension DataDao {
         for row in result {
             let r = try parseRecord(row)
             if c.dateDict[r.date.unixDay] == nil {
-                c.dateDict[r.date.unixDay] = .init(records: [], cost: 0)
+                c.dateDict[r.date.unixDay] = Card.RecordSet()
             }
             c.dateDict[r.date.unixDay]?.records.append(r)
             c.dateDict[r.date.unixDay]?.cost += r.cost
+            c.cost += r.cost
         }
+        c.balance = c.amount - c.cost
         return c
     }
     
     private func parseBudget(_ row: Row) throws -> Budget {
         return Budget(
             id: try row.get(Budget.id),
-            start: try row.get(Budget.start),
-            amount: try row.get(Budget.amount),
-            cost: try row.get(Budget.cost),
-            balance: try row.get(Budget.balance)
+            start: try row.get(Budget.start)
         )
     }
     
@@ -195,8 +256,6 @@ extension DataDao {
             index: try row.get(Card.index),
             name: try row.get(Card.name),
             amount: try row.get(Card.amount),
-            cost: try row.get(Card.cost),
-            balance: try row.get(Card.balance),
             display: try row.get(Card.display),
             color: try row.get(Card.color),
             fixed: try row.get(Card.fixed)
