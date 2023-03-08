@@ -9,8 +9,17 @@ struct RecordRow: View {
     
     var body: some View {
         HStack {
-            Block(width: 4, color: card.color)
-                .padding(.trailing, 10)
+            if record.fixed {
+                Image(systemName: "pin")
+                    .font(.callout)
+                    .fontWeight(.semibold)
+                    .rotationEffect(Angle(degrees: 45))
+                    .foregroundColor(card.color)
+                    .padding(.trailing, 10)
+            } else {
+                Block(width: 4, color: card.color)
+                    .padding(.trailing, 10)
+            }
             Text(record.memo)
                 .foregroundColor(.primary50)
             Spacer()

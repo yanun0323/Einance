@@ -73,7 +73,7 @@ extension CardRect {
                     .font(.system(size: size(p)*0.04, weight: .light, design: .rounded))
                     .foregroundColor(cardTitleColor())
                     .offset(y: size(p)*0.008)
-                    .rotationEffect(Angle(degrees: 30))
+                    .rotationEffect(Angle(degrees: 45))
             }
             #if DEBUG
             if isOrder {
