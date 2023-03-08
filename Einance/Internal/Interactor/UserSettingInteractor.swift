@@ -1,4 +1,5 @@
 import SwiftUI
+import UIComponent
 
 struct UserSettingInteractor {
     private var appstate: AppState
@@ -13,12 +14,12 @@ struct UserSettingInteractor {
 // MARK: - Public
 extension UserSettingInteractor {
     func GetAppearance() -> ColorScheme? {
-        return AppearanceToScheme(repo.GetAppearance())
+        return appearanceToScheme(repo.GetAppearance())
     }
     
     func SetAppearance(_ scheme: ColorScheme?) {
         appstate.appearancePublisher.send(scheme)
-        return repo.SetAppearance(SchemeToAppearance(scheme))
+        return repo.SetAppearance(schemeToAppearance(scheme))
     }
     
     func GetCardBudgetCategoryAbove() -> BudgetCategory {
@@ -52,7 +53,7 @@ extension UserSettingInteractor {
         if category != .None {
             return category
         }
-        return .Cost
+        return .Amount
     }
     
     func SetDashboardBudgetCategoryLeft(_ category: BudgetCategory) {
@@ -61,22 +62,32 @@ extension UserSettingInteractor {
     }
     
     func GetDashboardBudgetCategoryRight() -> BudgetCategory {
-        let category = BudgetCategory(UserDefaults.dashboardBudgetCategoryLeft)
+        let category = BudgetCategory(UserDefaults.dashboardBudgetCategoryRight)
         if category != .None {
             return category
         }
-        return .Amount
+        return .Cost
     }
     
     func SetDashboardBudgetCategoryRight(_ category: BudgetCategory) {
         UserDefaults.dashboardBudgetCategoryRight = category.rawValue
         appstate.rightBudgetCategoryPublisher.send(category)
     }
+    
+    func SetbaseDateNumber(_ n: Int) {
+        UserDefaults.baseDateNumber = n
+    }
+    
+    func IsExpired(_ budgetExpiredDate: Date) -> Bool {
+        let now = Date.now
+        let nextDate = baseNumberToNextDate(UserDefaults.baseDateNumber) ?? now.AddDay(1)
+        return now >= budgetExpiredDate || now >= nextDate
+    }
 }
 
 // MARK: - Helper
 extension UserSettingInteractor {
-    private func AppearanceToScheme(_ appearance: Int?) -> ColorScheme? {
+    private func appearanceToScheme(_ appearance: Int?) -> ColorScheme? {
         switch appearance {
         case 1:
             return .light
@@ -87,7 +98,7 @@ extension UserSettingInteractor {
         }
     }
     
-    private func SchemeToAppearance(_ scheme: ColorScheme?) -> Int? {
+    private func schemeToAppearance(_ scheme: ColorScheme?) -> Int? {
         switch scheme {
         case .light:
             return 1
@@ -96,5 +107,15 @@ extension UserSettingInteractor {
         default:
             return 0
         }
+    }
+    
+    private func baseNumberToNextDate(_ baseNumber: Int?) -> Date? {
+        guard let n = baseNumber else { return nil }
+        let now = Date.now
+        var date = now.firstDayOfMonth.AddDay(n-1)
+        if now > date {
+            date = date.AddMonth(1)
+        }
+        return date
     }
 }

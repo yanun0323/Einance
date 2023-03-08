@@ -50,7 +50,7 @@ struct EditCardPanel: View {
                         return
                     }
                     
-                    container.interactor.data.UpdateCard(budget, card, name: nameInput, amount: amount, color: colorInput, display: displayInput, fixed: fixedInput)
+                    container.interactor.data.UpdateCard(budget, card, name: nameInput, index: card.index, amount: amount, color: colorInput, display: displayInput, fixed: fixedInput)
                     container.interactor.system.ClearActionView()
                 }
             }

@@ -8,13 +8,17 @@ struct ContentView: View {
     @State private var isKeyboardActive = false
     @State private var isPickerActive = false
     @State private var stopTheWorld = false
+    @State private var isUpdating = false
     
     @StateObject private var budget: Budget
     @State private var current: Card = .empty
-    
+    @State private var timer: Timer?
+    @State private var bookCount: Int = 0
+    private let isPreview: Bool
     
     // TODO: move current budget and card here
-    init(injector: DIContainer, preview: Budget? = nil) {
+    init(injector: DIContainer, preview: Budget? = nil, isPreview: Bool = false) {
+        self.isPreview = isPreview
         if let b = preview {
             self._budget = .init(wrappedValue: b)
             return
@@ -25,7 +29,7 @@ struct ContentView: View {
     
     var body: some View {
         ZStack {
-            if budget.isZero {
+            if budget.isZero && !isPreview {
                 WelcomeView()
                     .disabled(stopTheWorld)
             } else {
@@ -60,29 +64,46 @@ struct ContentView: View {
             }
         }
         .onReceive(container.appstate.budgetPublisher) { output in
+            if isUpdating { return }
+            guard let b = output else { return }
             withAnimation(.quick) {
-                if let b = output {
-                    budget.Update(b)
-                }
+                isUpdating = true
+                defer { isUpdating = false }
+                
+                budget.Update(b)
+                refreshCurrentCard()
+                
+                // make current card move to first
+                bookCount = -1
+                
+                let expiredDate = budget.start.AddMonth(1)
+                timer?.invalidate()
+                timer = Timer.scheduledTimer(
+                    withTimeInterval: 15, repeats: true,
+                    block: { _ in
+                        if container.interactor.setting.IsExpired(expiredDate) {
+                            container.interactor.system.TriggerMonthlyCheck()
+                        }
+                    })
             }
         }
+        .onReceive(container.appstate.monthlyCheckPublisher) { output in
+            print("Monthly Publish Received")
+            container.interactor.data.UpdateMonthlyBudget(budget)
+        }
         .onReceive(container.appstate.stopTheWorldPublisher) { output in
+            if stopTheWorld == output { return }
             withAnimation(.quick) {
-                if stopTheWorld == output { return }
                 stopTheWorld = output
             }
         }
         .onAppear {
             container.interactor.data.PublishCurrentBudget()
         }
-        .onChange(of: budget.book.count) { count in
+        .onChange(of: budget.book.count) { _ in
+            print("L: \(bookCount), R: \(budget.book.count)")
             withAnimation(.quick) {
-                if hasCards {
-                    current = budget.book.last!
-                    return
-                }
-                
-                current = .empty
+                refreshCurrentCard()
             }
         }
     }
@@ -132,15 +153,24 @@ extension ContentView {
     var hasCards: Bool {
         budget.book.count != 0
     }
+    
+    func refreshCurrentCard() {
+        defer { bookCount = budget.book.count }
+        if !hasCards {
+            current = .empty
+            return
+        }
+        
+        current = bookCount < budget.book.count ? budget.book.last! : budget.book.first!
+    }
 }
 
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView(injector: .preview)
+        ContentView(injector: .preview, preview: .preview, isPreview: true)
             .inject(DIContainer.preview)
-            .preferredColorScheme(.dark)
-        ContentView(injector: .preview)
+        ContentView(injector: .preview, preview: .preview)
             .inject(DIContainer.preview)
     }
 }

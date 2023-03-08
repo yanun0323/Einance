@@ -29,30 +29,23 @@ extension DataInteractor {
     }
     
     func UpdateMonthlyBudget(_ budget: Budget) {
-        stopTheWorld(true)
-        System.Async {
-            let nextStartDate = calculateStartDate()
-            if !budget.IsExpired(nextStartDate) {
-                return
+        let nextStartDate = calculateStartDate()
+        if !budget.IsExpired(nextStartDate) {
+            return
+        }
+        DoTx("update monthly budget") {
+            let b = Budget(start: nextStartDate)
+            b.id = try repo.CreateBudget(b)
+            
+            for card in budget.book {
+                try addNextCardToBudget(b, card)
             }
             
-            DoTx("update monthly budget") {
-                let b = Budget(start: nextStartDate)
-                b.id = try repo.CreateBudget(b)
-                
-                for card in budget.book {
-                    try addNextCardToBudget(b, card)
-                }
-                
-                b.balance = b.amount - b.cost
-                try repo.UpdateBudget(b)
-                try _Sleep(3)
-            }
-        } main: {
+            b.balance = b.amount - b.cost
+            try repo.UpdateBudget(b)
+            
             PublishCurrentBudget()
-            stopTheWorld(false)
         }
-
     }
     
     // MARK: - Current Budget
@@ -66,7 +59,7 @@ extension DataInteractor {
     func PublishCurrentBudget() {
         stopTheWorld(true)
         System.Async {
-            return DoTx("get budget by id") {
+            return DoTx("publish current budget") {
                 return try repo.GetLastBudget()
             }
         } main: { b in
@@ -87,7 +80,7 @@ extension DataInteractor {
     func CreateFirstBudget() {
         stopTheWorld(true)
         System.Async {
-            DoTx("create budget") {
+            DoTx("create first budget") {
                 let startDate = calculateStartDate()
                 _ = try repo.CreateBudget(Budget(start: startDate))
             }
@@ -147,18 +140,27 @@ extension DataInteractor {
     /**
     Update card parameter and parent budget into database without updating records
      */
-    func UpdateCard(_ b: Budget, _ c: Card, name: String, amount: Decimal, color: Color, display: Card.Display, fixed: Bool) {
+    func UpdateCard(_ b: Budget, _ c: Card, name: String, index: Int, amount: Decimal, color: Color, display: Card.Display, fixed: Bool) {
         DoTx("update card") {
+            let updateOrder = (c.index != index)
             b.amount = b.amount - c.amount + amount
             b.balance = b.amount - b.cost
             
             c.name = name
+            c.index = index
             c.amount = amount
             c.balance = c.amount - c.cost
             c.color = color
             c.display = display
             c.fixed = fixed || display == .forever
-
+            
+            if updateOrder {
+                for i in 0 ..< b.book.count {
+                    b.book[i].index = i
+                    try repo.UpdateCard(b.book[i])
+                }
+            }
+            
             try repo.UpdateCard(c)
             try repo.UpdateBudget(b)
         }
@@ -181,8 +183,12 @@ extension DataInteractor {
             b.book.remove(at: index)
             
             b.amount -= c.amount
-            b.cost -= c.amount
+            b.cost -= c.cost
             b.balance = b.amount - b.cost
+            for i in 0 ..< b.book.count {
+                b.book[i].index = i
+                try repo.UpdateCard(b.book[i])
+            }
             
             try repo.UpdateBudget(b)
             try repo.DeleteCard(c.id)
@@ -206,11 +212,11 @@ extension DataInteractor {
             
             r.id = try repo.CreateRecord(r)
             
-            if c.dateDict[r.date.unixDay] == nil {
-                c.dateDict[r.date.unixDay] = Card.RecordSet()
+            if c.dateDict[r.date.key] == nil {
+                c.dateDict[r.date.key] = Card.RecordSet()
             }
-            c.dateDict[r.date.unixDay]?.records.append(r)
-            c.dateDict[r.date.unixDay]?.cost += r.cost
+            c.dateDict[r.date.key]?.records.append(r)
+            c.dateDict[r.date.key]?.cost += r.cost
             
             try repo.UpdateCard(c)
             try repo.UpdateBudget(b)
@@ -222,6 +228,18 @@ extension DataInteractor {
      */
     func UpdateRecord(_ b: Budget, _ c: Card, _ r: Record, date: Date, cost: Decimal, memo: String, fixed: Bool) {
         DoTx("update record") {
+            let key = r.date.key
+            if c.dateDict[key] == nil {
+                throw DataInteractorError.recordNotFound
+            }
+            let needSort = (r.date != date)
+            
+            c.dateDict[key]!.records.removeAll(where: { $0.id == r.id })
+            c.dateDict[key]!.cost -= r.cost
+            if c.dateDict[key]!.records.isEmpty {
+                c.dateDict.removeValue(forKey: key)
+            }
+            
             c.cost = c.cost - r.cost + cost
             c.balance = c.amount - c.cost
             
@@ -233,6 +251,16 @@ extension DataInteractor {
             r.memo = memo
             r.fixed = fixed
             
+            let newKey = r.date.key
+            if c.dateDict[newKey] == nil {
+                c.dateDict[newKey] = Card.RecordSet()
+            }
+            c.dateDict[newKey]?.records.append(r)
+            c.dateDict[newKey]?.cost += r.cost
+            if needSort {
+                c.dateDict.sort()
+            }
+            
             try repo.UpdateRecord(r)
             try repo.UpdateCard(c)
             try repo.UpdateBudget(b)
@@ -241,16 +269,12 @@ extension DataInteractor {
     
     func DeleteRecord(_ b: Budget, _ c: Card, _ r: Record) {
         DoTx("delete record") {
-            let key = r.date.unixDay
+            let key = r.date.key
             if c.dateDict[key] == nil {
                 throw DataInteractorError.recordNotFound
             }
             
-            guard let index = c.dateDict[key]!.records.firstIndex(where: { $0.id == r.id }) else {
-                throw DataInteractorError.recordNotFound
-            }
-            
-            c.dateDict[key]!.records.remove(at: index)
+            c.dateDict[key]!.records.removeAll(where: { $0.id == r.id })
             c.dateDict[key]!.cost -= r.cost
             if c.dateDict[key]!.records.isEmpty {
                 c.dateDict.removeValue(forKey: key)
@@ -269,18 +293,31 @@ extension DataInteractor {
     
 #if DEBUG
     // MARK: - Debug
-    func DebugGetBudgetsCount() -> Int {
-        return DoTx("[DEBUG] get budgets count") {
-            return try repo.GetBudgets()
-        }?.count ?? -1
+    func DebugForceMonthlyUpdate(_ budget: Budget) {
+        let nextStartDate = calculateStartDate()
+        if !budget.IsExpired(nextStartDate) {
+            return
+        }
+        DoTx("update monthly budget") {
+            let b = Budget(start: nextStartDate)
+            b.id = try repo.CreateBudget(b)
+            
+            for card in budget.book {
+                try addNextCardToBudget(b, card)
+            }
+            
+            b.balance = b.amount - b.cost
+            try repo.UpdateBudget(b)
+            
+            PublishCurrentBudget()
+        }
     }
     
-    func DebugDeleteAllBudgets() {
+    func DebugDeleteLastBudget() {
         DoTx("[DEBUG] delete all budgets") {
             let budgets = try repo.GetBudgets()
-            for b in budgets {
-                try repo.DeleteBudget(b.id)
-            }
+            if budgets.isEmpty { return }
+            try repo.DeleteBudget(budgets[0].id)
         }
     }
     

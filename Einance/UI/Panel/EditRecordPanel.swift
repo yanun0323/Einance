@@ -144,7 +144,6 @@ extension EditRecordPanel {
                     .kerning(1)
                     .foregroundColor(card.color)
             }
-
         }
     }
 }

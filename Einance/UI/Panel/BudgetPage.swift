@@ -11,7 +11,7 @@ struct BudgetPage: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            Dashboard(budget: budget)
+            Dashboard(budget: budget, current: current)
                 .padding(.horizontal)
             
             TabView(selection: $current) {
@@ -26,16 +26,16 @@ struct BudgetPage: View {
             
             if !current.dateDict.isEmpty {
                 List {
-                    ForEach(current.dateDict.keys.reversed(), id: \.self) { unixDay in
+                    ForEach(current.dateDict.keys.reversed(), id: \.self) { date in
                         HStack {
-                            Text(Date(unixDay).String("MM/dd EEEE", .init(identifier: Locale.preferredLanguages[0])))
+                            Text(date.String("MM/dd EEEE", .init(identifier: Locale.preferredLanguages[0])))
                             Block(height: 1, color: .section)
-                            Text("\(current.dateDict[unixDay]!.cost.description) $")
+                            Text("\(current.dateDict[date]!.cost.description) $")
                         }
                         .animation(.none, value: current)
                         .foregroundColor(.gray)
                         .font(.caption)
-                        ForEach(current.dateDict[unixDay]!.records, id: \.id) { record in
+                        ForEach(current.dateDict[date]!.records, id: \.id) { record in
                             RecordRow(budget: budget, card: current, record: record)
                         }
                     }

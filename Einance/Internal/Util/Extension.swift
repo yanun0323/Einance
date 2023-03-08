@@ -39,6 +39,9 @@ extension Color {
 
 extension Date {
     static var zero: Date = .init(timeIntervalSince1970: 0)
+    var key: Date {
+        return Date(from: self.String(.Numeric), .Numeric) ?? .zero
+    }
 }
 
 extension System {

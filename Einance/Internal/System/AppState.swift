@@ -5,6 +5,7 @@ struct AppState {
     var stopTheWorldPublisher: PassthroughSubject<Bool, Never> = .init()
     
     var budgetPublisher: PassthroughSubject<Budget?, Never> = .init()
+    var monthlyCheckPublisher: PassthroughSubject<Bool, Never> = .init()
     
     var routerViewPublisher: PassthroughSubject<AnyView?, Never> = .init()
     var actionViewPublisher: PassthroughSubject<AnyView?, Never> = .init()

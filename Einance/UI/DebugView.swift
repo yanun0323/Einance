@@ -7,6 +7,7 @@ struct DebugView: View {
     @State private var budgetCount: Int = 0
     @State private var cardCount: Int = 0
     @State private var recordCount: Int = 0
+    @State private var date: Date = Date(from: "20220101", .Numeric)!
     
     @ObservedObject var budget: Budget
     
@@ -19,23 +20,19 @@ struct DebugView: View {
                 Text("Budget Count: \(budgetCount)")
                 Text("Card Count: \(cardCount)")
                 Text("Record Count: \(recordCount)")
+                VStack(spacing: 15) {
+                    Text("\(date)\n\(date.String(.Stamp, .US))\n\(date.String(.Stamp, .US))")
+                    Text("\(Date(date.unixDay))\n\(Date(date.unixDay).String(.Stamp, .US))\n\(Date(date.unixDay).String(.Stamp, .US))")
+                }
             }
             Divider()
             
-            anyButton("Create Budget") {
-                container.interactor.data.CreateFirstBudget()
+            anyButton("Delete Last Budget") {
+                container.interactor.data.DebugDeleteLastBudget()
             }
             
-            anyButton("Delete Budgets", .red) {
-                container.interactor.data.DebugDeleteAllBudgets()
-            }
-            
-            anyButton("Refresh Info") {
-                refreshInfo()
-            }
-            
-            anyButton("Monthly Update") {
-                container.interactor.data.UpdateMonthlyBudget(budget)
+            anyButton("Force Monthly Update") {
+                container.interactor.data.DebugForceMonthlyUpdate(budget)
             }
             
             Spacer()

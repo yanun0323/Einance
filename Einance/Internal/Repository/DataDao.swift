@@ -209,15 +209,15 @@ extension DataDao {
     }
     
     private func queryCard(_ c: Card) throws -> Card {
-        let query = Record.GetTable().filter(Record.cardID == c.id).order(Record.date.asc)
+        let query = Record.GetTable().filter(Record.cardID == c.id).order(Record.date.desc)
         let result = try Sql.GetDriver().prepare(query)
         for row in result {
             let r = try parseRecord(row)
-            if c.dateDict[r.date.unixDay] == nil {
-                c.dateDict[r.date.unixDay] = Card.RecordSet()
+            if c.dateDict[r.date.key] == nil {
+                c.dateDict[r.date.key] = Card.RecordSet()
             }
-            c.dateDict[r.date.unixDay]?.records.append(r)
-            c.dateDict[r.date.unixDay]?.cost += r.cost
+            c.dateDict[r.date.key]?.records.append(r)
+            c.dateDict[r.date.key]?.cost += r.cost
             c.cost += r.cost
         }
         c.balance = c.amount - c.cost

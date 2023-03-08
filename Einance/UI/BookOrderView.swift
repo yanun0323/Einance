@@ -13,16 +13,17 @@ struct BookOrderView: View {
     @State private var draggingUpdating: Bool = false
     
     @ObservedObject var budget: Budget
-    var cardOffset: CGFloat = System.device.screen.width * 0.25
     
     @State private var info = "\n"
+    private let defaultCardOffset: CGFloat = System.device.screen.width * 0.25
     
     // MARK: TODO: Check Refresh
     var body: some View {
         VStack(spacing: 30) {
             ViewHeader(title: "預算卡片排序")
-            VStack {
-                listBlock
+            GeometryReader { proxy in
+                _ListBlock(getCardOffset(proxy))
+                    .padding()
             }
         }
         .padding(.horizontal)
@@ -30,9 +31,9 @@ struct BookOrderView: View {
     }
 }
 
-// MARK: Property
+// MARK: - View Block
 extension BookOrderView {
-    var listBlock: some View {
+    func _ListBlock(_ cardOffset: CGFloat) -> some View {
         ZStack {
             ForEach(budget.book) { card in
                 CardRect(budget: budget, card: card, isOrder: true)
@@ -83,11 +84,13 @@ extension BookOrderView {
     }
 }
 
-// MARK: - View Block
-extension BookOrderView {}
-
 // MARK: - Function
 extension BookOrderView {
+    func getCardOffset(_ proxy: GeometryProxy) -> CGFloat {
+        let offset = (proxy.size.height - proxy.size.width*0.66)/CGFloat(budget.book.count)
+        return offset > defaultCardOffset ? defaultCardOffset : offset
+    }
+    
     func move(from source: IndexSet, to destination: Int) {
         let from = source.first ?? 0
         if from == destination { return }

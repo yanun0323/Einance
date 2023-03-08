@@ -10,7 +10,7 @@ struct HomeHeader: View {
     var body: some View {
         HStack {
             ButtonCustom(width: buttonSize, height: buttonSize) {
-                container.interactor.system.PushRouterView(SettingView(budget: budget))
+                container.interactor.system.PushRouterView(SettingView(budget: budget, current: current))
             } content: {
                 Image(systemName: "gearshape")
                     .font(.title2)
@@ -26,6 +26,12 @@ struct HomeHeader: View {
                 container.interactor.system.PushRouterView(DebugView(budget: budget))
             } content: {
                 Image(systemName: "hammer.fill")
+                    .font(.title2)
+            }
+            ButtonCustom(width: buttonSize, height: buttonSize) {
+                container.interactor.data.DebugForceMonthlyUpdate(budget)
+            } content: {
+                Image(systemName: "hammer")
                     .font(.title2)
             }
             Spacer()

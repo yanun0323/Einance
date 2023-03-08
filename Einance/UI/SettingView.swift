@@ -8,7 +8,9 @@ struct SettingView: View {
     @State private var appearance: ColorScheme? = nil
     
     @ObservedObject var budget: Budget
-    let color: Color = .primary
+    @ObservedObject var current: Card
+    
+    private let color: Color = .primary
     
     var body: some View {
         VStack(spacing: 0) {
@@ -44,7 +46,7 @@ extension SettingView {
                 .foregroundColor(.section)
                 .frame(height: 120)
                 .overlay {
-                    Dashboard(budget: .preview, isPreview: true, previewColor: color)
+                    Dashboard(budget: budget, current: current, isPreview: true, previewColor: color)
                         .padding(.horizontal)
                 }
         }
@@ -56,7 +58,7 @@ extension SettingView {
                 .foregroundColor(.primary25)
                 .font(.caption)
                 .padding(.leading)
-            CardRect(budget: .preview, card: .preview, isPreview: true, previewColor: color)
+            CardRect(budget: budget, card: current, isPreview: true, previewColor: color)
                 .frame(
                     width: widthWithPadding,
                     height: widthWithPadding*0.66
@@ -208,9 +210,9 @@ extension SettingView {
 
 // MARK: - Property
 extension SettingView {
-    var window: UIWindow? {
-        (UIApplication.shared.connectedScenes.first as? UIWindowScene)?.windows.first
-    }
+//    var window: UIWindow? {
+//        (UIApplication.shared.connectedScenes.first as? UIWindowScene)?.windows.first
+//    }
     
     var widthWithPadding: CGFloat {
         System.device.screen.width-30
@@ -256,9 +258,9 @@ extension SettingView {
 
 struct SettingView_Previews: PreviewProvider {
     static var previews: some View {
-        SettingView(budget: .preview)
+        SettingView(budget: .preview, current: .preview)
             .inject(DIContainer.preview)
-        SettingView(budget: .preview)
+        SettingView(budget: .preview, current: .preview)
             .inject(DIContainer.preview)
             .preferredColorScheme(.dark)
     }

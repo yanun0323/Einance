@@ -14,7 +14,7 @@ final class Card: ObservableObject {
     @Published var display: Card.Display
     @Published var color: Color
     @Published var fixed: Bool
-    @Published var dateDict: OrderedDictionary<Int, RecordSet>
+    @Published var dateDict: OrderedDictionary<Date, RecordSet>
     
     init(
         id: Int64 = 0,
@@ -40,11 +40,11 @@ final class Card: ObservableObject {
         self.balance = 0
         self.dateDict = [:]
         for record in records {
-            if dateDict[record.date.unixDay] == nil {
-                dateDict[record.date.unixDay] = RecordSet()
+            if dateDict[record.date.key] == nil {
+                dateDict[record.date.key] = RecordSet()
             }
-            dateDict[record.date.unixDay]?.records.append(record)
-            dateDict[record.date.unixDay]?.cost += record.cost
+            dateDict[record.date.key]?.records.append(record)
+            dateDict[record.date.key]?.cost += record.cost
             self.cost += record.cost
         }
         self.balance = self.amount - self.cost

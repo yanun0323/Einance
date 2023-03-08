@@ -55,4 +55,8 @@ extension SystemInteractor {
     func RunTheWorld() {
         appstate.stopTheWorldPublisher.send(false)
     }
+    
+    func TriggerMonthlyCheck() {
+        appstate.monthlyCheckPublisher.send(true)
+    }
 }
