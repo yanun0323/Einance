@@ -2,8 +2,9 @@ import SwiftUI
 import Combine
 
 struct AppState {
-    var updateBudgetIDPublisher: PassthroughSubject<Int64, Never> = .init()
-    var updateCardIDPublisher: PassthroughSubject<Int64, Never> = .init()
+    var stopTheWorldPublisher: PassthroughSubject<Bool, Never> = .init()
+    
+    var budgetPublisher: PassthroughSubject<Budget?, Never> = .init()
     
     var routerViewPublisher: PassthroughSubject<AnyView?, Never> = .init()
     var actionViewPublisher: PassthroughSubject<AnyView?, Never> = .init()
@@ -12,6 +13,8 @@ struct AppState {
     
     var aboveBudgetCategoryPubliser: PassthroughSubject<BudgetCategory, Never> = .init()
     var belowBudgetCategoryPubliser: PassthroughSubject<BudgetCategory, Never> = .init()
+    var leftBudgetCategoryPublisher: PassthroughSubject<BudgetCategory, Never> = .init()
+    var rightBudgetCategoryPublisher: PassthroughSubject<BudgetCategory, Never> = .init()
     
     var keyboardPublisher: AnyPublisher<Bool, Never> {
             Publishers.Merge(

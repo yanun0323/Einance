@@ -47,4 +47,12 @@ extension SystemInteractor {
             appstate.pickerPublisher.send(isOn)
         }
     }
+    
+    func StopTheWorld() {
+        appstate.stopTheWorldPublisher.send(true)
+    }
+    
+    func RunTheWorld() {
+        appstate.stopTheWorldPublisher.send(false)
+    }
 }

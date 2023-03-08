@@ -11,19 +11,13 @@ struct CreateCardPanel: View {
     @State private var fixedInput = false
     @State private var creating = false
     
-    @ObservedObject var current: Current
-    
-    init(current: Current) {
-        self._current = .init(wrappedValue: current)
-        self.displayInput = .month
-        self.amountInput = ""
-    }
+    @ObservedObject var budget: Budget
     
     var body: some View {
         VStack {
             _TitleBlock
                 .padding()
-            VStack(spacing: 10) {
+            VStack {
                 _CardNameBlock
                 _CardAmountBlock
                 _CardColorBlock
@@ -50,7 +44,8 @@ struct CreateCardPanel: View {
                         return
                     }
                     
-                    container.interactor.data.CreateCard(current.budget, name: nameInput, amount: amount, display: displayInput, color: colorInput, fixed: fixedInput)
+                    fixedInput = fixedInput || displayInput == .forever
+                    container.interactor.data.CreateCard(budget, name: nameInput, amount: amount, display: displayInput, color: colorInput, fixed: fixedInput)
                     container.interactor.system.ClearActionView()
                 }
             }
@@ -116,7 +111,7 @@ extension CreateCardPanel {
             Spacer()
             Menu {
                 Picker("", selection: $displayInput) {
-                    ForEach(Card.Display.allCases) { display in
+                    ForEach(Card.Display.avaliable) { display in
                         Text(display.string).tag(display)
                     }
                 }
@@ -138,6 +133,8 @@ extension CreateCardPanel {
             Spacer()
             ToggleCustom(isOn: $fixedInput, color: $colorInput, size: 24)
         }
+        .opacity(displayInput == .forever ? 0.1 : 1)
+        .disabled(displayInput == .forever)
     }
 }
 
@@ -146,7 +143,7 @@ extension CreateCardPanel {}
 
 struct CreateCardPanel_Previews: PreviewProvider {
     static var previews: some View {
-        CreateCardPanel(current: .preview)
+        CreateCardPanel(budget: .preview)
             .inject(DIContainer.preview)
     }
 }

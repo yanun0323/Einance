@@ -5,20 +5,21 @@ struct HomeView: View {
     @EnvironmentObject private var container: DIContainer
     @State private var hideAddButton: Bool = false
     
-    @ObservedObject var current: Current
+    @ObservedObject var budget: Budget
+    @Binding var current: Card
     
     var body: some View {
         ZStack {
             VStack {
-                HomeHeader(current: current)
+                HomeHeader(budget: budget, current: current)
                     .padding(.horizontal)
                 
                 if hasCards {
-                    BudgetPage(current: current)
+                    BudgetPage(budget: budget, current: $current)
                 } else {
                     Spacer()
                     ButtonCustom(width: 100, height: 100) {
-                        container.interactor.system.PushActionView(current: current)
+                        container.interactor.system.PushActionView(CreateCardPanel(budget: budget))
                     } content: {
                         Image(systemName: "rectangle.fill.badge.plus")
                             .font(.title)
@@ -29,7 +30,7 @@ struct HomeView: View {
             VStack {
                 Spacer()
                 if hasCards && !hideAddButton {
-                    AddRecordButton(current: current)
+                    AddRecordButton(budget: budget, card: current)
                         .transition(.move(edge: .bottom))
                 }
             }
@@ -46,13 +47,13 @@ struct HomeView: View {
 
 extension HomeView {
     var hasCards: Bool {
-        current.budget.book.count != 0
+        budget.book.count != 0
     }
 }
 
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
-        HomeView(current: .preview)
+        HomeView(budget: .preview, current: .constant(.preview))
             .inject(DIContainer.preview)
     }
 }

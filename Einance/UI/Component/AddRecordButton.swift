@@ -3,9 +3,8 @@ import UIComponent
 
 struct AddRecordButton: View {
     @EnvironmentObject private var container: DIContainer
-    @ObservedObject var current: Current
-    @Binding var card: Card
-    @Binding var color: Color
+    @ObservedObject var budget: Budget
+    @ObservedObject var card: Card
     
     var body: some View {
         Button {
@@ -19,7 +18,7 @@ struct AddRecordButton: View {
                     Label("button.record.create", systemImage: "plus.square.dashed")
                         .font(.system(size: 28, weight: .light))
                         .kerning(2)
-                        .foregroundColor(color)
+                        .foregroundColor(card.color)
                         .padding(size*0.15)
                         .padding(.bottom)
                 }
@@ -36,7 +35,7 @@ extension AddRecordButton {
 
 struct AddRecordButton_Previews: PreviewProvider {
     static var previews: some View {
-        AddRecordButton(budget: .preview, card: .constant(.preview), color: .constant(.red))
+        AddRecordButton(budget: .preview, card: .preview)
             .inject(DIContainer.preview)
     }
 }

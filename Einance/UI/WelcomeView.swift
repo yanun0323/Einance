@@ -5,11 +5,10 @@ struct WelcomeView: View {
     @EnvironmentObject private var container: DIContainer
     var body: some View {
         VStack {
-            Text("Welcome!!")
             Spacer()
             ButtonCustom(width: 200, height: 50, color: .blue, radius: 5, shadow: 3) {
                 withAnimation(.quick) {
-                    container.interactor.data.DebugCreateBudget()
+                    container.interactor.data.CreateFirstBudget()
                 }
             } content: {
                 Text("Create Budget")

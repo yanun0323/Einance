@@ -25,7 +25,7 @@ final class Card: ObservableObject {
         display: Card.Display = .month,
         records: [Record] = [],
         color: Color,
-        fixed: Bool = true
+        fixed: Bool = false
     ) {
         self.id = id
         self.budgetID = budgetID
@@ -34,7 +34,7 @@ final class Card: ObservableObject {
         self.amount = amount
         self.display = display
         self.color = color
-        self.fixed = fixed
+        self.fixed = fixed || display == .forever
         
         self.cost = 0
         self.balance = 0
@@ -51,8 +51,10 @@ final class Card: ObservableObject {
     }
 }
 
+// MARK: Identifiable
 extension Card: Identifiable {}
 
+// MARK: Hashable
 extension Card: Hashable {
     static func == (lhs: Card, rhs: Card) -> Bool {
         return lhs.id == rhs.id
@@ -65,15 +67,22 @@ extension Card: Hashable {
     func hash(into hasher: inout Hasher) {}
 }
 
-// MARK: - Property
+// MARK: Property
 extension Card {
     var tag: LocalizedStringKey {
         return display.cardTag
     }
 }
 
-// MARK: - Function
+// MARK: Method
 extension Card {}
+
+// MARK: Static Property
+extension Card {
+    static let empty = Card(id: -1, budgetID: -1, index: -1, name: "", amount: 0, color: .blue)
+    var isZero: Bool { self.id == -1 }
+}
+
 
 // MARK: - Card.Display
 extension Card {
@@ -118,19 +127,17 @@ extension Card {
         var isForever: Bool {
             self == .forever
         }
+        
+        static var avaliable: [Card.Display] {
+            return [.month, .forever]
+        }
     }
 }
 
 // MARK: - Card.RecordSet
 extension Card {
-    struct RecordSet {
-        var records: [Record] = []
-        var cost: Decimal = 0
+    class RecordSet: ObservableObject {
+        @Published var records: [Record] = []
+        @Published var cost: Decimal = 0
     }
-}
-
-// MARK: - Card Extension
-extension Card {
-    static let empty = Card(id: -1, budgetID: -1, index: -1, name: "", amount: 0, color: .blue)
-    var isZero: Bool { self.id == -1 }
 }

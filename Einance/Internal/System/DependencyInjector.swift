@@ -12,8 +12,6 @@ class DIContainer: ObservableObject {
     }
 }
 
-
-
 struct Interactor {
     var data: DataInteractor
     var system: SystemInteractor

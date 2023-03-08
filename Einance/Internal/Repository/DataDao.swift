@@ -7,6 +7,16 @@ class DataDaoCache {}
 protocol DataDao {}
 
 extension DataDao where Self: DataRepository {
+    // MARK: - Common
+    
+    func Tx<T>(_ action: () throws -> T?) throws -> T? where T: Any {
+        var result: T?
+        try Sql.GetDriver().transaction {
+            result = try action()
+        }
+        return result
+    }
+    
     
     // MARK: - Budgets
     
@@ -42,11 +52,7 @@ extension DataDao where Self: DataRepository {
         let query = Budget.GetTable().filter(Budget.id == id)
         let result = try Sql.GetDriver().prepare(query)
         for row in result {
-            let b = try queryBudget(try parseBudget(row))
-            b.book.sort { c1, c2 in
-                c1.index < c2.index
-            }
-            return b
+            return try queryBudget(try parseBudget(row))
         }
         return nil
     }
@@ -55,29 +61,7 @@ extension DataDao where Self: DataRepository {
         let query = Budget.GetTable().limit(1).order(Budget.id.desc)
         let result = try Sql.GetDriver().prepare(query)
         for row in result {
-            let b = try queryBudget(try parseBudget(row))
-            b.book.sort { c1, c2 in
-                c1.index < c2.index
-            }
-            return b
-        }
-        return nil
-    }
-    
-    func GetBudgetWithoutChildren(_ id: Int64) throws -> Budget? {
-        let query = Budget.GetTable().filter(Budget.id == id)
-        let result = try Sql.GetDriver().prepare(query)
-        for row in result {
-            return try parseBudget(row)
-        }
-        return nil
-    }
-    
-    func GetLastBudgetWithoutChildren() throws -> Budget? {
-        let query = Budget.GetTable().limit(1).order(Budget.id.desc)
-        let result = try Sql.GetDriver().prepare(query)
-        for row in result {
-            return try parseBudget(row)
+            return try queryBudget(try parseBudget(row))
         }
         return nil
     }
@@ -107,6 +91,7 @@ extension DataDao where Self: DataRepository {
         try Sql.GetDriver().run(Budget.GetTable().filter(Budget.id == id).delete())
     }
     
+    
     // MARK: - Card
     
     func GetCard(_ id: Int64) throws -> Card? {
@@ -118,22 +103,7 @@ extension DataDao where Self: DataRepository {
         return nil
     }
     
-    func GetCardWithoutChildren(_ id: Int64) throws -> Card? {
-        let query = Card.GetTable().filter(Card.id == id)
-        let result = try Sql.GetDriver().prepare(query)
-        for row in result {
-            return try parseCard(row)
-        }
-        return nil
-    }
-    
-    func GetCardCountOfBudget(_ id: Int64) throws -> Int? {
-        let query = Card.GetTable().filter(Card.budgetID == id).count
-        return try Sql.GetDriver().scalar(query)
-    }
-    
     func CreateCard(_ c: Card) throws -> Int64 {
-        print("[DEBUG] Card ID: \(c.id), Color: \(c.color), Color descripton: \(c.color.description)")
         let insert = Card.GetTable().insert(
             Card.budgetID <- c.budgetID,
             Card.index <- c.index,
@@ -145,7 +115,11 @@ extension DataDao where Self: DataRepository {
             Card.color <- c.color,
             Card.fixed <- c.fixed
         )
-        return try Sql.GetDriver().run(insert)
+        let id = try Sql.GetDriver().run(insert)
+#if DEBUG
+        print("[DEBUG] Card ID: \(id), Color: \(c.color), Color descripton: \(c.color.description)")
+#endif
+        return id
     }
     
     func UpdateCard(_ c: Card) throws {
@@ -165,6 +139,10 @@ extension DataDao where Self: DataRepository {
     
     func DeleteCard(_ id: Int64) throws {
         try Sql.GetDriver().run(Card.GetTable().filter(Card.id == id).delete())
+    }
+    
+    func DeleteCards(_ budgetID: Int64) throws {
+        try Sql.GetDriver().run(Card.GetTable().filter(Card.budgetID == budgetID).delete())
     }
     
     // MARK: - Record
@@ -204,6 +182,10 @@ extension DataDao where Self: DataRepository {
         try Sql.GetDriver().run(Record.GetTable().filter(Record.id == id).delete())
     }
     
+    func DeleteRecords(_ cardID: Int64) throws {
+        try Sql.GetDriver().run(Record.GetTable().filter(Record.cardID == cardID).delete())
+    }
+    
 }
 
 // MARK: - Private Function
@@ -214,7 +196,7 @@ extension DataDao {
     }
     
     private func queryBudget(_ b: Budget) throws -> Budget {
-        let query = Card.GetTable().filter(Card.budgetID == b.id).order(Card.index.desc)
+        let query = Card.GetTable().filter(Card.budgetID == b.id).order(Card.index.asc)
         let result = try Sql.GetDriver().prepare(query)
         for row in result {
             let c = try queryCard(try parseCard(row))
@@ -227,7 +209,7 @@ extension DataDao {
     }
     
     private func queryCard(_ c: Card) throws -> Card {
-        let query = Record.GetTable().filter(Record.cardID == c.id).order(Record.date.desc)
+        let query = Record.GetTable().filter(Record.cardID == c.id).order(Record.date.asc)
         let result = try Sql.GetDriver().prepare(query)
         for row in result {
             let r = try parseRecord(row)

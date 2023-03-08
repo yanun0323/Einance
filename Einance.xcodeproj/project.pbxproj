@@ -32,6 +32,8 @@
 		A8B09029291D6A01008D9B33 /* CardRect.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8B09028291D6A01008D9B33 /* CardRect.swift */; };
 		A8B0902E291D6BFF008D9B33 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = A8B09030291D6BFF008D9B33 /* Localizable.strings */; };
 		A8B09033291D73F3008D9B33 /* BudgetPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8B09032291D73F3008D9B33 /* BudgetPage.swift */; };
+		A8BDCC2D29B6431D0021309B /* LoadingSymbol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8BDCC2C29B6431D0021309B /* LoadingSymbol.swift */; };
+		A8BDCC2F29B7167B0021309B /* BookOrderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8BDCC2E29B7167B0021309B /* BookOrderView.swift */; };
 		A8C0A101291D88B800AD5E97 /* DataDao.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8C0A100291D88B800AD5E97 /* DataDao.swift */; };
 		A8C0A103291D892700AD5E97 /* DataInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8C0A102291D892700AD5E97 /* DataInteractor.swift */; };
 		A8E52C68295B063F00AC80B0 /* ActionPanelCloseButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E52C67295B063F00AC80B0 /* ActionPanelCloseButton.swift */; };
@@ -50,7 +52,6 @@
 		F691B86A29AE02DF00E05E05 /* SQLite in Frameworks */ = {isa = PBXBuildFile; productRef = F691B86929AE02DF00E05E05 /* SQLite */; };
 		F691B86C29AE043700E05E05 /* Sql.swift in Sources */ = {isa = PBXBuildFile; fileRef = F691B86B29AE043700E05E05 /* Sql.swift */; };
 		F691B87029AE233F00E05E05 /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F691B86F29AE233F00E05E05 /* Helper.swift */; };
-		F6BD3EB529B3378800DA5669 /* Current.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6BD3EB429B3378800DA5669 /* Current.swift */; };
 		F6EA06A029AFEDC2005D08D7 /* DebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6EA069F29AFEDC2005D08D7 /* DebugView.swift */; };
 		F6EA06A329B200F5005D08D7 /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6EA06A229B200F5005D08D7 /* WelcomeView.swift */; };
 		F6EA06A929B2276E005D08D7 /* Table.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6EA06A829B2276E005D08D7 /* Table.swift */; };
@@ -82,6 +83,8 @@
 		A8B0902F291D6BFF008D9B33 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		A8B09031291D6C19008D9B33 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		A8B09032291D73F3008D9B33 /* BudgetPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgetPage.swift; sourceTree = "<group>"; };
+		A8BDCC2C29B6431D0021309B /* LoadingSymbol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingSymbol.swift; sourceTree = "<group>"; };
+		A8BDCC2E29B7167B0021309B /* BookOrderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookOrderView.swift; sourceTree = "<group>"; };
 		A8C0A100291D88B800AD5E97 /* DataDao.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataDao.swift; sourceTree = "<group>"; };
 		A8C0A102291D892700AD5E97 /* DataInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataInteractor.swift; sourceTree = "<group>"; };
 		A8E52C67295B063F00AC80B0 /* ActionPanelCloseButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionPanelCloseButton.swift; sourceTree = "<group>"; };
@@ -99,7 +102,6 @@
 		F62C884C2928C2960059F914 /* HomeHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeHeader.swift; sourceTree = "<group>"; };
 		F691B86B29AE043700E05E05 /* Sql.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sql.swift; sourceTree = "<group>"; };
 		F691B86F29AE233F00E05E05 /* Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
-		F6BD3EB429B3378800DA5669 /* Current.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Current.swift; sourceTree = "<group>"; };
 		F6EA069F29AFEDC2005D08D7 /* DebugView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugView.swift; sourceTree = "<group>"; };
 		F6EA06A129B0AC83005D08D7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		F6EA06A229B200F5005D08D7 /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
@@ -174,6 +176,7 @@
 				A8357FD929293F010086720F /* HomeView.swift */,
 				A87219EE2968131F00D52995 /* SettingView.swift */,
 				F6EA069F29AFEDC2005D08D7 /* DebugView.swift */,
+				A8BDCC2E29B7167B0021309B /* BookOrderView.swift */,
 				F6EA06A229B200F5005D08D7 /* WelcomeView.swift */,
 				A8E52C66295AF2F100AC80B0 /* Panel */,
 				A8B09025291D69CC008D9B33 /* Component */,
@@ -198,7 +201,6 @@
 		A8A75AFC291CCE1200EF9D8A /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				F6BD3EB429B3378800DA5669 /* Current.swift */,
 				A8A75B0C291CF07100EF9D8A /* Budget.swift */,
 				A8A75B0E291CF24A00EF9D8A /* Card.swift */,
 				A8A75B10291CF25000EF9D8A /* Record.swift */,
@@ -264,6 +266,7 @@
 				A8E52C67295B063F00AC80B0 /* ActionPanelCloseButton.swift */,
 				A8E52C6B295BE62E00AC80B0 /* ActionPanelConfirmButton.swift */,
 				A8E52C6D295BE91600AC80B0 /* DatePickerCustom.swift */,
+				A8BDCC2C29B6431D0021309B /* LoadingSymbol.swift */,
 			);
 			path = Component;
 			sourceTree = "<group>";
@@ -377,6 +380,7 @@
 				A8C0A103291D892700AD5E97 /* DataInteractor.swift in Sources */,
 				A8FF946A29222BFE00C628BD /* RecordRow.swift in Sources */,
 				A8A75AEB291CCCBC00EF9D8A /* ContentView.swift in Sources */,
+				A8BDCC2D29B6431D0021309B /* LoadingSymbol.swift in Sources */,
 				A8B09022291CFF2B008D9B33 /* Mock.swift in Sources */,
 				A87219F32968149C00D52995 /* UserSettingDao.swift in Sources */,
 				F6EA06A929B2276E005D08D7 /* Table.swift in Sources */,
@@ -392,13 +396,13 @@
 				A8A75B11291CF25000EF9D8A /* Record.swift in Sources */,
 				F62C884D2928C2960059F914 /* HomeHeader.swift in Sources */,
 				F6EA06A029AFEDC2005D08D7 /* DebugView.swift in Sources */,
+				A8BDCC2F29B7167B0021309B /* BookOrderView.swift in Sources */,
 				A8FF94702922BCFB00C628BD /* Dashboard.swift in Sources */,
 				F691B86C29AE043700E05E05 /* Sql.swift in Sources */,
 				A8FF946E2922B74F00C628BD /* Extension.swift in Sources */,
 				A8A75B0B291CD1E700EF9D8A /* Dao.swift in Sources */,
 				A8F43BFF2951C52E00C89EDE /* Setting.swift in Sources */,
 				A8E52C68295B063F00AC80B0 /* ActionPanelCloseButton.swift in Sources */,
-				F6BD3EB529B3378800DA5669 /* Current.swift in Sources */,
 				A8E52C74296477B400AC80B0 /* EditCardPanel.swift in Sources */,
 				A8E52C6E295BE91600AC80B0 /* DatePickerCustom.swift in Sources */,
 				A87219ED2967F60700D52995 /* AddRecordButton.swift in Sources */,

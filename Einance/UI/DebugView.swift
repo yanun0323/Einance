@@ -7,6 +7,9 @@ struct DebugView: View {
     @State private var budgetCount: Int = 0
     @State private var cardCount: Int = 0
     @State private var recordCount: Int = 0
+    
+    @ObservedObject var budget: Budget
+    
     var body: some View {
         VStack {
             ViewHeader(title: "DEBUG")
@@ -20,7 +23,7 @@ struct DebugView: View {
             Divider()
             
             anyButton("Create Budget") {
-                container.interactor.data.DebugCreateBudget()
+                container.interactor.data.CreateFirstBudget()
             }
             
             anyButton("Delete Budgets", .red) {
@@ -30,6 +33,11 @@ struct DebugView: View {
             anyButton("Refresh Info") {
                 refreshInfo()
             }
+            
+            anyButton("Monthly Update") {
+                container.interactor.data.UpdateMonthlyBudget(budget)
+            }
+            
             Spacer()
         }
         .onAppear {
@@ -66,7 +74,7 @@ struct DebugView: View {
 
 struct DebugView_Previews: PreviewProvider {
     static var previews: some View {
-        DebugView()
+        DebugView(budget: .preview)
             .inject(DIContainer.preview)
     }
 }

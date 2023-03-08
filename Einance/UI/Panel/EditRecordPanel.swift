@@ -14,12 +14,12 @@ struct EditRecordPanel: View {
     @State private var dateEnd: Date? = nil
     @State private var updating: Bool = false
     
-    @ObservedObject var current: Current
+    @ObservedObject var budget: Budget
     @ObservedObject var card: Card
     @ObservedObject var record: Record
     
-    init(current: Current, card: Card, record: Record) {
-        self._current = .init(wrappedValue: current)
+    init(budget: Budget, card: Card, record: Record) {
+        self._budget = .init(wrappedValue: budget)
         self._card = .init(wrappedValue: card)
         self._record = .init(wrappedValue: record)
         self._costInput = .init(wrappedValue:record.cost.description)
@@ -55,7 +55,7 @@ struct EditRecordPanel: View {
                                 return
                             }
                             
-                            container.interactor.data.UpdateRecord(current.budget, card, record, date: dateInput, cost: cost, memo: memoInput, fixed: fixedInput)
+                            container.interactor.data.UpdateRecord(budget, card, record, date: dateInput, cost: cost, memo: memoInput, fixed: fixedInput)
                             container.interactor.system.ClearActionView()
                         }
                     }
@@ -157,7 +157,7 @@ extension EditRecordPanel {
 
 struct EditRecordPanel_Previews: PreviewProvider {
     static var previews: some View {
-        EditRecordPanel(current: .preview, card: .preview, record: .preview)
+        EditRecordPanel(budget: .preview, card: .preview, record: .preview)
             .inject(DIContainer.preview)
     }
 }

@@ -19,40 +19,81 @@ enum DataInteractorError: Error {
 
 // MARK: Public Function
 extension DataInteractor {
-    // MARK: - Current Budget
-    func IsZeroBudget() -> Bool {
-        guard let count = System.Catch("get budget count", {
-            return try repo.GetBudgetCount()
-        }) else {
-            return true
+    
+    func DoTx<T>(_ log: String, _ action: () throws -> T?) -> T? where T: Any {
+        return System.Catch(log) {
+            return try repo.Tx {
+                return try action()
+            }
         }
-        return count == 0
     }
     
+    func UpdateMonthlyBudget(_ budget: Budget) {
+        stopTheWorld(true)
+        System.Async {
+            let nextStartDate = calculateStartDate()
+            if !budget.IsExpired(nextStartDate) {
+                return
+            }
+            
+            DoTx("update monthly budget") {
+                let b = Budget(start: nextStartDate)
+                b.id = try repo.CreateBudget(b)
+                
+                for card in budget.book {
+                    try addNextCardToBudget(b, card)
+                }
+                
+                b.balance = b.amount - b.cost
+                try repo.UpdateBudget(b)
+                try _Sleep(3)
+            }
+        } main: {
+            PublishCurrentBudget()
+            stopTheWorld(false)
+        }
+
+    }
+    
+    // MARK: - Current Budget
+    
     func GetCurrentBudget() -> Budget? {
-        return System.Catch("get current budget") {
+        return DoTx("get current budget") {
             return try repo.GetLastBudget()
         }
     }
     
-    func GetCurrentBudgetWithoutChildren() -> Budget? {
-        return System.Catch("get current budget id") {
-            return try repo.GetLastBudgetWithoutChildren()
+    func PublishCurrentBudget() {
+        stopTheWorld(true)
+        System.Async {
+            return DoTx("get budget by id") {
+                return try repo.GetLastBudget()
+            }
+        } main: { b in
+            appstate.budgetPublisher.send(b)
+            stopTheWorld(false)
         }
     }
     
+    
     // MARK: Budget
     func GetBudget(_ id: Int64) -> Budget? {
-        return System.Catch("get budget by id") {
+        return DoTx("get budget by id") {
             return try repo.GetBudget(id)
         }
     }
     
     
-    func CreateBudget() {
-        System.Catch("create budget") {
-            let id = try repo.CreateBudget(Budget(start:.now.firstDayOfMonth))
-            publishBudgetID(id)
+    func CreateFirstBudget() {
+        stopTheWorld(true)
+        System.Async {
+            DoTx("create budget") {
+                let startDate = calculateStartDate()
+                _ = try repo.CreateBudget(Budget(start: startDate))
+            }
+        } main: {
+            PublishCurrentBudget()
+            stopTheWorld(false)
         }
     }
     
@@ -60,25 +101,27 @@ extension DataInteractor {
      Update budget parameter into database without updating cards
      */
     func UpdateBudget(_ b: Budget) {
-        System.Catch("update budget") {
+        DoTx("update budget") {
             try repo.UpdateBudget(b)
+        }
+    }
+    
+    func DeleteBudget(_ b: Budget) {
+        DoTx("delete budget") {
+            try repo.Tx {
+                try repo.DeleteBudget(b.id)
+                try repo.DeleteCards(b.id)
+                for card in b.book {
+                    try repo.DeleteRecords(card.id)
+                }
+            }
         }
     }
     
     // MARK: - Card
     
-    func IsZeroCardOfBudget(_ id: Int64) -> Bool {
-        guard let count = System.Catch("is any book of budget", {
-            return try repo.GetCardCountOfBudget(id)
-        }) else {
-            return true
-        }
-        
-        return count == 0
-    }
-    
     func GetCard(_ id: Int64) -> Card? {
-        return System.Catch("get card") {
+        return DoTx("get card") {
             return try repo.GetCard(id)
         }
     }
@@ -86,10 +129,9 @@ extension DataInteractor {
     /**
      Create card into budget and update budget
      */
-    func CreateCard(_ b: Budget, name: String, amount: Decimal, display: Card.Display, color: Color, fixed: Bool
-    ) {
-        System.Catch("create card") {
-            let c = Card(budgetID: b.id, index: b.book.count, name: name, amount: amount, display: display, color: color, fixed: fixed)
+    func CreateCard(_ b: Budget, name: String, amount: Decimal, display: Card.Display, color: Color, fixed: Bool ) {
+        DoTx("create card") {
+            let c = Card(budgetID: b.id, index: b.book.count, name: name, amount: amount, display: display, color: color, fixed: fixed || display == .forever)
             
             b.amount += amount
             b.balance = b.amount - b.cost
@@ -106,7 +148,7 @@ extension DataInteractor {
     Update card parameter and parent budget into database without updating records
      */
     func UpdateCard(_ b: Budget, _ c: Card, name: String, amount: Decimal, color: Color, display: Card.Display, fixed: Bool) {
-        System.Catch("update card") {
+        DoTx("update card") {
             b.amount = b.amount - c.amount + amount
             b.balance = b.amount - b.cost
             
@@ -115,10 +157,36 @@ extension DataInteractor {
             c.balance = c.amount - c.cost
             c.color = color
             c.display = display
-            c.fixed = fixed
+            c.fixed = fixed || display == .forever
 
             try repo.UpdateCard(c)
             try repo.UpdateBudget(b)
+        }
+    }
+    
+    func UpdateCardsOrder(_ budget: Budget) {
+        DoTx("update card order") {
+            for card in budget.book {
+                try repo.UpdateCard(card)
+            }
+        }
+    }
+    
+    func DeleteCard(_ b: Budget, _ c: Card) {
+        DoTx("delete card") {
+            guard let index = b.book.firstIndex(where: { $0.id == c.id }) else {
+                throw DataInteractorError.cardNotFound
+            }
+            
+            b.book.remove(at: index)
+            
+            b.amount -= c.amount
+            b.cost -= c.amount
+            b.balance = b.amount - b.cost
+            
+            try repo.UpdateBudget(b)
+            try repo.DeleteCard(c.id)
+            try repo.DeleteRecords(c.id)
         }
     }
     
@@ -128,7 +196,7 @@ extension DataInteractor {
      Create record into card and update budget and card
      */
     func CreateRecord(_ b: Budget, _ c: Card, date: Date, cost: Decimal, memo: String, fixed: Bool) {
-        System.Catch("create record") {
+        DoTx("create record") {
             let r = Record(id: b.id, cardID: c.id, date: date, cost: cost, memo: memo, fixed: fixed)
             
             c.cost += r.cost
@@ -153,7 +221,7 @@ extension DataInteractor {
      Update card parameter and parent budget into database without updating records
      */
     func UpdateRecord(_ b: Budget, _ c: Card, _ r: Record, date: Date, cost: Decimal, memo: String, fixed: Bool) {
-        System.Catch("update record") {
+        DoTx("update record") {
             c.cost = c.cost - r.cost + cost
             c.balance = c.amount - c.cost
             
@@ -171,28 +239,55 @@ extension DataInteractor {
         }
     }
     
+    func DeleteRecord(_ b: Budget, _ c: Card, _ r: Record) {
+        DoTx("delete record") {
+            let key = r.date.unixDay
+            if c.dateDict[key] == nil {
+                throw DataInteractorError.recordNotFound
+            }
+            
+            guard let index = c.dateDict[key]!.records.firstIndex(where: { $0.id == r.id }) else {
+                throw DataInteractorError.recordNotFound
+            }
+            
+            c.dateDict[key]!.records.remove(at: index)
+            c.dateDict[key]!.cost -= r.cost
+            if c.dateDict[key]!.records.isEmpty {
+                c.dateDict.removeValue(forKey: key)
+            }
+            
+            c.cost -= r.cost
+            c.balance = c.amount - c.cost
+            b.cost -= r.cost
+            b.balance = b.amount - b.cost
+            
+            try repo.DeleteBudget(r.id)
+            try repo.UpdateCard(c)
+            try repo.UpdateBudget(b)
+        }
+    }
+    
 #if DEBUG
     // MARK: - Debug
     func DebugGetBudgetsCount() -> Int {
-        return System.Catch("[DEBUG] get budgets count") {
+        return DoTx("[DEBUG] get budgets count") {
             return try repo.GetBudgets()
         }?.count ?? -1
     }
     
-    func DebugCreateBudget() {
-        System.Catch("[DEBUG] create budget") {
-            let id = try repo.CreateBudget(Budget(start:.now.firstDayOfMonth))
-            print("INSERTED ID: \(id)")
-            publishBudgetID(id)
-        }
-    }
-    
     func DebugDeleteAllBudgets() {
-        System.Catch("[DEBUG] delete all budgets") {
+        DoTx("[DEBUG] delete all budgets") {
             let budgets = try repo.GetBudgets()
             for b in budgets {
                 try repo.DeleteBudget(b.id)
             }
+        }
+    }
+    
+    private func _Sleep(_ second: Int) throws {
+        let t = second * 100000
+        for _ in 0...t {
+            _ = try repo.GetBudgetCount()
         }
     }
 #endif
@@ -200,9 +295,64 @@ extension DataInteractor {
 
 // MARK: Private Function
 extension DataInteractor {
-    private func publishBudgetID(_ id: Int64) {
-        System.Async {
-            appstate.updateBudgetIDPublisher.send(id)
+    private func stopTheWorld(_ stop: Bool) {
+        appstate.stopTheWorldPublisher.send(stop)
+    }
+    
+    private func calculateStartDate() -> Date {
+        let startDay = repo.GetBaseDateNumber() ?? 1
+        var startDate = Date.now.firstDayOfMonth.AddDay(startDay-1)
+        if Date.now < startDate {
+            startDate = startDate.AddMonth(-1)
         }
+        return startDate
+    }
+    
+    private func addNextCardToBudget(_ b: Budget, _ card: Card) throws {
+        if card.display == .forever {
+            card.budgetID = b.id
+            card.index = b.book.count
+            b.amount += card.amount
+            b.cost += card.cost
+            b.book.append(card)
+            try repo.UpdateCard(card)
+            return
+        }
+        
+        if !card.fixed { return }
+        
+        /* card.fixed == true, then -> */
+        let c = Card(
+            budgetID: b.id,
+            index: b.book.count,
+            name: card.name,
+            amount: card.amount,
+            display: card.display,
+            records: [],
+            color: card.color,
+            fixed: card.fixed
+        )
+        
+        c.id = try repo.CreateCard(c)
+
+        for (_, set) in card.dateDict {
+            for record in set.records {
+                if !record.fixed { continue }
+                let r = Record(
+                    cardID: c.id,
+                    date: b.start,
+                    cost: record.cost,
+                    memo: record.memo,
+                    fixed: record.fixed
+                )
+                c.cost += r.cost
+                _ = try repo.CreateRecord(r)
+            }
+        }
+        c.balance = c.amount - c.cost
+        b.amount += card.amount
+        b.cost += card.cost
+        b.book.append(card)
+        try repo.UpdateCard(c)
     }
 }

@@ -2,24 +2,66 @@ import SwiftUI
 import UIComponent
 
 struct Dashboard: View {
-    @ObservedObject var current: Current
+    @EnvironmentObject private var container: DIContainer
+    @State private var leftCategory: BudgetCategory = .Cost
+    @State private var rightCategory: BudgetCategory = .Amount
+    
+    @ObservedObject var budget: Budget
+    var isPreview: Bool = false
+    var previewColor: Color = .primary
+    
     var body: some View {
         VStack(spacing: 10) {
             HStack {
-                Text("label.balance")
-                Spacer()
-                Text("label.cost")
+                if isPreview {
+                    _PreviewCategoryLabel($leftCategory)
+                    Spacer()
+                    _PreviewCategoryLabel($rightCategory)
+                } else {
+                    _CategoryLabel(leftCategory)
+                    Spacer()
+                    _CategoryLabel(rightCategory)
+                }
             }
-            _BarBlock
+            
+            if leftCategory == rightCategory {
+                _SameCategoryBarBlock
+            } else {
+                _BarBlock
+                    .opacity(isPreview ? 0.5 : 1)
+            }
             HStack {
-                Text(current.budget.balance.description)
+                _CategoryValue(leftCategory)
                 Spacer()
-                Text(current.budget.cost.description)
+                _CategoryValue(rightCategory)
             }
+            .opacity(isPreview ? 0.1 : 1)
         }
         .font(.system(size: 20, weight: .regular, design: .rounded))
         .kerning(5)
         .monospacedDigit()
+        .onAppear {
+            leftCategory = container.interactor.setting.GetDashboardBudgetCategoryLeft()
+            rightCategory = container.interactor.setting.GetDashboardBudgetCategoryRight()
+        }
+        .onChange(of: leftCategory) { _ in
+            container.interactor.setting.SetDashboardBudgetCategoryLeft(leftCategory)
+        }
+        .onChange(of: rightCategory) { _ in
+            container.interactor.setting.SetDashboardBudgetCategoryRight(rightCategory)
+        }
+        .onReceive(container.appstate.leftBudgetCategoryPublisher) { output in
+            if isPreview { return }
+            withAnimation(.quick) {
+                leftCategory = output
+            }
+        }
+        .onReceive(container.appstate.rightBudgetCategoryPublisher) { output in
+            if isPreview { return }
+            withAnimation(.quick) {
+                rightCategory = output
+            }
+        }
     }
 }
 
@@ -28,11 +70,18 @@ extension Dashboard {
     var _BarBlock: some View {
         GeometryReader { bounds in
             HStack(spacing: 0) {
-                Spacer()
-                ForEach(current.budget.book) { card in
-                    Rectangle()
-                        .frame(width: (card.cost/current.budget.amount).ToCGFloat()*bounds.size.width)
-                        .foregroundColor(card.color)
+                if leftCategory == .Cost {
+                    _costBar(bounds)
+                    Spacer()
+                } else if rightCategory == .Cost {
+                    Spacer()
+                    _costBar(bounds)
+                } else if leftCategory == .Balance {
+                    _balanceBar(bounds)
+                    Spacer()
+                } else {
+                    Spacer()
+                    _balanceBar(bounds)
                 }
             }
         }
@@ -40,10 +89,95 @@ extension Dashboard {
         .background(Color.section.opacity(0.5))
         .cornerRadius(5, antialiased: true)
     }
+    
+    var _SameCategoryBarBlock: some View {
+        Rectangle()
+            .frame(height: 15)
+            .foregroundColor(Color.section.opacity(0.5))
+            .cornerRadius(5, antialiased: true)
+    }
 }
+
+// MARK: - View Function
+extension Dashboard {
+    func _CategoryLabel(_ category: BudgetCategory) -> some View {
+        switch category {
+        case .Amount:
+            return Text("label.amount")
+        case .Balance:
+            return Text("label.balance")
+        case .Cost:
+            return Text("label.cost")
+        default:
+            return Text("label.cost")
+        }
+    }
+    
+    func _PreviewCategoryLabel(_ category: Binding<BudgetCategory>) -> some View {
+        Menu {
+            Picker("", selection: category) {
+                ForEach(BudgetCategory.allCases) { value in
+                    if value != .None {
+                        Text(value.string).tag(value)
+                    }
+                }
+            }
+        } label: {
+            Text(category.wrappedValue.string)
+                .font(.system(size: 20, weight: .light))
+                .foregroundColor(previewColor)
+                .frame(height: 20)
+        }
+        .frame(width: 80)
+        .padding(5)
+        .backgroundColor(.section)
+        .cornerRadius(5)
+    }
+    
+    func _CategoryValue(_ category: BudgetCategory) -> some View {
+        switch category {
+        case .Amount:
+            return Text(budget.amount.description)
+        case .Balance:
+            return Text(budget.balance.description)
+        case .Cost:
+            return Text(budget.cost.description)
+        default:
+            return Text(budget.cost.description)
+        }
+    }
+
+    // MARK: Private
+    
+    private func _balanceBar(_ bounds: GeometryProxy) -> some View {
+        HStack(spacing: 0) {
+            ForEach(budget.book) { card in
+                Rectangle()
+                    .frame(width: abs(card.balance/budget.amount).ToCGFloat()*bounds.size.width)
+                    .foregroundColor(card.color)
+            }
+        }
+    }
+    
+    private func _costBar(_ bounds: GeometryProxy) -> some View {
+        HStack(spacing: 0) {
+            ForEach(budget.book) { card in
+                Rectangle()
+                    .frame(width: (card.cost/budget.amount).ToCGFloat()*bounds.size.width)
+                    .foregroundColor(card.color)
+            }
+        }
+    }
+}
+
+// MARK: - Function
+extension Dashboard {}
 
 struct Dashboard_Previews: PreviewProvider {
     static var previews: some View {
-        Dashboard(current: .preview)
+        Dashboard(budget: .preview, isPreview: true)
+            .inject(DIContainer.preview)
+        Dashboard(budget: .preview)
+            .inject(DIContainer.preview)
     }
 }

@@ -7,7 +7,8 @@ struct SettingView: View {
     @State private var belowBudgetCategory: BudgetCategory = .Amount
     @State private var appearance: ColorScheme? = nil
     
-    @ObservedObject var current: Current
+    @ObservedObject var budget: Budget
+    let color: Color = .primary
     
     var body: some View {
         VStack(spacing: 0) {
@@ -43,7 +44,7 @@ extension SettingView {
                 .foregroundColor(.section)
                 .frame(height: 120)
                 .overlay {
-                    Dashboard(budget: .preview)
+                    Dashboard(budget: .preview, isPreview: true, previewColor: color)
                         .padding(.horizontal)
                 }
         }
@@ -55,7 +56,7 @@ extension SettingView {
                 .foregroundColor(.primary25)
                 .font(.caption)
                 .padding(.leading)
-            CardRect(budget: .preview, card: .preview, isPreview: true)
+            CardRect(budget: .preview, card: .preview, isPreview: true, previewColor: color)
                 .frame(
                     width: widthWithPadding,
                     height: widthWithPadding*0.66
@@ -137,7 +138,7 @@ extension SettingView {
             .cornerRadius(10, antialiased: true)
             .overlay(
                 RoundedRectangle(cornerRadius: 10)
-                    .stroke(current.card.color, style: StrokeStyle(lineWidth: 3))
+                    .stroke(color, style: StrokeStyle(lineWidth: 3))
                     .opacity(appearance == nil ? 1 : 0)
             )
             Text("系統")
@@ -148,7 +149,7 @@ extension SettingView {
                     .font(.title3)
                 if appearance == nil {
                     Image(systemName: "checkmark.circle.fill")
-                        .foregroundColor(current.card.color)
+                        .foregroundColor(color)
                         .font(.title3)
                 }
             }
@@ -161,7 +162,7 @@ extension SettingView {
                 .cornerRadius(10, antialiased: true)
                 .overlay(
                     RoundedRectangle(cornerRadius: 10)
-                        .stroke(current.card.color, style: StrokeStyle(lineWidth: 3))
+                        .stroke(color, style: StrokeStyle(lineWidth: 3))
                         .opacity(appearance == .light ? 1 : 0)
                 )
             Text("淺色")
@@ -172,7 +173,7 @@ extension SettingView {
                     .font(.title3)
                 if appearance == .light {
                     Image(systemName: "checkmark.circle.fill")
-                        .foregroundColor(current.card.color)
+                        .foregroundColor(color)
                         .font(.title3)
                 }
             }
@@ -185,7 +186,7 @@ extension SettingView {
                 .cornerRadius(10, antialiased: true)
                 .overlay(
                     RoundedRectangle(cornerRadius: 10)
-                        .stroke(current.card.color, style: StrokeStyle(lineWidth: 3))
+                        .stroke(color, style: StrokeStyle(lineWidth: 3))
                         .opacity(appearance == .dark ? 1 : 0)
                 )
             Text("深色")
@@ -196,7 +197,7 @@ extension SettingView {
                     .font(.title3)
                 if appearance == .dark {
                     Image(systemName: "checkmark.circle.fill")
-                        .foregroundColor(current.card.color)
+                        .foregroundColor(color)
                         .font(.title3)
                 }
             }
@@ -255,7 +256,10 @@ extension SettingView {
 
 struct SettingView_Previews: PreviewProvider {
     static var previews: some View {
-        SettingView(current: .preview)
+        SettingView(budget: .preview)
             .inject(DIContainer.preview)
+        SettingView(budget: .preview)
+            .inject(DIContainer.preview)
+            .preferredColorScheme(.dark)
     }
 }

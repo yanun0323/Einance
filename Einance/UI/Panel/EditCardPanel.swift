@@ -9,20 +9,22 @@ struct EditCardPanel: View {
     @State private var displayInput: Card.Display
     @State private var colorInput: Color
     @State private var fixedInput: Bool
+    private let isFixed: Bool
     
     @State private var updating: Bool = false
     
-    @ObservedObject var current: Current
+    @ObservedObject var budget: Budget
     @ObservedObject var card: Card
     
-    init(current: Current, card: Card) {
-        self._current = .init(wrappedValue: current)
+    init(budget: Budget, card: Card) {
+        self._budget = .init(wrappedValue: budget)
         self._card = .init(wrappedValue: card)
         self._nameInput = .init(wrappedValue: card.name)
         self._amountInput = .init(wrappedValue: card.amount.description)
         self._displayInput = .init(wrappedValue: card.display)
         self._colorInput = .init(wrappedValue: card.color)
         self._fixedInput = .init(wrappedValue: card.fixed)
+        self.isFixed = card.fixed || card.display == .forever
     }
     
     var body: some View {
@@ -33,10 +35,8 @@ struct EditCardPanel: View {
                 _CardNameBlock
                 _CardAmountBlock
                 _CardColorBlock
-                if card.display != .forever {
-                    _CardDisplayBlock
-                    _CardFixedBlock
-                }
+//                _CardDisplayBlock
+                _CardFixedBlock
             }
             .padding(.horizontal)
             ActionPanelConfirmButton(color: $colorInput, text: "global.edit") {
@@ -130,8 +130,9 @@ extension EditCardPanel {
                     .animation(.none, value: displayInput)
                     .foregroundColor(colorInput)
             }
-
         }
+        .opacity(displayInput == .forever ? 0.1 : 1)
+        .disabled(displayInput == .forever)
     }
     
     var _CardFixedBlock: some View {
@@ -141,6 +142,8 @@ extension EditCardPanel {
             Spacer()
             ToggleCustom(isOn: $fixedInput, color: $colorInput, size: 24)
         }
+        .opacity(displayInput == .forever ? 0.1 : 1)
+        .disabled(displayInput == .forever)
     }
 }
 
@@ -153,7 +156,7 @@ extension EditCardPanel {
 
 struct EditCardPanel_Previews: PreviewProvider {
     static var previews: some View {
-        EditCardPanel(current: .preview, card: .preview)
+        EditCardPanel(budget: .preview, card: .preview2)
             .inject(DIContainer.preview)
     }
 }

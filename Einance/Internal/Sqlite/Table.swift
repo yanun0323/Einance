@@ -14,7 +14,7 @@ extension Budget {
     static func migrate(_ conn: Connection) throws {
         try conn.run(GetTable().create { t in
             t.column(id, primaryKey: .autoincrement)
-            t.column(start, unique: true)
+            t.column(start) //, unique: true)
             t.column(amount)
             t.column(cost)
             t.column(balance)

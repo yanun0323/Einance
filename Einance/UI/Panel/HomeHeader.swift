@@ -3,13 +3,14 @@ import UIComponent
 
 struct HomeHeader: View {
     @EnvironmentObject private var container: DIContainer
-    @ObservedObject var current: Current
+    @ObservedObject var budget: Budget
+    @ObservedObject var current: Card
     
     let buttonSize: CGFloat = 40
     var body: some View {
         HStack {
             ButtonCustom(width: buttonSize, height: buttonSize) {
-                container.interactor.system.PushRouterView(SettingView(current: current))
+                container.interactor.system.PushRouterView(SettingView(budget: budget))
             } content: {
                 Image(systemName: "gearshape")
                     .font(.title2)
@@ -22,7 +23,7 @@ struct HomeHeader: View {
             Spacer()
 #if DEBUG
             ButtonCustom(width: buttonSize, height: buttonSize) {
-                container.interactor.system.PushRouterView(DebugView())
+                container.interactor.system.PushRouterView(DebugView(budget: budget))
             } content: {
                 Image(systemName: "hammer.fill")
                     .font(.title2)
@@ -30,17 +31,18 @@ struct HomeHeader: View {
             Spacer()
 #endif
             ButtonCustom(width: buttonSize, height: buttonSize) {
-                
+                container.interactor.system.PushRouterView(BookOrderView(budget: budget))
             } content: {
                 Image(systemName: "rectangle.on.rectangle.angled")
                     .font(.title2)
             }
 
             ButtonCustom(width: buttonSize, height: buttonSize) {
-                container.interactor.system.PushActionView(CreateCardPanel(current: current))
+                container.interactor.system.PushActionView(CreateCardPanel(budget: budget))
             } content: {
                 Image(systemName: "rectangle.fill.badge.plus")
                     .font(.title2)
+                    .foregroundColor(current.color)
             }
         }
         .foregroundColor(.gray)
@@ -52,7 +54,7 @@ extension HomeHeader {}
 
 struct HomeHeader_Previews: PreviewProvider {
     static var previews: some View {
-        HomeHeader(current: .preview)
+        HomeHeader(budget: .preview, current: .preview)
             .inject(DIContainer.preview)
     }
 }

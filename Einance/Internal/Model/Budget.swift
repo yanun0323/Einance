@@ -30,10 +30,40 @@ final class Budget: ObservableObject {
     }
 }
 
+// MARK: Identifiable
 extension Budget: Identifiable {}
 
+// MARK: Static Property
 extension Budget {
     static let empty = Budget(id: -1, start: .zero, book: [.empty])
     var isZero: Bool { self.id == -1 }
 }
 
+// MARK: Hashable
+extension Budget: Hashable {
+    static func == (lhs: Budget, rhs: Budget) -> Bool {
+        return lhs.id == rhs.id
+    }
+    
+    var hashValue: Int {
+        return id.hashValue
+    }
+    
+    func hash(into hasher: inout Hasher) {}
+}
+
+//MARK: Method
+extension Budget {
+    func Update(_ newValue: Budget) {
+        self.id = newValue.id
+        self.start = newValue.start
+        self.amount = newValue.amount
+        self.cost = newValue.cost
+        self.balance = newValue.balance
+        self.book = newValue.book
+    }
+    
+    func IsExpired(_ nextStartDate: Date) -> Bool {
+        return Date.now >= self.start.AddMonth(1) || Date.now >= nextStartDate
+    }
+}

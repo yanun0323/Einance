@@ -13,11 +13,11 @@ struct CreateRecordPanel: View {
     @State private var dateEnd: Date? = nil
     @State private var creating: Bool = false
     
-    @ObservedObject var current: Current
+    @ObservedObject var budget: Budget
     @ObservedObject var card: Card
     
-    init(current: Current, card: Card, today: Date = .now) {
-        self._current = .init(wrappedValue: current)
+    init(budget: Budget, card: Card, today: Date = .now) {
+        self._budget = .init(wrappedValue: budget)
         self._card = .init(wrappedValue: card)
         self.costInput = ""
         self.dateInput = today
@@ -51,7 +51,7 @@ struct CreateRecordPanel: View {
                                 return
                             }
                             
-                            container.interactor.data.CreateRecord(current.budget, card, date: dateInput, cost: cost, memo: memoInput, fixed: fixedInput)
+                            container.interactor.data.CreateRecord(budget, card, date: dateInput, cost: cost, memo: memoInput, fixed: fixedInput)
                             container.interactor.system.ClearActionView()
                         }
                     }
@@ -154,7 +154,7 @@ extension CreateRecordPanel {
 
 struct CreateRecordPanel_Previews: PreviewProvider {
     static var previews: some View {
-        CreateRecordPanel(current: .preview, card: .preview, today: .now)
+        CreateRecordPanel(budget: .preview, card: .preview, today: .now)
             .inject(DIContainer.preview)
     }
 }

@@ -46,6 +46,32 @@ extension UserSettingInteractor {
         UserDefaults.cardBudgetCategoryBelow = category.rawValue
         appstate.belowBudgetCategoryPubliser.send(category)
     }
+    
+    func GetDashboardBudgetCategoryLeft() -> BudgetCategory {
+        let category = BudgetCategory(UserDefaults.dashboardBudgetCategoryLeft)
+        if category != .None {
+            return category
+        }
+        return .Cost
+    }
+    
+    func SetDashboardBudgetCategoryLeft(_ category: BudgetCategory) {
+        UserDefaults.dashboardBudgetCategoryLeft = category.rawValue
+        appstate.leftBudgetCategoryPublisher.send(category)
+    }
+    
+    func GetDashboardBudgetCategoryRight() -> BudgetCategory {
+        let category = BudgetCategory(UserDefaults.dashboardBudgetCategoryLeft)
+        if category != .None {
+            return category
+        }
+        return .Amount
+    }
+    
+    func SetDashboardBudgetCategoryRight(_ category: BudgetCategory) {
+        UserDefaults.dashboardBudgetCategoryRight = category.rawValue
+        appstate.rightBudgetCategoryPublisher.send(category)
+    }
 }
 
 // MARK: - Helper

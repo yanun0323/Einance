@@ -3,7 +3,7 @@ import UIComponent
 
 struct RecordRow: View {
     @EnvironmentObject private var container: DIContainer
-    @ObservedObject var current: Current
+    @ObservedObject var budget: Budget
     @ObservedObject var card: Card
     @ObservedObject var record: Record
     
@@ -24,6 +24,7 @@ struct RecordRow: View {
             HStack {
                 Button(role: .destructive) {
                     withAnimation(.quick) {
+                        container.interactor.data.DeleteRecord(budget, card, record)
                         print("record deleted")
                     }
                 } label: {
@@ -31,7 +32,7 @@ struct RecordRow: View {
                 }
                 
                 Button(role: .none) {
-                    container.interactor.system.PushActionView(EditRecordPanel(current: current, card: card, record: record))
+                    container.interactor.system.PushActionView(EditRecordPanel(budget: budget, card: card, record: record))
                 } label: {
                     Label("Edit", systemImage: "square.and.pencil")
                 }

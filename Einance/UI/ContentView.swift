@@ -7,28 +7,36 @@ struct ContentView: View {
     @State private var actionView: AnyView? = nil
     @State private var isKeyboardActive = false
     @State private var isPickerActive = false
+    @State private var stopTheWorld = false
     
-    @StateObject private var current: Current = .empty
+    @StateObject private var budget: Budget
+    @State private var current: Card = .empty
+    
     
     // TODO: move current budget and card here
     init(injector: DIContainer, preview: Budget? = nil) {
         if let b = preview {
-            self.current.budget = b
+            self._budget = .init(wrappedValue: b)
             return
         }
         
-        if let b = injector.interactor.data.GetCurrentBudget() {
-            self.current.budget = b
-            return
-        }
+        self._budget = .init(wrappedValue: .empty)
     }
     
     var body: some View {
         ZStack {
-            if current.budget.isZero {
+            if budget.isZero {
                 WelcomeView()
+                    .disabled(stopTheWorld)
             } else {
                 _BudgetExistView
+                    .disabled(stopTheWorld)
+            }
+            
+            if stopTheWorld {
+                Color.background.opacity(0.9)
+                    .ignoresSafeArea(.all)
+                LoadingSymbol()
             }
         }
         .onReceive(container.appstate.routerViewPublisher) { output in
@@ -51,37 +59,30 @@ struct ContentView: View {
                 isPickerActive = output
             }
         }
-        .onReceive(container.appstate.updateBudgetIDPublisher) { output in
+        .onReceive(container.appstate.budgetPublisher) { output in
             withAnimation(.quick) {
-                if let b = container.interactor.data.GetCurrentBudget() {
-                    current.budget = b
+                if let b = output {
+                    budget.Update(b)
                 }
+            }
+        }
+        .onReceive(container.appstate.stopTheWorldPublisher) { output in
+            withAnimation(.quick) {
+                if stopTheWorld == output { return }
+                stopTheWorld = output
             }
         }
         .onAppear {
-            withAnimation(.quick) {
-                if let _ = current.budget.book.first(where: { $0.id == current.card.id }) {
-                    return
-                }
-                
-                if hasCards {
-                    current.card = current.budget.book.first!
-                    return
-                }
-            }
+            container.interactor.data.PublishCurrentBudget()
         }
-        .onChange(of: current.budget.book.count) { count in
+        .onChange(of: budget.book.count) { count in
             withAnimation(.quick) {
-                if let _ = current.budget.book.first(where: { $0.id == current.card.id }) {
-                    return
-                }
-                
                 if hasCards {
-                    current.card = current.budget.book.first!
+                    current = budget.book.last!
                     return
                 }
                 
-                current.card = .empty
+                current = .empty
             }
         }
     }
@@ -91,7 +92,7 @@ struct ContentView: View {
 extension ContentView {
     var _BudgetExistView: some View {
         ZStack {
-            HomeView(current: current)
+            HomeView(budget: budget, current: $current)
                 .ignoresSafeArea(.keyboard)
                 .disabled(actionView != nil)
             ZStack {
@@ -129,7 +130,7 @@ extension ContentView {
 // MARK: - Property
 extension ContentView {
     var hasCards: Bool {
-        current.budget.book.count != 0
+        budget.book.count != 0
     }
 }
 
