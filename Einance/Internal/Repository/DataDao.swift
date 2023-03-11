@@ -24,20 +24,17 @@ extension DataDao where Self: DataRepository {
         return try countBudget()
     }
     
-    func GetBudgets() throws -> [Budget] {
+    func ListBudgets() throws -> [Budget] {
         var budgets: [Budget] = []
         let result = try Sql.GetDriver().prepare(Budget.GetTable().order(Budget.id.desc))
         for row in result {
             let b = try queryBudget(try parseBudget(row))
-            b.book.sort { c1, c2 in
-                c1.index < c2.index
-            }
             budgets.append(b)
         }
         return budgets
     }
     
-    func GetBudgetsWithoutChildren(_:Int64) throws -> [Budget] {
+    func ListBudgetsWithoutChildren(_:Int64) throws -> [Budget] {
         var budgets: [Budget] = []
         let result = try Sql.GetDriver().prepare(Budget.GetTable().order(Budget.id.desc))
         for row in result {
@@ -103,6 +100,16 @@ extension DataDao where Self: DataRepository {
         return nil
     }
     
+    func ListCards(_ budgetID:Int64) throws -> [Card] {
+        let query = Card.GetTable().filter(Card.budgetID == budgetID)
+        let result = try Sql.GetDriver().prepare(query)
+        var cards: [Card] = []
+        for row in result {
+            cards.append(try queryCard(try parseCard(row)))
+        }
+        return cards
+    }
+    
     func CreateCard(_ c: Card) throws -> Int64 {
         let insert = Card.GetTable().insert(
             Card.budgetID <- c.budgetID,
@@ -115,11 +122,7 @@ extension DataDao where Self: DataRepository {
             Card.color <- c.color,
             Card.fixed <- c.fixed
         )
-        let id = try Sql.GetDriver().run(insert)
-#if DEBUG
-        print("[DEBUG] Card ID: \(id), Color: \(c.color), Color descripton: \(c.color.description)")
-#endif
-        return id
+        return try Sql.GetDriver().run(insert)
     }
     
     func UpdateCard(_ c: Card) throws {
@@ -201,6 +204,7 @@ extension DataDao {
         for row in result {
             let c = try queryCard(try parseCard(row))
             b.book.append(c)
+            if c.isForever { continue }
             b.amount += c.amount
             b.cost += c.cost
         }
@@ -213,11 +217,11 @@ extension DataDao {
         let result = try Sql.GetDriver().prepare(query)
         for row in result {
             let r = try parseRecord(row)
-            if c.dateDict[r.date.key] == nil {
-                c.dateDict[r.date.key] = Card.RecordSet()
+            if r.fixed {
+                c.AddRecordToFixed(r)
+            } else {
+                c.AddRecordToDict(r)
             }
-            c.dateDict[r.date.key]?.records.append(r)
-            c.dateDict[r.date.key]?.cost += r.cost
             c.cost += r.cost
         }
         c.balance = c.amount - c.cost

@@ -70,7 +70,7 @@ struct EditCardPanel: View {
 extension EditCardPanel {
     var _TitleBlock: some View {
         HStack {
-            Text("panel.card.create.title")
+            Text("view.header.edit.card")
                 .font(Setting.panelTitleFont)
             Spacer()
             ActionPanelCloseButton()

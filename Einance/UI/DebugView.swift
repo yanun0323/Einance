@@ -32,7 +32,7 @@ struct DebugView: View {
             }
             
             anyButton("Force Monthly Update") {
-                container.interactor.data.DebugForceMonthlyUpdate(budget)
+                container.interactor.data.UpdateMonthlyBudget(budget)
             }
             
             Spacer()

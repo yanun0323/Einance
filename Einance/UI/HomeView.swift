@@ -15,7 +15,7 @@ struct HomeView: View {
                     .padding(.horizontal)
                 
                 if hasCards {
-                    BudgetPage(budget: budget, current: $current)
+                    BudgetPage(budget: budget, current: current, selected: $current)
                 } else {
                     Spacer()
                     ButtonCustom(width: 100, height: 100) {
@@ -36,7 +36,6 @@ struct HomeView: View {
             }
             .ignoresSafeArea(.all)
         }
-        .backgroundColor(.background)
         .onReceive(container.appstate.actionViewPublisher) { output in
             withAnimation(.quick) {
                 hideAddButton = (output != nil)

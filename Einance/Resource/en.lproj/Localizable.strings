@@ -1,12 +1,24 @@
 /* global */
+"global.edit" = "Edit";
 "global.create" = "Create";
 "global.cancel" = "Cancel";
 "global.delete" = "Delete";
-"global.edit" = "Edit";
+"global.change" = "Change";
+"global.archive" = "Archive";
+"global.confirm" = "Confirm";
 
 "label.cost" = "Cost";
-"label.balance" = "Balance";
 "label.amount" = "Amount";
+"label.balance" = "Balance";
+
+/* view header */
+"view.header.setting" = "Setting";
+"view.header.book.order" = "Cards Order";
+"view.header.statistic" = "Statistic";
+"view.header.create.card" = "Create Card";
+"view.header.create.record" = "Create Record";
+"view.header.edit.card" = "Edit Card";
+"view.header.edit.record" = "Edit Record";
 
 /* card display */
 "card.display.day" = "Day";
@@ -21,7 +33,6 @@
 "card.display.forever.cardTag" = "Forever";
 
 /* create card */
-"panel.card.create.title" = "Create Card";
 "panel.card.create.name.label" = "Name";
 "panel.card.create.name.label.placeholder" = "New Card";
 "panel.card.create.amount.label" = "Budget";
@@ -32,16 +43,18 @@
 
 /* card context alert */
 "card.context.alert.title" = "Delete Card";
-"card.context.alert.content" = "Are you sure to delete this card?";
+"card.context.alert.content" = "realy want to delete this card?";
+"card.context.alert.archive.title" = "Archive Card";
+"card.context.alert.archive.content" = "realy want to archive this card?";
 
 /* create record */
-"panel.record.create.title" = "Create Record";
 "panel.record.create.cost.label" = "Cost";
 "panel.record.create.cost.placeholder" = "100";
 "panel.record.create.date.label" = "Date";
 "panel.record.create.memo.label" = "Memo";
 "panel.record.create.memo.placeholder" = "Dinner";
+"panel.record.create.fixed.label" = "Fixed";
 "button.record.create" = "New Record";
 
-/* edit record */
-"panel.record.edit.title" = "Edit Record";
+/* budget page view */
+"view.record.row.title.fixed" = "Fixed";

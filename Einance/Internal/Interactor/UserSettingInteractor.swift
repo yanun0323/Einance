@@ -74,14 +74,16 @@ extension UserSettingInteractor {
         appstate.rightBudgetCategoryPublisher.send(category)
     }
     
-    func SetbaseDateNumber(_ n: Int) {
-        UserDefaults.baseDateNumber = n
+    func GetBaseDateNumber() -> Int {
+        repo.GetBaseDateNumber()
     }
     
-    func IsExpired(_ budgetExpiredDate: Date) -> Bool {
-        let now = Date.now
-        let nextDate = baseNumberToNextDate(UserDefaults.baseDateNumber) ?? now.AddDay(1)
-        return now >= budgetExpiredDate || now >= nextDate
+    func SetBaseDateNumber(_ n: Int) {
+        repo.SetBaseDateNumber(n)
+    }
+    
+    func IsExpired(_ start: Date) -> Bool {
+        return repo.IsExpired(start)
     }
 }
 
@@ -107,15 +109,5 @@ extension UserSettingInteractor {
         default:
             return 0
         }
-    }
-    
-    private func baseNumberToNextDate(_ baseNumber: Int?) -> Date? {
-        guard let n = baseNumber else { return nil }
-        let now = Date.now
-        var date = now.firstDayOfMonth.AddDay(n-1)
-        if now > date {
-            date = date.AddMonth(1)
-        }
-        return date
     }
 }

@@ -64,7 +64,7 @@ struct CreateCardPanel: View {
 extension CreateCardPanel {
     var _TitleBlock: some View {
         HStack {
-            Text("panel.card.create.title")
+            Text("view.header.create.card")
                 .font(Setting.panelTitleFont)
             Spacer()
             ActionPanelCloseButton()

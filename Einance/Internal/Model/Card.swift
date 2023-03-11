@@ -15,6 +15,8 @@ final class Card: ObservableObject {
     @Published var color: Color
     @Published var fixed: Bool
     @Published var dateDict: OrderedDictionary<Date, RecordSet>
+    @Published var fixedArray: [Record] = []
+    @Published var fixedCost: Decimal = 0
     
     init(
         id: Int64 = 0,
@@ -39,13 +41,13 @@ final class Card: ObservableObject {
         self.cost = 0
         self.balance = 0
         self.dateDict = [:]
-        for record in records {
-            if dateDict[record.date.key] == nil {
-                dateDict[record.date.key] = RecordSet()
+        for r in records {
+            if r.fixed {
+                AddRecordToFixed(r)
+            } else {
+                AddRecordToDict(r)
             }
-            dateDict[record.date.key]?.records.append(record)
-            dateDict[record.date.key]?.cost += record.cost
-            self.cost += record.cost
+            self.cost += r.cost
         }
         self.balance = self.amount - self.cost
     }
@@ -69,13 +71,62 @@ extension Card: Hashable {
 
 // MARK: Property
 extension Card {
-    var tag: LocalizedStringKey {
-        return display.cardTag
-    }
+    var isForever: Bool { self.display == .forever }
 }
 
 // MARK: Method
-extension Card {}
+extension Card {
+    
+    // MARK: Public
+    
+    func RemoveRecordFromDict(_ r: Record) {
+        let key = r.date.key
+        if dateDict[key].isNil { return }
+        dateDict[key]!.records.removeAll(where: { $0.id == r.id })
+        dateDict[key]!.cost -= r.cost
+        cleanDictIfExist(key)
+    }
+    
+    func AddRecordToDict(_ r: Record) {
+        let key = r.date.key
+        createDictIfNotExist(key)
+        dateDict[key]!.records.append(r)
+        dateDict[key]!.cost += r.cost
+    }
+    
+    func AddRecordToFixed(_ r: Record) {
+        fixedArray.append(r)
+        fixedCost += r.cost
+    }
+    
+    func RemoveRecordFromFixed(_ r: Record) {
+        fixedArray.removeAll(where: { $0.id == r.id })
+        fixedCost -= r.cost
+    }
+    
+    func MoveRecordDictToFixed(_ r: Record) {
+        RemoveRecordFromDict(r)
+        AddRecordToFixed(r)
+    }
+    
+    func MoveRecordFixedToDict(_ r: Record) {
+        RemoveRecordFromFixed(r)
+        AddRecordToDict(r)
+    }
+    
+    // MARK: Private
+    
+    private func cleanDictIfExist(_ key: Date) {
+        if dateDict[key].isNil || dateDict[key]!.records.count != 0 { return }
+        dateDict.removeValue(forKey: key)
+    }
+    
+    private func createDictIfNotExist(_ key: Date) {
+        if dateDict[key].isNil {
+            dateDict[key] = RecordSet()
+        }
+    }
+}
 
 // MARK: Static Property
 extension Card {

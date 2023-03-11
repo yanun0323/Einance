@@ -37,6 +37,7 @@ struct CreateRecordPanel: View {
                         _RecordCostBlock
                         _RecordMemoBlock
                         _RecordDateBlock
+                        _RecordFixedBlock
                     }
                     .padding(.horizontal)
                     
@@ -92,7 +93,7 @@ struct CreateRecordPanel: View {
 extension CreateRecordPanel {
     var _TitleBlock: some View {
         HStack {
-            Text("panel.record.create.title")
+            Text("view.header.create.record")
                 .font(Setting.panelTitleFont)
             Spacer()
             ActionPanelCloseButton()
@@ -142,6 +143,15 @@ extension CreateRecordPanel {
                     .foregroundColor(card.color)
             }
 
+        }
+    }
+    
+    var _RecordFixedBlock: some View {
+        HStack {
+            Text("panel.record.create.fixed.label")
+                .font(Setting.cardPanelLabelFont)
+            Spacer()
+            ToggleCustom(isOn: $fixedInput, color: $card.color, size: 24)
         }
     }
 }

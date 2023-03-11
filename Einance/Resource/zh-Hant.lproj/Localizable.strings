@@ -1,12 +1,24 @@
 /* global */
+"global.edit" = "修改";
 "global.create" = "新增";
 "global.cancel" = "取消";
 "global.delete" = "刪除";
-"global.edit" = "修改";
+"global.change" = "變更";
+"global.archive" = "封存";
+"global.confirm" = "確認";
 
 "label.cost" = "花費";
-"label.balance" = "餘額";
 "label.amount" = "預算";
+"label.balance" = "餘額";
+
+/* view header */
+"view.header.setting" = "設定";
+"view.header.book.order" = "調整卡片順序";
+"view.header.statistic" = "統計";
+"view.header.create.card" = "新增預算卡片";
+"view.header.create.record" = "新增花費";
+"view.header.edit.card" = "編輯預算卡片";
+"view.header.edit.record" = "編輯花費";
 
 /* card display */
 "card.display.day" = "日";
@@ -21,7 +33,6 @@
 "card.display.forever.cardTag" = "永久";
 
 /* create card */
-"panel.card.create.title" = "新增預算卡片";
 "panel.card.create.name.label" = "名稱";
 "panel.card.create.name.label.placeholder" = "新卡片";
 "panel.card.create.amount.label" = "預算";
@@ -31,17 +42,33 @@
 "panel.card.create.fixed.label" = "固定卡片";
 
 /* card context alert */
-"card.context.alert.title" = "刪除預算卡片";
-"card.context.alert.content" = "確定要刪除這張卡片?";
+"card.context.alert.delete.title" = "刪除預算卡片";
+"card.context.alert.delete.content" = "確定要刪除這張卡片?";
+"card.context.alert.archive.title" = "封存預算卡片";
+"card.context.alert.archive.content" = "確定要封存這張卡片?";
 
 /* create record */
-"panel.record.create.title" = "新增花費";
 "panel.record.create.cost.label" = "花費";
 "panel.record.create.cost.placeholder" = "100";
 "panel.record.create.date.label" = "日期";
 "panel.record.create.memo.label" = "備註";
 "panel.record.create.memo.placeholder" = "晚餐";
+"panel.record.create.fixed.label" = "固定花費";
 "button.record.create" = "新增花費";
 
-/* edit record */
-"panel.record.edit.title" = "編輯花費";
+/* budget page view */
+"view.record.row.title.fixed" = "固定花費";
+
+/* welcome view description */
+"welcome.button.next" = "下一步";
+"welcome.button.tutorial.confirm" = "執行教學";
+"welcome.button.tutorial.denine" = "不！直接開始";
+
+"welcome.step.0.title" = "歡迎使用 Einance";
+"welcome.step.0.content" = "最簡約的記帳軟體";
+"welcome.step.1.title" = "您要何時更新預算";
+"welcome.step.1.picker.left" = "每月";
+"welcome.step.1.picker.right" = "號";
+"welcome.step.1.content" = "稍後可在設定更改";
+"welcome.step.2.title" = "設定完成";
+"welcome.step.2.content" = "是否執行教學？";

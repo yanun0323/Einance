@@ -7,42 +7,33 @@ struct ContentView: View {
     @State private var actionView: AnyView? = nil
     @State private var isKeyboardActive = false
     @State private var isPickerActive = false
-    @State private var stopTheWorld = false
     @State private var isUpdating = false
     
-    @StateObject private var budget: Budget
+    @StateObject private var budget: Budget = .empty
     @State private var current: Card = .empty
     @State private var timer: Timer?
     @State private var bookCount: Int = 0
     private let isPreview: Bool
     
     // TODO: move current budget and card here
-    init(injector: DIContainer, preview: Budget? = nil, isPreview: Bool = false) {
+    init(injector: DIContainer, isPreview: Bool = false) {
         self.isPreview = isPreview
-        if let b = preview {
-            self._budget = .init(wrappedValue: b)
+        if isPreview {
+            self._budget = .init(wrappedValue: .preview)
+            self._current = .init(wrappedValue: Budget.preview.book.first!)
             return
         }
-        
-        self._budget = .init(wrappedValue: .empty)
     }
     
     var body: some View {
         ZStack {
             if budget.isZero && !isPreview {
                 WelcomeView()
-                    .disabled(stopTheWorld)
             } else {
                 _BudgetExistView
-                    .disabled(stopTheWorld)
-            }
-            
-            if stopTheWorld {
-                Color.background.opacity(0.9)
-                    .ignoresSafeArea(.all)
-                LoadingSymbol()
             }
         }
+        .backgroundColor(.background)
         .onReceive(container.appstate.routerViewPublisher) { output in
             withAnimation(.quick) {
                 routerView = output
@@ -74,14 +65,14 @@ struct ContentView: View {
                 refreshCurrentCard()
                 
                 // make current card move to first
-                bookCount = -1
+                bookCount = b.book.count
                 
-                let expiredDate = budget.start.AddMonth(1)
                 timer?.invalidate()
+                let start = budget.start
                 timer = Timer.scheduledTimer(
                     withTimeInterval: 15, repeats: true,
-                    block: { _ in
-                        if container.interactor.setting.IsExpired(expiredDate) {
+                    block: { t in
+                        if container.interactor.setting.IsExpired(start) {
                             container.interactor.system.TriggerMonthlyCheck()
                         }
                     })
@@ -90,12 +81,6 @@ struct ContentView: View {
         .onReceive(container.appstate.monthlyCheckPublisher) { output in
             print("Monthly Publish Received")
             container.interactor.data.UpdateMonthlyBudget(budget)
-        }
-        .onReceive(container.appstate.stopTheWorldPublisher) { output in
-            if stopTheWorld == output { return }
-            withAnimation(.quick) {
-                stopTheWorld = output
-            }
         }
         .onAppear {
             container.interactor.data.PublishCurrentBudget()
@@ -168,9 +153,9 @@ extension ContentView {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView(injector: .preview, preview: .preview, isPreview: true)
+        ContentView(injector: .preview, isPreview: true)
             .inject(DIContainer.preview)
-        ContentView(injector: .preview, preview: .preview)
+        ContentView(injector: .preview)
             .inject(DIContainer.preview)
     }
 }

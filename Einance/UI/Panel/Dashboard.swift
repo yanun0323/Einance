@@ -150,10 +150,12 @@ extension Dashboard {
     private func _balanceBar(_ bounds: GeometryProxy) -> some View {
         HStack(spacing: 0) {
             ForEach(budget.book) { card in
-                Rectangle()
-                    .frame(width: abs(card.balance/budget.amount).ToCGFloat()*bounds.size.width)
-                    .foregroundColor(card.color)
-                    .opacity(isCurrent(card.id) ? 1 : 0.25)
+                if !card.isForever {
+                    Rectangle()
+                        .frame(width: abs(card.balance/budget.amount).ToCGFloat()*bounds.size.width)
+                        .foregroundColor(card.color)
+                        .opacity(isCurrent(card.id) ? 1 : 0.25)
+                }
             }
         }
     }
@@ -161,10 +163,12 @@ extension Dashboard {
     private func _costBar(_ bounds: GeometryProxy) -> some View {
         HStack(spacing: 0) {
             ForEach(budget.book) { card in
-                Rectangle()
-                    .frame(width: (card.cost/budget.amount).ToCGFloat()*bounds.size.width)
-                    .foregroundColor(card.color)
-                    .opacity(isCurrent(card.id) ? 1 : 0.25)
+                if !card.isForever {
+                    Rectangle()
+                        .frame(width: (card.cost/budget.amount).ToCGFloat()*bounds.size.width)
+                        .foregroundColor(card.color)
+                        .opacity(isCurrent(card.id) ? 1 : 0.25)
+                }
             }
         }
     }

@@ -20,14 +20,14 @@ struct BookOrderView: View {
     // MARK: TODO: Check Refresh
     var body: some View {
         VStack(spacing: 30) {
-            ViewHeader(title: "預算卡片排序")
+            ViewHeader(title: "view.header.book.order")
             GeometryReader { proxy in
                 _ListBlock(getCardOffset(proxy))
                     .padding()
             }
         }
         .padding(.horizontal)
-        .background(Color.background)
+        .backgroundColor(.background)
     }
 }
 

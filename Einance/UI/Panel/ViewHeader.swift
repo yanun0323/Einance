@@ -3,7 +3,7 @@ import UIComponent
 
 struct ViewHeader: View {
     @EnvironmentObject private var container: DIContainer
-    let title: String
+    let title: LocalizedStringKey
     let length: CGFloat = 45
     
     var body: some View {

@@ -22,6 +22,7 @@ final class Budget: ObservableObject {
         self.cost = 0
         
         for card in book {
+            if card.isForever { continue }
             self.amount += card.amount
             self.cost += card.cost
         }
@@ -63,7 +64,11 @@ extension Budget {
         self.book = newValue.book
     }
     
-    func IsExpired(_ nextStartDate: Date) -> Bool {
-        return Date.now >= self.start.AddMonth(1) || Date.now >= nextStartDate
+    func NextStartDate(_ baseNumber: Int) -> Date {
+        return start.AddMonth(1).firstDayOfMonth.AddDay(baseNumber-1)
+    }
+    
+    func IsExpired(_ baseNumber: Int) -> Bool {
+        return Date.now >= NextStartDate(baseNumber)
     }
 }

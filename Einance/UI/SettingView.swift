@@ -6,29 +6,53 @@ struct SettingView: View {
     @State private var aboveBudgetCategory: BudgetCategory = .Cost
     @State private var belowBudgetCategory: BudgetCategory = .Amount
     @State private var appearance: ColorScheme? = nil
+    @State private var dateNumber: Int = 1
+    @State private var dateNumberEdit: Int = 1
+    @State private var showDateNumberAlert: Bool = false
+    
+    @State private var showDangerAlert: Bool = false
+    @State private var dangerAlertTitle: LocalizedStringKey = ""
+    @State private var dangerAction: () -> Void = {}
     
     @ObservedObject var budget: Budget
     @ObservedObject var current: Card
     
-    private let color: Color = .primary
+    @State private var color: Color = .primary.opacity(0.8)
     
     var body: some View {
         VStack(spacing: 0) {
-            ViewHeader(title: "設定")
+            ViewHeader(title: "view.header.setting")
                 .padding(.horizontal)
             ScrollView(.vertical, showsIndicators: false) {
                 VStack(spacing: 30) {
                     _AppearanceBlock
                     _DashboardStyleSample
                     _CardShapeStyleSample
+                    _BaseNumberBlock
+                    _DangerZoneBlock
                     Spacer()
                 }
-                .padding(.horizontal)
             }
+            .frame(width: System.device.screen.width - 30)
         }
         .background(Color.background)
+        .animation(.medium, value: dateNumberEdit)
+        .transition(.scale(scale: 0.95, anchor: .topLeading).combined(with: .opacity))
+        .alert("確定要變更更新日期？", isPresented: $showDateNumberAlert, actions: {
+            _DateNumberAlertButton
+        }, message: {
+            Text("下次更新日期")+Text(" ")+Text(_CalculateNextDate().String("yyyy.MM.dd"))
+                .kerning(1)
+        })
+        .alert(dangerAlertTitle, isPresented: $showDangerAlert, actions: {
+            Button("global.confirm", role: .destructive, action: dangerAction)
+        })
         .onAppear {
             appearance = container.interactor.setting.GetAppearance()
+            dateNumber = container.interactor.setting.GetBaseDateNumber()
+            dateNumberEdit = dateNumber
+            showDateNumberAlert = false
+            color = current.color
         }
     }
 }
@@ -36,19 +60,98 @@ struct SettingView: View {
 // MARK: - ViewBlock
 extension SettingView {
     
-    var _DashboardStyleSample: some View {
+    var _BaseNumberBlock: some View {
         VStack(alignment: .leading, spacing: 5) {
-            Text("儀表板樣式")
-                .foregroundColor(.primary25)
-                .font(.caption)
-                .padding(.leading)
-            RoundedRectangle(cornerRadius: Setting.globalCornerRadius)
-                .foregroundColor(.section)
-                .frame(height: 120)
-                .overlay {
-                    Dashboard(budget: budget, current: current, isPreview: true, previewColor: color)
-                        .padding(.horizontal)
+            if dateNumberEdit != 0 {
+                Text("更新日期")
+                    .foregroundColor(.primary25)
+                    .font(.caption)
+                    .padding(.leading)
+                RoundedRectangle(cornerRadius: Setting.globalCornerRadius)
+                    .foregroundColor(.section)
+                    .frame(height: isDateNumberChanged ? 200: 160)
+                    .overlay {
+                        VStack(spacing: 0) {
+                            _BaseNumberContentEdit
+                            Spacer()
+                        }
+                    }
+            }
+        }
+    }
+    
+    var _BaseNumberContentEdit: some View {
+        ZStack {
+            HStack(spacing: 20) {
+                ButtonCustom(width: 100, height: 33, color: .section.opacity(0.5), radius: 5, shadow: 5) {
+                    withAnimation(.quick) {
+                        dateNumberEdit = dateNumber
+                    }
+                } content: {
+                    Text("global.cancel")
                 }
+                
+                ButtonCustom(width: 100, height: 33, color: color, radius: 5) {
+                    withAnimation(.quick) {
+                        showDateNumberAlert = true
+                    }
+                } content: {
+                    Text("global.change")
+                        .foregroundColor(.white)
+                }
+            }
+            .scaleEffect(y: isDateNumberChanged ? 1 : 0.2, anchor: .top)
+            .offset(y: 95)
+            .opacity(isDateNumberChanged ? 1 : 0)
+            .disabled(!isDateNumberChanged)
+            
+            VStack {
+                HStack {
+                    Text("welcome.step.1.picker.left")
+                    Picker("", selection: $dateNumberEdit) {
+                        ForEach(1...31, id: \.self) { i in
+                            Text(i.description)
+                                .tag(i)
+                                .foregroundColor(color)
+                        }
+                    }
+                    .pickerStyle(.wheel)
+                    .frame(width: 80, height: 100)
+                    Text("welcome.step.1.picker.right")
+                }
+                
+                VStack {
+                    HStack(spacing: 10) {
+                        Text("上次更新日期")
+                        Text(budget.start.String("yyyy.MM.dd"))
+                            .kerning(1)
+                    }
+                    HStack(spacing: 10) {
+                        Text("下次更新日期")
+                        Text(_CalculateNextDate().String("yyyy.MM.dd"))
+                            .kerning(1)
+
+                    }
+                    .foregroundColor(isDateNumberChanged ? color : .gray)
+                    .fontWeight(isDateNumberChanged ? .regular : .light)
+                    .animation(.quick, value: isDateNumberChanged)
+                    .animation(.none, value: dateNumberEdit)
+                }
+                .font(.caption)
+                .fontWeight(.light)
+                .foregroundColor(.gray)
+                .monospacedDigit()
+            }
+            .frame(height: 150)
+        }
+    }
+    
+    var _DateNumberAlertButton: some View {
+        Button("global.change", role: .destructive) {
+            withAnimation(.medium) {
+                dateNumber = dateNumberEdit
+                container.interactor.setting.SetBaseDateNumber(dateNumber)
+            }
         }
     }
     
@@ -63,6 +166,22 @@ extension SettingView {
                     width: widthWithPadding,
                     height: widthWithPadding*0.66
                 )
+        }
+    }
+    
+    var _DashboardStyleSample: some View {
+        VStack(alignment: .leading, spacing: 5) {
+            Text("儀表板樣式")
+                .foregroundColor(.primary25)
+                .font(.caption)
+                .padding(.leading)
+            RoundedRectangle(cornerRadius: Setting.globalCornerRadius)
+                .foregroundColor(.section)
+                .frame(height: 120)
+                .overlay {
+                    Dashboard(budget: budget, current: current, isPreview: true, previewColor: color)
+                        .padding(.horizontal)
+                }
         }
     }
     
@@ -206,6 +325,47 @@ extension SettingView {
         }
     }
     
+    var _DangerZoneBlock: some View {
+        VStack(alignment: .leading, spacing: 5) {
+            Text("危險區域")
+                .foregroundColor(.red)
+                .font(.caption)
+                .padding(.leading)
+            RoundedRectangle(cornerRadius: Setting.globalCornerRadius)
+                .foregroundColor(.red.opacity(0.1))
+                .frame(height: 100)
+                .overlay {
+                    VStack(spacing: 0) {
+                        Spacer()
+                        _DangerForceUpdateBudgetButton
+                        Spacer()
+                    }
+                }
+        }
+    }
+    
+    var _DangerForceUpdateBudgetButton: some View {
+        Button {
+            withAnimation(.quick) {
+                dangerAlertTitle = "確定要強制更新卡片到下個月?"
+                dangerAction = {
+                    container.interactor.data.UpdateMonthlyBudget(budget, force: true)
+                }
+                showDangerAlert = true
+            }
+        } label: {
+            Text("強制更新卡片到下個月")
+                .font(.body)
+                .foregroundColor(.white)
+        }
+        .padding(.horizontal, 30)
+        .padding(.vertical, 7)
+        .backgroundColor(.red)
+        .cornerRadius(7)
+
+
+    }
+    
 }
 
 // MARK: - Property
@@ -216,6 +376,10 @@ extension SettingView {
     
     var widthWithPadding: CGFloat {
         System.device.screen.width-30
+    }
+    
+    var isDateNumberChanged: Bool {
+        dateNumber != dateNumberEdit
     }
 }
 
@@ -253,6 +417,14 @@ extension SettingView {
             @unknown default:
                 return Color(red: light, green: light ,blue: light)
         }
+    }
+    
+    func _CalculateNextDate() -> Date {
+        let nextDay1 = budget.start.AddMonth(1).firstDayOfMonth
+        if nextDay1.daysOfMonth < dateNumberEdit {
+            return nextDay1.AddMonth(1).AddDay(-1)
+        }
+        return nextDay1.AddDay(dateNumberEdit-1)
     }
 }
 

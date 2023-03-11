@@ -16,8 +16,9 @@ struct HomeHeader: View {
                     .font(.title2)
             }
             ButtonCustom(width: buttonSize, height: buttonSize) {
+                container.interactor.system.PushRouterView(StatisticView(budget: budget, card: current))
             } content: {
-                Image(systemName: "chart.xyaxis.line")
+                Image(systemName: "chart.pie")
                     .font(.title2)
             }
             Spacer()
@@ -26,12 +27,6 @@ struct HomeHeader: View {
                 container.interactor.system.PushRouterView(DebugView(budget: budget))
             } content: {
                 Image(systemName: "hammer.fill")
-                    .font(.title2)
-            }
-            ButtonCustom(width: buttonSize, height: buttonSize) {
-                container.interactor.data.DebugForceMonthlyUpdate(budget)
-            } content: {
-                Image(systemName: "hammer")
                     .font(.title2)
             }
             Spacer()
@@ -48,7 +43,6 @@ struct HomeHeader: View {
             } content: {
                 Image(systemName: "rectangle.fill.badge.plus")
                     .font(.title2)
-                    .foregroundColor(current.color)
             }
         }
         .foregroundColor(.gray)
@@ -62,5 +56,9 @@ struct HomeHeader_Previews: PreviewProvider {
     static var previews: some View {
         HomeHeader(budget: .preview, current: .preview)
             .inject(DIContainer.preview)
+        
+        HomeHeader(budget: .preview, current: .preview)
+            .inject(DIContainer.preview)
+            .preferredColorScheme(.dark)
     }
 }

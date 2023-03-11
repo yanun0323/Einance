@@ -3,11 +3,13 @@ import UIComponent
 
 struct CardRect: View {
     @EnvironmentObject private var container: DIContainer
-    @State private var showAlert = false
-    @ObservedObject var budget: Budget
-    @ObservedObject var card: Card
+    @State private var showDeleteAlert = false
+    @State private var showArchiveAlert = false
     @State private var aboveCategory: BudgetCategory = .Cost
     @State private var belowCategory: BudgetCategory = .Amount
+    
+    @ObservedObject var budget: Budget
+    @ObservedObject var card: Card
     var isPreview: Bool = false
     var previewColor: Color = .primary
     var isOrder: Bool = false
@@ -39,8 +41,15 @@ struct CardRect: View {
                     _ContextButtons
                 }
             }
-            .alert("card.context.alert.title", isPresented: $showAlert, actions: { _AlertButton }, message: {
-                Text("card.context.alert.content")
+            .alert("card.context.alert.delete.title", isPresented: $showDeleteAlert, actions: {
+                _AlertDeleteButton
+            }, message: {
+                Text("card.context.alert.delete.content")
+            })
+            .alert("card.context.alert.archive.title", isPresented: $showArchiveAlert, actions: {
+                _AlertArchiveButton
+            }, message: {
+                Text("card.context.alert.archive.content")
             })
             .onAppear {
                 aboveCategory = container.interactor.setting.GetCardBudgetCategoryAbove()
@@ -130,9 +139,19 @@ extension CardRect {
                 Label("global.edit", systemImage: "square.and.pencil")
             }
             
+            if card.isForever {
+                Button(role: .cancel) {
+                    withAnimation(.quick) {
+                        showArchiveAlert = true
+                    }
+                } label: {
+                    Label("global.archive", systemImage: "archivebox")
+                }
+            }
+            
             Button(role: .destructive) {
                 withAnimation(.quick) {
-                    showAlert = true
+                    showDeleteAlert = true
                 }
             } label: {
                 Label("global.delete", systemImage: "trash")
@@ -140,13 +159,19 @@ extension CardRect {
         }
     }
     
-    var _AlertButton: some View {
-        Button(role: .destructive) {
+    var _AlertDeleteButton: some View {
+        Button("global.delete", role: .destructive) {
             withAnimation(.quick) {
                 container.interactor.data.DeleteCard(budget, card)
             }
-        } label: {
-            Text("global.delete")
+        }
+    }
+    
+    var _AlertArchiveButton: some View {
+        Button("global.archive", role: .destructive) {
+            withAnimation(.quick) {
+                container.interactor.data.ArchiveCard(budget, card)
+            }
         }
     }
 }

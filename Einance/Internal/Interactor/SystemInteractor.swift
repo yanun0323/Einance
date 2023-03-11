@@ -48,15 +48,9 @@ extension SystemInteractor {
         }
     }
     
-    func StopTheWorld() {
-        appstate.stopTheWorldPublisher.send(true)
-    }
-    
-    func RunTheWorld() {
-        appstate.stopTheWorldPublisher.send(false)
-    }
-    
     func TriggerMonthlyCheck() {
-        appstate.monthlyCheckPublisher.send(true)
+        System.Async {
+            appstate.monthlyCheckPublisher.send(true)
+        }
     }
 }

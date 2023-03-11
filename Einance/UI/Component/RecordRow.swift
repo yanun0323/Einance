@@ -34,7 +34,6 @@ struct RecordRow: View {
                 Button(role: .destructive) {
                     withAnimation(.quick) {
                         container.interactor.data.DeleteRecord(budget, card, record)
-                        print("record deleted")
                     }
                 } label: {
                     Label("Delete", systemImage: "trash")
@@ -44,6 +43,19 @@ struct RecordRow: View {
                     container.interactor.system.PushActionView(EditRecordPanel(budget: budget, card: card, record: record))
                 } label: {
                     Label("Edit", systemImage: "square.and.pencil")
+                }
+            }
+        }
+        .swipeActions(edge: .leading, allowsFullSwipe: true) {
+            if card.fixed {
+                Button(role: .cancel) {
+                    withAnimation(.quick) {
+                        let fixed = !record.fixed
+                        container.interactor.data.UpdateRecord(budget, card, record, date: record.date, cost: record.cost, memo: record.memo, fixed: fixed)
+                    }
+                } label: {
+                    Label("Fixed", systemImage: "pin")
+                        .foregroundColor(card.color)
                 }
             }
         }

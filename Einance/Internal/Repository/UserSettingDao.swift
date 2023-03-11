@@ -12,12 +12,41 @@ extension UserSettingDao where Self: UserSettingRepository {
         UserDefaults.appearance = appearance
     }
     
-    func GetBaseDateNumber() -> Int? {
-        return UserDefaults.baseDateNumber
+    func GetBaseDateNumber() -> Int {
+        return UserDefaults.baseDateNumber ?? 5
     }
     
     func SetBaseDateNumber(_ number: Int?) {
         UserDefaults.baseDateNumber = number
+    }
+    
+    func GetFirstStartDate() -> Date {
+        let days = GetBaseDateNumber()
+        let prev =  Date.now.AddMonth(-1)
+        let prevDay1 = prev.firstDayOfMonth
+        var result = prevDay1.AddDay(days-1)
+        if prevDay1.daysOfMonth < days {
+            result = prevDay1.AddMonth(1).AddDay(-1)
+        }
+        
+        if result <= prev {
+            return result.AddMonth(1)
+        }
+        return result
+    }
+    
+    func GetNextStartDate(_ start: Date) -> Date {
+        let days = GetBaseDateNumber()
+        let nextDay1 = start.AddMonth(1).firstDayOfMonth
+        
+        if nextDay1.daysOfMonth < days {
+            return nextDay1.AddMonth(1).AddDay(-1)
+        }
+        return nextDay1.AddDay(days-1)
+    }
+    
+    func IsExpired(_ start: Date) -> Bool {
+        return Date.now >= GetNextStartDate(start)
     }
     
     func GetCardBudgetCategoryAbove() -> Int? {
