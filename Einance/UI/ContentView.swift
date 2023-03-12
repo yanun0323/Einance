@@ -3,8 +3,9 @@ import UIComponent
 
 struct ContentView: View {
     @EnvironmentObject private var container: DIContainer
-    @State private var routerView: RouterView? = nil
-    @State private var actionView: ActionView? = nil
+    @State private var viewRouter: AppState.ViewRouter = .Empty
+    @State private var actionRouter: AppState.ActionRouter = .Empty
+    @State private var isActionViewEmpty: Bool = true
     @State private var isKeyboardActive = false
     @State private var isPickerActive = false
     @State private var isUpdating = false
@@ -25,12 +26,12 @@ struct ContentView: View {
         .backgroundColor(.background)
         .onReceive(container.appstate.routerViewPublisher) { output in
             withAnimation(.quick) {
-                routerView = output
+                viewRouter = output
             }
         }
         .onReceive(container.appstate.actionViewPublisher) { output in
             withAnimation(.quick) {
-                actionView = output
+                actionRouter = output
             }
         }
         .onReceive(container.appstate.keyboardPublisher) { output in
@@ -43,6 +44,7 @@ struct ContentView: View {
                 isPickerActive = output
             }
         }
+        .onSmoothRecive(.quick, container.appstate.actionViewEmptyPublisher) { isActionViewEmpty = $0 }
         .onReceive(container.appstate.budgetPublisher) { output in
             if isUpdating { return }
             guard let b = output else { return }
@@ -81,6 +83,38 @@ struct ContentView: View {
             }
         }
     }
+    
+    @ViewBuilder
+    private func routerView() -> some View {
+        switch viewRouter {
+        case .Empty:
+            EmptyView()
+        case let .Setting(di, budget, card):
+            SettingView(injector: di, budget: budget, current: card)
+        case let .BookOrder(budget):
+            BookOrderView(budget: budget)
+        case let .Statistic(budget, card):
+            StatisticView(budget: budget, card: card)
+        case let .Debug(budget):
+            DebugView(budget: budget)
+        }
+    }
+    
+    @ViewBuilder
+    private func actionView() -> some View {
+        switch actionRouter {
+        case .Empty:
+            EmptyView()
+        case let .CreateCard(budget):
+            CreateCardPanel(budget: budget)
+        case let .EditCard(budget, card):
+            EditCardPanel(budget: budget, card: card)
+        case let .CreateRecord(budget, card):
+            CreateRecordPanel(budget: budget, card: card)
+        case let .EditRecord(budget, card, record):
+            EditRecordPanel(budget: budget, card: card, record: record)
+        }
+    }
 }
 
 // MARK: - View Block
@@ -88,16 +122,13 @@ extension ContentView {
     var _BudgetExistView: some View {
         ZStack {
             HomeView(budget: budget, current: current, selected: $current)
-                .disabled(actionView != nil)
+                .disabled(!isActionViewEmpty)
             ZStack {
-                if routerView != nil {
-                    routerView!
-                }
-                
-                if actionView != nil {
+                routerView()
+                if !isActionViewEmpty {
                     Rectangle()
                         .foregroundColor(.black.opacity(0.5))
-                        .animation(.default, value: actionView.isNil)
+                        .animation(.default, value: isActionViewEmpty)
                         .onTapGesture {
                             if isKeyboardActive || isPickerActive {
                                 container.interactor.system.PushPickerState(isOn: false)
@@ -109,10 +140,10 @@ extension ContentView {
                         .transition(.opacity)
                         .ignoresSafeArea(.all)
                     VStack {
-                        actionView!
+                        actionView()
                         Spacer(minLength: 0)
                     }
-                    .animation(.default, value: actionView.isNil)
+                    .animation(.default, value: isActionViewEmpty)
                     .transition(.opacity)
                     .ignoresSafeArea(.all, edges: .bottom)
                 }
@@ -135,11 +166,6 @@ extension ContentView {
             return
         }
         current = bookCount < budget.book.count ? budget.book.last! : budget.book.first!
-    }
-    
-    @ViewBuilder
-    func ActionView() -> some View {
-        Group{}
     }
 }
 

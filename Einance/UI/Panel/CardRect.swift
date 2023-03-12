@@ -134,7 +134,7 @@ extension CardRect {
     var _ContextButtons: some View {
         VStack {
             Button {
-                container.interactor.system.PushActionView(ActionView(budget: budget, card: card, router: .EditCard))
+                container.interactor.system.PushActionView(.EditCard(budget, card))
             } label: {
                 Label("global.edit", systemImage: "square.and.pencil")
             }

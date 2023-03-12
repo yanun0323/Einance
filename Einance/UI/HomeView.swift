@@ -3,7 +3,7 @@ import UIComponent
 
 struct HomeView: View {
     @EnvironmentObject private var container: DIContainer
-    @State private var hideAddButton: Bool = false
+    @State private var showAddButton: Bool = false
     
     @ObservedObject var budget: Budget
     @ObservedObject var current: Card
@@ -21,7 +21,7 @@ struct HomeView: View {
                     VStack {
                         Spacer()
                         ButtonCustom(width: 100, height: 100) {
-                            container.interactor.system.PushActionView(ActionView(budget: budget, router: .CreateCard))
+                            container.interactor.system.PushActionView(.CreateCard(budget))
                         } content: {
                             Image(systemName: "rectangle.fill.badge.plus")
                                 .font(.title)
@@ -32,7 +32,7 @@ struct HomeView: View {
             }
             VStack {
                 Spacer()
-                if hasCards && !hideAddButton {
+                if hasCards && showAddButton {
                     AddRecordButton(budget: budget, card: current)
                         .transition(.move(edge: .bottom))
                 }
@@ -40,11 +40,8 @@ struct HomeView: View {
             .ignoresSafeArea(.all)
         }
         .ignoresSafeArea(.keyboard)
-        .onReceive(container.appstate.actionViewPublisher) { output in
-            withAnimation(.quick) {
-                hideAddButton = (output != nil)
-            }
-        }
+        .onReceive(container.appstate.actionViewEmptyPublisher) { showAddButton = $0 }
+        .animation(.quick, value: showAddButton)
     }
 }
 

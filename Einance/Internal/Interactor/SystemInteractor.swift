@@ -12,27 +12,29 @@ struct SystemInteractor {
 }
 
 extension SystemInteractor {
-    func PushRouterView(_ content: RouterView) {
+    func PushRouterView(_ router: AppState.ViewRouter) {
         System.Async {
-            appstate.routerViewPublisher.send(content)
+            appstate.routerViewPublisher.send(router)
         }
     }
     
     func ClearRouterView() {
         System.Async {
-            appstate.routerViewPublisher.send(nil)
+            appstate.routerViewPublisher.send(.Empty)
         }
     }
     
-    func PushActionView(_ content: ActionView) {
+    func PushActionView(_ router: AppState.ActionRouter) {
         System.Async {
-            appstate.actionViewPublisher.send(content)
+            appstate.actionViewPublisher.send(router)
+            appstate.actionViewEmptyPublisher.send(false)
         }
     }
     
     func ClearActionView() {
         System.Async {
-            appstate.actionViewPublisher.send(nil)
+            appstate.actionViewPublisher.send(.Empty)
+            appstate.actionViewEmptyPublisher.send(true)
         }
     }
     

@@ -5,8 +5,9 @@ struct AppState {
     var budgetPublisher: PassthroughSubject<Budget?, Never> = .init()
     var monthlyCheckPublisher: PassthroughSubject<Bool, Never> = .init()
     
-    var routerViewPublisher: CurrentValueSubject<RouterView?, Never> = .init(nil)
-    var actionViewPublisher: CurrentValueSubject<ActionView?, Never> = .init(nil)
+    var routerViewPublisher: PassthroughSubject<ViewRouter, Never> = .init()
+    var actionViewPublisher: PassthroughSubject<ActionRouter, Never> = .init()
+    var actionViewEmptyPublisher: PassthroughSubject<Bool, Never> = .init()
     
     var pickerPublisher: PassthroughSubject<Bool, Never> = .init()
     var appearancePublisher: PassthroughSubject<ColorScheme?, Never> = .init()
@@ -28,4 +29,33 @@ struct AppState {
             )
             .eraseToAnyPublisher()
         }
+}
+
+extension AppState {
+    enum ViewRouter {
+        case Empty
+        case Setting(DIContainer, Budget, Card)
+        case BookOrder(Budget)
+        case Statistic(Budget, Card?)
+        case Debug(Budget)
+        
+        var isEmpty: Bool {
+            switch self {
+            case .Empty:
+                return true
+            default:
+                return false
+            }
+        }
+    }
+}
+
+extension AppState {
+    enum ActionRouter {
+        case Empty
+        case CreateCard(Budget)
+        case EditCard(Budget, Card)
+        case CreateRecord(Budget, Card)
+        case EditRecord(Budget, Card, Record)
+    }
 }

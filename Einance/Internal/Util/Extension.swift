@@ -1,5 +1,6 @@
 import SwiftUI
 import UIComponent
+import Combine
 
 extension View {
     func previewDeviceSet() -> some View {
@@ -31,6 +32,18 @@ extension Animation {
     static var quick: Animation = .easeInOut(duration: 0.2)
     static var medium: Animation = .easeInOut(duration: 0.6)
     static var slow: Animation = .easeInOut(duration: 1)
+}
+
+extension View {
+    func onQuickRecive<P>(_ publisher: P, perform action: @escaping (P.Output) -> Void) -> some View where P : Publisher, P.Failure == Never {
+        onSmoothRecive(.quick, publisher, perform: action)
+    }
+    
+    func onSmoothRecive<P>(_ animation: Animation, _ publisher: P, perform action: @escaping (P.Output) -> Void) -> some View where P : Publisher, P.Failure == Never  {
+        withAnimation(animation) {
+            self.onReceive(publisher, perform: action)
+        }
+    }
 }
 
 extension Color {

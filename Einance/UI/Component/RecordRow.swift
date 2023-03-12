@@ -40,7 +40,7 @@ struct RecordRow: View {
                 }
                 
                 Button(role: .none) {
-                    container.interactor.system.PushActionView(ActionView(budget: budget, card: card, record: record, router: .EditRecord))
+                    container.interactor.system.PushActionView(.EditRecord(budget, card, record))
                 } label: {
                     Label("Edit", systemImage: "square.and.pencil")
                 }

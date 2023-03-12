@@ -10,13 +10,13 @@ struct HomeHeader: View {
     var body: some View {
         HStack {
             ButtonCustom(width: buttonSize, height: buttonSize) {
-                container.interactor.system.PushRouterView(RouterView(budget: budget, current: current, router: .Setting))
+                container.interactor.system.PushRouterView(.Setting(container, budget, current))
             } content: {
                 Image(systemName: "gearshape")
                     .font(.title2)
             }
             ButtonCustom(width: buttonSize, height: buttonSize) {
-                container.interactor.system.PushRouterView(RouterView(budget: budget, current: current, router: .Statistic))
+                container.interactor.system.PushRouterView(.Statistic(budget, current))
             } content: {
                 Image(systemName: "chart.pie")
                     .font(.title2)
@@ -24,7 +24,7 @@ struct HomeHeader: View {
             Spacer()
 #if DEBUG
             ButtonCustom(width: buttonSize, height: buttonSize) {
-                container.interactor.system.PushRouterView(RouterView(budget: budget, router: .Debug))
+                container.interactor.system.PushRouterView(.Debug(budget))
             } content: {
                 Image(systemName: "hammer.fill")
                     .font(.title2)
@@ -33,7 +33,7 @@ struct HomeHeader: View {
 #endif
             if budget.book.count >= 2 {
                 ButtonCustom(width: buttonSize, height: buttonSize) {
-                    container.interactor.system.PushRouterView(RouterView(budget: budget, router: .BookOrder))
+                    container.interactor.system.PushRouterView(.BookOrder(budget))
                 } content: {
                     Image(systemName: "rectangle.on.rectangle.angled")
                         .font(.title2)
@@ -43,7 +43,7 @@ struct HomeHeader: View {
             }
 
             ButtonCustom(width: buttonSize, height: buttonSize) {
-                container.interactor.system.PushActionView(ActionView(budget: budget, router: .CreateCard))
+                container.interactor.system.PushActionView(.CreateCard(budget))
             } content: {
                 Image(systemName: "rectangle.fill.badge.plus")
                     .font(.title2)

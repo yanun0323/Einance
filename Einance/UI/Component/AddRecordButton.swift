@@ -8,7 +8,7 @@ struct AddRecordButton: View {
     
     var body: some View {
         Button {
-            container.interactor.system.PushActionView(ActionView(budget: budget, card: card, router: .CreateRecord))
+            container.interactor.system.PushActionView(.CreateRecord(budget, card))
         } label: {
             RoundedRectangle(cornerRadius: Setting.deviceCornerRadius)
                 .frame(height: 90)
