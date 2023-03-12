@@ -10,6 +10,8 @@
 		A8357FDA29293F010086720F /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8357FD929293F010086720F /* HomeView.swift */; };
 		A8357FDD292952230086720F /* OrderedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = A8357FDC292952230086720F /* OrderedCollections */; };
 		A839C78A29BAF3AA0036C096 /* StatisticView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A839C78929BAF3AA0036C096 /* StatisticView.swift */; };
+		A848A6BC29BD9B7700E85A8E /* RouterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A848A6BB29BD9B7700E85A8E /* RouterView.swift */; };
+		A848A6BE29BD9DE900E85A8E /* ActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A848A6BD29BD9DE900E85A8E /* ActionView.swift */; };
 		A87219ED2967F60700D52995 /* AddRecordButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A87219EC2967F60700D52995 /* AddRecordButton.swift */; };
 		A87219EF2968131F00D52995 /* SettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A87219EE2968131F00D52995 /* SettingView.swift */; };
 		A87219F12968144400D52995 /* UserSettingInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A87219F02968144400D52995 /* UserSettingInteractor.swift */; };
@@ -61,6 +63,8 @@
 /* Begin PBXFileReference section */
 		A8357FD929293F010086720F /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		A839C78929BAF3AA0036C096 /* StatisticView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticView.swift; sourceTree = "<group>"; };
+		A848A6BB29BD9B7700E85A8E /* RouterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouterView.swift; sourceTree = "<group>"; };
+		A848A6BD29BD9DE900E85A8E /* ActionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionView.swift; sourceTree = "<group>"; };
 		A87219EC2967F60700D52995 /* AddRecordButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddRecordButton.swift; sourceTree = "<group>"; };
 		A87219EE2968131F00D52995 /* SettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingView.swift; sourceTree = "<group>"; };
 		A87219F02968144400D52995 /* UserSettingInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettingInteractor.swift; sourceTree = "<group>"; };
@@ -174,6 +178,8 @@
 		A8A75AF7291CCCD300EF9D8A /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				A848A6BB29BD9B7700E85A8E /* RouterView.swift */,
+				A848A6BD29BD9DE900E85A8E /* ActionView.swift */,
 				A8A75AEA291CCCBC00EF9D8A /* ContentView.swift */,
 				A8357FD929293F010086720F /* HomeView.swift */,
 				A87219EE2968131F00D52995 /* SettingView.swift */,
@@ -409,6 +415,7 @@
 				A8E52C74296477B400AC80B0 /* EditCardPanel.swift in Sources */,
 				A8E52C6E295BE91600AC80B0 /* DatePickerCustom.swift in Sources */,
 				A87219ED2967F60700D52995 /* AddRecordButton.swift in Sources */,
+				A848A6BE29BD9DE900E85A8E /* ActionView.swift in Sources */,
 				A87219EF2968131F00D52995 /* SettingView.swift in Sources */,
 				A87219F7296D67C200D52995 /* BudgetCategory.swift in Sources */,
 				A8A75B09291CD1D800EF9D8A /* Repository.swift in Sources */,
@@ -418,6 +425,7 @@
 				A8F43C01295208DC00C89EDE /* FocusField.swift in Sources */,
 				A8A75B05291CCE7E00EF9D8A /* AppState.swift in Sources */,
 				A8B09029291D6A01008D9B33 /* CardRect.swift in Sources */,
+				A848A6BC29BD9B7700E85A8E /* RouterView.swift in Sources */,
 				A839C78A29BAF3AA0036C096 /* StatisticView.swift in Sources */,
 				A8E52C6A295B342E00AC80B0 /* CreateRecordPanel.swift in Sources */,
 				A8A75B0F291CF24A00EF9D8A /* Card.swift in Sources */,

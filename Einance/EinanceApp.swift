@@ -18,7 +18,7 @@ struct EinanceApp: App {
 #endif
     var body: some Scene {
         WindowGroup {
-            ContentView(injector: container)
+            ContentView()
                 .inject(container)
                 .preferredColorScheme(appearance)
                 .onReceive(container.appstate.appearancePublisher) { output in

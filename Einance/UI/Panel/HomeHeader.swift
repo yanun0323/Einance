@@ -10,13 +10,13 @@ struct HomeHeader: View {
     var body: some View {
         HStack {
             ButtonCustom(width: buttonSize, height: buttonSize) {
-                container.interactor.system.PushRouterView(SettingView(budget: budget, current: current))
+                container.interactor.system.PushRouterView(RouterView(budget: budget, current: current, router: .Setting))
             } content: {
                 Image(systemName: "gearshape")
                     .font(.title2)
             }
             ButtonCustom(width: buttonSize, height: buttonSize) {
-                container.interactor.system.PushRouterView(StatisticView(budget: budget, card: current))
+                container.interactor.system.PushRouterView(RouterView(budget: budget, current: current, router: .Statistic))
             } content: {
                 Image(systemName: "chart.pie")
                     .font(.title2)
@@ -24,22 +24,26 @@ struct HomeHeader: View {
             Spacer()
 #if DEBUG
             ButtonCustom(width: buttonSize, height: buttonSize) {
-                container.interactor.system.PushRouterView(DebugView(budget: budget))
+                container.interactor.system.PushRouterView(RouterView(budget: budget, router: .Debug))
             } content: {
                 Image(systemName: "hammer.fill")
                     .font(.title2)
             }
             Spacer()
 #endif
-            ButtonCustom(width: buttonSize, height: buttonSize) {
-                container.interactor.system.PushRouterView(BookOrderView(budget: budget))
-            } content: {
-                Image(systemName: "rectangle.on.rectangle.angled")
-                    .font(.title2)
+            if budget.book.count >= 2 {
+                ButtonCustom(width: buttonSize, height: buttonSize) {
+                    container.interactor.system.PushRouterView(RouterView(budget: budget, router: .BookOrder))
+                } content: {
+                    Image(systemName: "rectangle.on.rectangle.angled")
+                        .font(.title2)
+                }
+            } else {
+                Block(width: buttonSize, height: buttonSize)
             }
 
             ButtonCustom(width: buttonSize, height: buttonSize) {
-                container.interactor.system.PushActionView(CreateCardPanel(budget: budget))
+                container.interactor.system.PushActionView(ActionView(budget: budget, router: .CreateCard))
             } content: {
                 Image(systemName: "rectangle.fill.badge.plus")
                     .font(.title2)

@@ -6,6 +6,7 @@ struct WelcomeView: View {
     @State private var step: Int = 0
     @State private var baseDateNumber: Int = 5
     @State private var creating: Bool = false
+    @State private var color: Color = .blue
     
     var body: some View {
         VStack {
@@ -44,7 +45,7 @@ extension WelcomeView {
                 }
             } content: {
                 Image(systemName: "chevron.left")
-                    .foregroundColor(.blue)
+                    .foregroundColor(color)
                     .font(.title2)
             }
             Spacer()
@@ -53,7 +54,7 @@ extension WelcomeView {
     }
     
     var _NextButton: some View {
-        ButtonCustom(width: 120, height: 50, color: .blue, radius: 10, shadow: 5) {
+        ButtonCustom(width: 120, height: 50, color: color, radius: 10, shadow: 5) {
             withAnimation(.medium) {
                 if step >= 2 { return }
                 step += 1
@@ -115,6 +116,7 @@ extension WelcomeView {
                             .font(.title)
                             .tag(i)
                     }
+                    .foregroundColor(color)
                 }
                 .pickerStyle(.wheel)
                 .frame(width: 80, height: 150)
@@ -134,7 +136,7 @@ extension WelcomeView {
                 .font(.title2)
             
             VStack {
-                ButtonCustom(width: 200, height: 50, color: .blue, radius: 10, shadow: 3) {
+                ButtonCustom(width: 200, height: 50, color: color, radius: 10, shadow: 3) {
                     withAnimation(.quick) {
 //                        if creating { return }
 //                        creating = true

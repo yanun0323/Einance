@@ -11,28 +11,40 @@ struct DebugView: View {
     
     @ObservedObject var budget: Budget
     
+    @State private var TODO: [String] = [
+        "Budget 要新增一欄 archiveAt",
+        "Card 要新增 startAt & archiveAt 來判斷永久卡片的起始",
+        "修鍵盤會讓畫面位移問題",
+        "統計圖表",
+        "*串接雲端發票",
+        "*花費位移系統/卡片接收雲端發票Filter",
+        "*",
+    ]
+    
     var body: some View {
         VStack {
             ViewHeader(title: "DEBUG")
             Spacer()
             VStack {
-                Text("INFO")
+                VStack(spacing: 5) {
+                    Text("要做的事")
+                    ForEach(TODO, id: \.self) { todo in
+                        Text(todo)
+                            
+                    }
+                    .font(.caption)
+                    .foregroundColor(.cyan)
+                }
+                Divider()
                 Text("Budget Count: \(budgetCount)")
                 Text("Card Count: \(cardCount)")
                 Text("Record Count: \(recordCount)")
-                VStack(spacing: 15) {
-                    Text("\(date)\n\(date.String(.Stamp, .US))\n\(date.String(.Stamp, .US))")
-                    Text("\(Date(date.unixDay))\n\(Date(date.unixDay).String(.Stamp, .US))\n\(Date(date.unixDay).String(.Stamp, .US))")
-                }
             }
             Divider()
             
             anyButton("Delete Last Budget") {
                 container.interactor.data.DebugDeleteLastBudget()
-            }
-            
-            anyButton("Force Monthly Update") {
-                container.interactor.data.UpdateMonthlyBudget(budget)
+                container.interactor.data.PublishCurrentBudget()
             }
             
             Spacer()

@@ -16,7 +16,7 @@ extension View {
     func modifyPanelBackground() -> some View {
         self
             .monospacedDigit()
-            .backgroundColor(.background)
+            .backgroundColor(.backgroundButton)
             .clipShape(RoundedRectangle(cornerRadius: Setting.panelCornerRadius))
             .shadow(radius: 5)
     }
@@ -35,6 +35,7 @@ extension Animation {
 
 extension Color {
     static var background: Color = .init("Background")
+    static var backgroundButton: Color = .init("BackgroundButton")
 }
 
 extension Date {

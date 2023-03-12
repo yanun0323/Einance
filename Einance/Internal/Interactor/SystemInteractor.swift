@@ -12,9 +12,9 @@ struct SystemInteractor {
 }
 
 extension SystemInteractor {
-    func PushRouterView<V: View>(_ content: V) {
+    func PushRouterView(_ content: RouterView) {
         System.Async {
-            appstate.routerViewPublisher.send(AnyView(content))
+            appstate.routerViewPublisher.send(content)
         }
     }
     
@@ -24,9 +24,9 @@ extension SystemInteractor {
         }
     }
     
-    func PushActionView<V: View>(_ content: V) {
+    func PushActionView(_ content: ActionView) {
         System.Async {
-            appstate.actionViewPublisher.send(AnyView(content))
+            appstate.actionViewPublisher.send(content)
         }
     }
     

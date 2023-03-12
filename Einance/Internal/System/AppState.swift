@@ -5,8 +5,9 @@ struct AppState {
     var budgetPublisher: PassthroughSubject<Budget?, Never> = .init()
     var monthlyCheckPublisher: PassthroughSubject<Bool, Never> = .init()
     
-    var routerViewPublisher: PassthroughSubject<AnyView?, Never> = .init()
-    var actionViewPublisher: PassthroughSubject<AnyView?, Never> = .init()
+    var routerViewPublisher: CurrentValueSubject<RouterView?, Never> = .init(nil)
+    var actionViewPublisher: CurrentValueSubject<ActionView?, Never> = .init(nil)
+    
     var pickerPublisher: PassthroughSubject<Bool, Never> = .init()
     var appearancePublisher: PassthroughSubject<ColorScheme?, Never> = .init()
     

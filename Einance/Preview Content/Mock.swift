@@ -7,7 +7,7 @@ extension DIContainer {
 }
 
 extension Budget {
-    static var preview = Budget(id: -1, start: Date(from: "20221105", .Numeric)!, book: [
+    static var preview = Budget(id: -1, startAt: Date(from: "20221105", .Numeric)!, book: [
             .preview,
             .preview2,
             .preview3,

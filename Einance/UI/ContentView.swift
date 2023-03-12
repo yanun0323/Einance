@@ -3,8 +3,8 @@ import UIComponent
 
 struct ContentView: View {
     @EnvironmentObject private var container: DIContainer
-    @State private var routerView: AnyView? = nil
-    @State private var actionView: AnyView? = nil
+    @State private var routerView: RouterView? = nil
+    @State private var actionView: ActionView? = nil
     @State private var isKeyboardActive = false
     @State private var isPickerActive = false
     @State private var isUpdating = false
@@ -13,21 +13,10 @@ struct ContentView: View {
     @State private var current: Card = .empty
     @State private var timer: Timer?
     @State private var bookCount: Int = 0
-    private let isPreview: Bool
-    
-    // TODO: move current budget and card here
-    init(injector: DIContainer, isPreview: Bool = false) {
-        self.isPreview = isPreview
-        if isPreview {
-            self._budget = .init(wrappedValue: .preview)
-            self._current = .init(wrappedValue: Budget.preview.book.first!)
-            return
-        }
-    }
     
     var body: some View {
-        ZStack {
-            if budget.isZero && !isPreview {
+        VStack {
+            if budget.isZero {
                 WelcomeView()
             } else {
                 _BudgetExistView
@@ -68,7 +57,7 @@ struct ContentView: View {
                 bookCount = b.book.count
                 
                 timer?.invalidate()
-                let start = budget.start
+                let start = budget.startAt
                 timer = Timer.scheduledTimer(
                     withTimeInterval: 15, repeats: true,
                     block: { t in
@@ -98,12 +87,11 @@ struct ContentView: View {
 extension ContentView {
     var _BudgetExistView: some View {
         ZStack {
-            HomeView(budget: budget, current: $current)
-                .ignoresSafeArea(.keyboard)
+            HomeView(budget: budget, current: current, selected: $current)
                 .disabled(actionView != nil)
             ZStack {
                 if routerView != nil {
-                    routerView
+                    routerView!
                 }
                 
                 if actionView != nil {
@@ -122,14 +110,15 @@ extension ContentView {
                         .ignoresSafeArea(.all)
                     VStack {
                         actionView!
-                        Spacer()
+                        Spacer(minLength: 0)
                     }
                     .animation(.default, value: actionView.isNil)
                     .transition(.opacity)
-                    .ignoresSafeArea(.keyboard)
+                    .ignoresSafeArea(.all, edges: .bottom)
                 }
             }
         }
+        .ignoresSafeArea(.all, edges: .bottom)
     }
 }
 
@@ -145,17 +134,21 @@ extension ContentView {
             current = .empty
             return
         }
-        
         current = bookCount < budget.book.count ? budget.book.last! : budget.book.first!
+    }
+    
+    @ViewBuilder
+    func ActionView() -> some View {
+        Group{}
     }
 }
 
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView(injector: .preview, isPreview: true)
+        ContentView()
             .inject(DIContainer.preview)
-        ContentView(injector: .preview)
+        ContentView()
             .inject(DIContainer.preview)
     }
 }

@@ -8,11 +8,11 @@ struct AddRecordButton: View {
     
     var body: some View {
         Button {
-            container.interactor.system.PushActionView(CreateRecordPanel(budget: budget, card: card))
+            container.interactor.system.PushActionView(ActionView(budget: budget, card: card, router: .CreateRecord))
         } label: {
             RoundedRectangle(cornerRadius: Setting.deviceCornerRadius)
                 .frame(height: 90)
-                .foregroundColor(.background)
+                .foregroundColor(.backgroundButton)
                 .shadow(radius: 5)
                 .overlay {
                     Label("button.record.create", systemImage: "plus.square.dashed")
@@ -35,7 +35,11 @@ extension AddRecordButton {
 
 struct AddRecordButton_Previews: PreviewProvider {
     static var previews: some View {
-        AddRecordButton(budget: .preview, card: .preview)
-            .inject(DIContainer.preview)
+        ZStack {
+            Color.background
+            AddRecordButton(budget: .preview, card: .preview)
+                .inject(DIContainer.preview)
+                .preferredColorScheme(.dark)
+        }
     }
 }

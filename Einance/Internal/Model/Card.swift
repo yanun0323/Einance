@@ -125,6 +125,7 @@ extension Card {
         if dateDict[key].isNil {
             dateDict[key] = RecordSet()
         }
+        dateDict.sort()
     }
 }
 

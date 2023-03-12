@@ -6,15 +6,28 @@ struct StatisticView: View {
     @State private var selectedType: Int = 0
     @State private var height: CGFloat = 30
     @State private var width: CGFloat = 50
+    @State private var budgets: [Budget] = []
     
     @ObservedObject var budget: Budget
-    @State var card: Card?
+    @State var card: Card? = nil
     
     var body: some View {
         GeometryReader { proxy in
             VStack {
                 ViewHeader(title: "view.header.statistic")
                 _TitleRowButton(proxy)
+                
+                ForEach(budgets) { b in
+                    HStack {
+                        Text(b.id.description)
+                            .frame(width: 50)
+                        Text(b.startAt.String("yyyy.MM.dd"))
+                            .frame(width: 100)
+                        Text(b.archiveAt?.String("yyyy.MM.dd") ?? "-")
+                            .frame(width: 100)
+                    }
+                }
+                
                 Spacer()
             }
             .onAppear {
@@ -24,6 +37,11 @@ struct StatisticView: View {
         .padding(.horizontal, 30)
         .backgroundColor(.background)
         .transition(.scale(scale: 0.95, anchor: .topLeading).combined(with: .opacity))
+        .onAppear {
+            withAnimation(.quick) {
+                budgets = container.interactor.data.ListBudgets()
+            }
+        }
 
     }
 }
@@ -36,7 +54,7 @@ extension StatisticView {
                 .foregroundColor(.background)
                 .frame(width: width, height: height)
                 .offset(x: CGFloat(selectedType)*width)
-                .shadow(color: .section, radius: 3)
+                .shadow(color: .black.opacity(0.2), radius: 3)
             HStack(spacing: 0) {
                 _RowButton(0, "chart.pie.fill")
                 _RowButton(1, "chart.bar.xaxis")

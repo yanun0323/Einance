@@ -65,7 +65,8 @@ extension DataDao where Self: DataRepository {
     
     func CreateBudget(_ b: Budget) throws -> Int64 {
         let insert = Budget.GetTable().insert(
-            Budget.start <- b.start,
+            Budget.startAt <- b.startAt,
+            Budget.archiveAt <- b.archiveAt,
             Budget.amount <- b.amount,
             Budget.cost <- b.cost,
             Budget.balance <- b.balance
@@ -76,7 +77,8 @@ extension DataDao where Self: DataRepository {
     
     func UpdateBudget(_ b: Budget) throws {
         let update = Budget.GetTable().filter(Budget.id == b.id).update(
-            Budget.start <- b.start,
+            Budget.startAt <- b.startAt,
+            Budget.archiveAt <- b.archiveAt,
             Budget.amount <- b.amount,
             Budget.cost <- b.cost,
             Budget.balance <- b.balance
@@ -231,7 +233,8 @@ extension DataDao {
     private func parseBudget(_ row: Row) throws -> Budget {
         return Budget(
             id: try row.get(Budget.id),
-            start: try row.get(Budget.start)
+            startAt: try row.get(Budget.startAt),
+            archiveAt: try row.get(Budget.archiveAt)
         )
     }
     

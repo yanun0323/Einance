@@ -6,9 +6,11 @@ struct SettingView: View {
     @State private var aboveBudgetCategory: BudgetCategory = .Cost
     @State private var belowBudgetCategory: BudgetCategory = .Amount
     @State private var appearance: ColorScheme? = nil
-    @State private var dateNumber: Int = 1
-    @State private var dateNumberEdit: Int = 1
+    @State private var color: Color
+    
     @State private var showDateNumberAlert: Bool = false
+    @State private var dateNumberEdit: Int
+    @State private var dateNumber: Int
     
     @State private var showDangerAlert: Bool = false
     @State private var dangerAlertTitle: LocalizedStringKey = ""
@@ -17,7 +19,15 @@ struct SettingView: View {
     @ObservedObject var budget: Budget
     @ObservedObject var current: Card
     
-    @State private var color: Color = .primary.opacity(0.8)
+    init(injector: DIContainer, budget: Budget, current: Card) {
+        self._budget = .init(wrappedValue: budget)
+        self._current = .init(wrappedValue: current)
+        self._color = .init(initialValue: current.color)
+        self._appearance = .init(initialValue: injector.interactor.setting.GetAppearance())
+        let dateNumber = injector.interactor.setting.GetBaseDateNumber()
+        self._dateNumber = .init(initialValue: dateNumber)
+        self._dateNumberEdit = .init(initialValue: dateNumber)
+    }
     
     var body: some View {
         VStack(spacing: 0) {
@@ -47,13 +57,6 @@ struct SettingView: View {
         .alert(dangerAlertTitle, isPresented: $showDangerAlert, actions: {
             Button("global.confirm", role: .destructive, action: dangerAction)
         })
-        .onAppear {
-            appearance = container.interactor.setting.GetAppearance()
-            dateNumber = container.interactor.setting.GetBaseDateNumber()
-            dateNumberEdit = dateNumber
-            showDateNumberAlert = false
-            color = current.color
-        }
     }
 }
 
@@ -123,7 +126,7 @@ extension SettingView {
                 VStack {
                     HStack(spacing: 10) {
                         Text("上次更新日期")
-                        Text(budget.start.String("yyyy.MM.dd"))
+                        Text(budget.startAt.String("yyyy.MM.dd"))
                             .kerning(1)
                     }
                     HStack(spacing: 10) {
@@ -420,7 +423,7 @@ extension SettingView {
     }
     
     func _CalculateNextDate() -> Date {
-        let nextDay1 = budget.start.AddMonth(1).firstDayOfMonth
+        let nextDay1 = budget.startAt.AddMonth(1).firstDayOfMonth
         if nextDay1.daysOfMonth < dateNumberEdit {
             return nextDay1.AddMonth(1).AddDay(-1)
         }
@@ -430,9 +433,9 @@ extension SettingView {
 
 struct SettingView_Previews: PreviewProvider {
     static var previews: some View {
-        SettingView(budget: .preview, current: .preview)
+        SettingView(injector: .preview, budget: .preview, current: .preview)
             .inject(DIContainer.preview)
-        SettingView(budget: .preview, current: .preview)
+        SettingView(injector: .preview, budget: .preview, current: .preview)
             .inject(DIContainer.preview)
             .preferredColorScheme(.dark)
     }

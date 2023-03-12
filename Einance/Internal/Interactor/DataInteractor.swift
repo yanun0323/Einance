@@ -36,12 +36,13 @@ extension DataInteractor {
     
     func UpdateMonthlyBudget(_ budget: Budget, force: Bool = false) {
         DoTx("update monthly budget") {
-            var nextStartDate = repo.GetNextStartDate(budget.start)
+            var nextStartDate = repo.GetNextStartDate(budget.startAt)
             if force {
                 nextStartDate = Date(from: Date.now.String("yyyyMMdd", .US), .Numeric)!
             }
+            budget.archiveAt = nextStartDate.AddDay(-1)
             
-            let b = Budget(start: nextStartDate)
+            let b = Budget(startAt: nextStartDate)
             b.id = try repo.CreateBudget(b)
             
             for card in budget.book {
@@ -50,6 +51,7 @@ extension DataInteractor {
             
             b.balance = b.amount - b.cost
             try repo.UpdateBudget(b)
+            try repo.UpdateBudget(budget)
             
             PublishCurrentBudget()
         }
@@ -72,16 +74,23 @@ extension DataInteractor {
     
     
     // MARK: Budget
+    
     func GetBudget(_ id: Int64) -> Budget? {
         return DoTx("get budget by id") {
             return try repo.GetBudget(id)
         }
     }
     
+    func ListBudgets() -> [Budget] {
+        return DoTx("list budgets") {
+            return try repo.ListBudgets()
+        }!
+    }
+    
     
     func CreateFirstBudget() {
         DoTx("create first budget") {
-            _ = try repo.CreateBudget(Budget(start: repo.GetFirstStartDate()))
+            _ = try repo.CreateBudget(Budget(startAt: repo.GetFirstStartDate()))
             PublishCurrentBudget()
         }
     }
@@ -376,7 +385,7 @@ extension DataInteractor {
         for record in card.fixedArray {
             let r = Record(
                 cardID: c.id,
-                date: b.start,
+                date: b.startAt,
                 cost: record.cost,
                 memo: record.memo,
                 fixed: record.fixed

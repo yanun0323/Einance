@@ -6,7 +6,8 @@ extension Budget {
     static func GetTable() -> SQLite.Table { .init("budgets") }
     
     static let id = Expression<Int64>("id")
-    static let start = Expression<Date>("start")
+    static let startAt = Expression<Date>("start_at")
+    static let archiveAt = Expression<Date?> ("archive_at")
     static let amount = Expression<Decimal>("amount")
     static let cost = Expression<Decimal>("cost")
     static let balance = Expression<Decimal>("balance")
@@ -14,7 +15,8 @@ extension Budget {
     static func migrate(_ conn: Connection) throws {
         try conn.run(GetTable().create { t in
             t.column(id, primaryKey: .autoincrement)
-            t.column(start) //, unique: true)
+            t.column(startAt) //, unique: true)
+            t.column(archiveAt)
             t.column(amount)
             t.column(cost)
             t.column(balance)

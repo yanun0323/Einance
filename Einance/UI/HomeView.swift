@@ -6,7 +6,8 @@ struct HomeView: View {
     @State private var hideAddButton: Bool = false
     
     @ObservedObject var budget: Budget
-    @Binding var current: Card
+    @ObservedObject var current: Card
+    @Binding var selected: Card
     
     var body: some View {
         ZStack {
@@ -15,16 +16,18 @@ struct HomeView: View {
                     .padding(.horizontal)
                 
                 if hasCards {
-                    BudgetPage(budget: budget, current: current, selected: $current)
+                    BudgetPage(budget: budget, current: current, selected: $selected)
                 } else {
-                    Spacer()
-                    ButtonCustom(width: 100, height: 100) {
-                        container.interactor.system.PushActionView(CreateCardPanel(budget: budget))
-                    } content: {
-                        Image(systemName: "rectangle.fill.badge.plus")
-                            .font(.title)
+                    VStack {
+                        Spacer()
+                        ButtonCustom(width: 100, height: 100) {
+                            container.interactor.system.PushActionView(ActionView(budget: budget, router: .CreateCard))
+                        } content: {
+                            Image(systemName: "rectangle.fill.badge.plus")
+                                .font(.title)
+                        }
+                        Spacer()
                     }
-                    Spacer()
                 }
             }
             VStack {
@@ -36,6 +39,7 @@ struct HomeView: View {
             }
             .ignoresSafeArea(.all)
         }
+        .ignoresSafeArea(.keyboard)
         .onReceive(container.appstate.actionViewPublisher) { output in
             withAnimation(.quick) {
                 hideAddButton = (output != nil)
@@ -52,7 +56,8 @@ extension HomeView {
 
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
-        HomeView(budget: .preview, current: .constant(.preview))
+        HomeView(budget: .preview, current: .preview, selected: .constant(.preview))
             .inject(DIContainer.preview)
+            .previewDeviceSet()
     }
 }
