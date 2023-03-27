@@ -35,32 +35,18 @@ struct EditRecordPanel: View {
         ZStack {
             VStack {
                 VStack {
-                    _TitleBlock
+                    titleBlock()
                         .padding()
                     VStack {
-                        _RecordCostBlock
-                        _RecordMemoBlock
-                        _RecordDateBlock
-                        _RecordFixedBlock
+                        recordCostBlock()
+                        recordMemoBlock()
+                        recordDateBlock()
+                        recordFixedBlock()
                     }
                     .padding(.horizontal)
                     
-                    ActionPanelConfirmButton(color: $card.color, text: "global.edit") {
-                        withAnimation(.quick) {
-                            if updating { return }
-                            updating = true
-                            
-                            guard let cost = Decimal(string: costInput) else {
-                                print("[ERROR] transform cost input to decimal failed")
-                                updating = false
-                                return
-                            }
-                            
-                            container.interactor.data.UpdateRecord(budget, card, record, date: dateInput, cost: cost, memo: memoInput, fixed: fixedInput)
-                            container.interactor.system.ClearActionView()
-                        }
-                    }
-                    .disabled(invalid)
+                    confirmButton()
+                        .disabled(invalid)
                 }
                 .modifyPanelBackground()
                 .padding()
@@ -71,30 +57,21 @@ struct EditRecordPanel: View {
                     container.interactor.system.PushPickerState(isOn: false)
                 }
             }
-            .onReceive(container.appstate.keyboardPublisher) { output in
-                if output {
-                    withAnimation(.quick) {
-                        container.interactor.system.PushPickerState(isOn: false)
-                    }
-                }
+            .onReceived(container.appstate.keyboardPublisher) {
+                if !$0 { return }
+                container.interactor.system.PushPickerState(isOn: false)
+
             }
-            .onReceive(container.appstate.pickerPublisher) { output in
-                if output { return }
-                withAnimation(.quick) {
-                    showDatePicker = output
-                }
+            .onReceived(container.appstate.pickerPublisher) {
+                if $0 { return }
+                showDatePicker = $0
             }
-            .onAppear {
-                withAnimation(.quick) {
-                    focus = .input
-                }
-            }
+            .onAppeared { focus = .input }
         }
     }
-}
-
-extension EditRecordPanel {
-    var _TitleBlock: some View {
+    
+    @ViewBuilder
+    private func titleBlock() -> some View {
         HStack {
             Text("view.header.edit.record")
                 .font(Setting.panelTitleFont)
@@ -104,7 +81,8 @@ extension EditRecordPanel {
     }
     
     
-    var _RecordCostBlock: some View {
+    @ViewBuilder
+    private func recordCostBlock() -> some View {
         HStack {
             Text("panel.record.create.cost.label")
                 .font(Setting.cardPanelLabelFont)
@@ -117,7 +95,8 @@ extension EditRecordPanel {
         }
     }
     
-    var _RecordMemoBlock: some View {
+    @ViewBuilder
+    private func recordMemoBlock() -> some View {
         HStack {
             Text("panel.record.create.memo.label")
                 .font(Setting.cardPanelLabelFont)
@@ -128,7 +107,8 @@ extension EditRecordPanel {
         }
     }
     
-    var _RecordDateBlock: some View {
+    @ViewBuilder
+    private func recordDateBlock() -> some View {
         HStack {
             Text("panel.record.create.date.label")
                 .font(Setting.cardPanelLabelFont)
@@ -148,7 +128,8 @@ extension EditRecordPanel {
         }
     }
     
-    var _RecordFixedBlock: some View {
+    @ViewBuilder
+    private func recordFixedBlock() -> some View {
         HStack {
             Text("panel.record.create.fixed.label")
                 .font(Setting.cardPanelLabelFont)
@@ -156,6 +137,26 @@ extension EditRecordPanel {
             ToggleCustom(isOn: $fixedInput, color: $card.color, size: 24)
         }
     }
+    
+    @ViewBuilder
+    private func confirmButton() -> some View {
+        ActionPanelConfirmButton(color: $card.color, text: "global.edit") {
+            withAnimation(.quick) {
+                if updating { return }
+                updating = true
+                
+                guard let cost = Decimal(string: costInput) else {
+                    print("[ERROR] transform cost input to decimal failed")
+                    updating = false
+                    return
+                }
+                
+                container.interactor.data.UpdateRecord(budget, card, record, date: dateInput, cost: cost, memo: memoInput, fixed: fixedInput)
+                container.interactor.system.ClearActionView()
+            }
+        }
+    }
+    
 }
 
 extension EditRecordPanel {
@@ -164,9 +165,11 @@ extension EditRecordPanel {
     }
 }
 
+#if DEBUG
 struct EditRecordPanel_Previews: PreviewProvider {
     static var previews: some View {
         EditRecordPanel(budget: .preview, card: .preview, record: .preview)
             .inject(DIContainer.preview)
     }
 }
+#endif

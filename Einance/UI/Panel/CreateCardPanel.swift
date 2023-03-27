@@ -15,54 +15,25 @@ struct CreateCardPanel: View {
     
     var body: some View {
         VStack {
-            _TitleBlock
+            titleBlock()
                 .padding()
             VStack {
-                _CardNameBlock
-                _CardAmountBlock
-                _CardColorBlock
-                _CardDisplayBlock
-                _CardFixedBlock
+                cardNameBlock()
+                cardAmountBlock()
+                cardColorBlock()
+                cardDisplayBlock()
+                cardFixedBlock()
             }
             .padding(.horizontal)
-            ActionPanelConfirmButton(color: $colorInput, text: "global.create") {
-                withAnimation(.quick) {
-                    if creating { return }
-                    creating = true
-                    
-                    if nameInput.isEmpty {
-                        nameInput = String(localized: "panel.card.create.name.label.placeholder")
-                    }
-                    
-                    if amountInput.isEmpty {
-                        amountInput = String(localized: "panel.card.create.amount.label.placeholder")
-                    }
-                    
-                    guard let amount = Decimal(string: amountInput) else {
-                        print("[ERROR] transform amount input to decimal failed")
-                        creating = false
-                        return
-                    }
-                    
-                    fixedInput = fixedInput || displayInput == .forever
-                    container.interactor.data.CreateCard(budget, name: nameInput, amount: amount, display: displayInput, color: colorInput, fixed: fixedInput)
-                    container.interactor.system.ClearActionView()
-                }
-            }
+            confirmButton()
         }
         .modifyPanelBackground()
         .padding()
-        .onAppear {
-            withAnimation(.quick) {
-                focus = .input
-            }
-        }
+        .onAppeared { focus = .input }
     }
-}
-
-// MARK: - View Block
-extension CreateCardPanel {
-    var _TitleBlock: some View {
+    
+    @ViewBuilder
+    private func titleBlock() -> some View {
         HStack {
             Text("view.header.create.card")
                 .font(Setting.panelTitleFont)
@@ -71,7 +42,8 @@ extension CreateCardPanel {
         }
     }
     
-    var _CardNameBlock: some View {
+    @ViewBuilder
+    private func cardNameBlock() -> some View {
         HStack {
             Text("panel.card.create.name.label")
                 .font(Setting.cardPanelLabelFont)
@@ -83,7 +55,8 @@ extension CreateCardPanel {
         }
     }
     
-    var _CardAmountBlock: some View {
+    @ViewBuilder
+    private func cardAmountBlock() -> some View {
         HStack {
             Text("panel.card.create.amount.label")
                 .font(Setting.cardPanelLabelFont)
@@ -95,7 +68,8 @@ extension CreateCardPanel {
         }
     }
     
-    var _CardColorBlock: some View {
+    @ViewBuilder
+    private func cardColorBlock() -> some View {
         HStack {
             Text("panel.card.create.color.label")
                 .font(Setting.cardPanelLabelFont)
@@ -104,7 +78,8 @@ extension CreateCardPanel {
         }
     }
     
-    var _CardDisplayBlock: some View {
+    @ViewBuilder
+    private func cardDisplayBlock() -> some View {
         HStack {
             Text("panel.card.create.display.label")
                 .font(Setting.cardPanelLabelFont)
@@ -126,7 +101,8 @@ extension CreateCardPanel {
         }
     }
     
-    var _CardFixedBlock: some View {
+    @ViewBuilder
+    private func cardFixedBlock() -> some View {
         HStack {
             Text("panel.card.create.fixed.label")
                 .font(Setting.cardPanelLabelFont)
@@ -136,10 +112,36 @@ extension CreateCardPanel {
         .opacity(displayInput == .forever ? 0.1 : 1)
         .disabled(displayInput == .forever)
     }
+    
+    @ViewBuilder
+    private func confirmButton() -> some View {
+        ActionPanelConfirmButton(color: $colorInput, text: "global.create") {
+            withAnimation(.quick) {
+                if creating { return }
+                creating = true
+                
+                if nameInput.isEmpty {
+                    nameInput = String(localized: "panel.card.create.name.label.placeholder")
+                }
+                
+                if amountInput.isEmpty {
+                    amountInput = String(localized: "panel.card.create.amount.label.placeholder")
+                }
+                
+                guard let amount = Decimal(string: amountInput) else {
+                    print("[ERROR] transform amount input to decimal failed")
+                    creating = false
+                    return
+                }
+                
+                fixedInput = fixedInput || displayInput == .forever
+                container.interactor.data.CreateCard(budget, name: nameInput, amount: amount, display: displayInput, color: colorInput, fixed: fixedInput)
+                container.interactor.system.ClearActionView()
+            }
+        }
+    }
+    
 }
-
-// MARK: - Property
-extension CreateCardPanel {}
 
 struct CreateCardPanel_Previews: PreviewProvider {
     static var previews: some View {

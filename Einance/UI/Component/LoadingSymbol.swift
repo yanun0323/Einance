@@ -24,11 +24,7 @@ struct LoadingSymbol: View {
                     .animation(.easeInOut(duration: duration).repeatForever(autoreverses: true).delay(0.15 * Double(index)), value: isLoading)
             }
         }
-        .onAppear {
-            withAnimation {
-                isLoading = true
-            }
-        }
+        .onAppeared { isLoading = true }
     }
     
     func getColor(_ index: Int) -> Color {
@@ -36,6 +32,7 @@ struct LoadingSymbol: View {
     }
 }
 
+#if DEBUG
 struct LoadingSymbol_Previews: PreviewProvider {
     static var previews: some View {
         LoadingSymbol()
@@ -43,3 +40,4 @@ struct LoadingSymbol_Previews: PreviewProvider {
         LoadingSymbol()
     }
 }
+#endif

@@ -21,13 +21,13 @@ struct CardRect: View {
                 
                 if isPreview {
                     VStack(alignment: .trailing, spacing: 5) {
-                        _PreviewCategoryLabel(p, $aboveCategory)
-                        _PreviewCategoryLabel(p, $belowCategory)
+                        previewCategoryLabel(p, $aboveCategory)
+                        previewCategoryLabel(p, $belowCategory)
                     }
                 } else {
                     VStack(alignment: .trailing, spacing: -size(p)*0.02) {
-                        _CategoryValue(p, aboveCategory, opacity: 1)
-                        _CategoryValue(p, belowCategory, opacity: 0.3)
+                        categoryValue(p, aboveCategory, opacity: 1)
+                        categoryValue(p, belowCategory, opacity: 0.3)
                     }
                 }
             }
@@ -38,16 +38,16 @@ struct CardRect: View {
             .cornerRadius(15)
             .contextMenu {
                 if !isPreview && !isOrder {
-                    _ContextButtons
+                    contextButtons()
                 }
             }
             .alert("card.context.alert.delete.title", isPresented: $showDeleteAlert, actions: {
-                _AlertDeleteButton
+                alertDeleteButton()
             }, message: {
                 Text("card.context.alert.delete.content")
             })
             .alert("card.context.alert.archive.title", isPresented: $showArchiveAlert, actions: {
-                _AlertArchiveButton
+                alertArchiveButton()
             }, message: {
                 Text("card.context.alert.archive.content")
             })
@@ -55,27 +55,21 @@ struct CardRect: View {
                 aboveCategory = container.interactor.setting.GetCardBudgetCategoryAbove()
                 belowCategory = container.interactor.setting.GetCardBudgetCategoryBelow()
             }
-            .onChange(of: aboveCategory) { value in
-                container.interactor.setting.SetCardBudgetCategoryAbove(value)
-            }
-            .onChange(of: belowCategory) { value in
-                container.interactor.setting.SetCardBudgetCategoryBelow(value)
-            }
-            .onReceive(container.appstate.aboveBudgetCategoryPubliser) { output in
+            .onChange(of: aboveCategory) { container.interactor.setting.SetCardBudgetCategoryAbove($0) }
+            .onChange(of: belowCategory) { container.interactor.setting.SetCardBudgetCategoryBelow($0) }
+            .onReceived(container.appstate.aboveBudgetCategoryPubliser) {
                 if isPreview { return }
-                aboveCategory = output
+                aboveCategory = $0
             }
-            .onReceive(container.appstate.belowBudgetCategoryPubliser) { output in
+            .onReceived(container.appstate.belowBudgetCategoryPubliser) {
                 if isPreview { return }
-                belowCategory = output
+                belowCategory = $0
             }
         }
     }
-}
-
-// MARK: - View Block
-extension CardRect {
-    func titleBlock(_ p: GeometryProxy) -> some View {
+    
+    @ViewBuilder
+    private func titleBlock(_ p: GeometryProxy) -> some View {
         HStack(alignment: .top, spacing: 10) {
             if card.fixed {
                 Image(systemName: "pin.fill")
@@ -103,14 +97,16 @@ extension CardRect {
         .frame(height: size(p)*0.11)
     }
     
-    func _CategoryValue(_ p: GeometryProxy, _ category: BudgetCategory, opacity: CGFloat) -> some View {
+    @ViewBuilder
+    private func categoryValue(_ p: GeometryProxy, _ category: BudgetCategory, opacity: CGFloat) -> some View {
         Text(getCardMoney(category).description)
             .font(.system(size: size(p)*0.13, weight: .semibold, design: .rounded))
             .foregroundColor(.white)
             .opacity(opacity)
     }
     
-    func _PreviewCategoryLabel(_ p: GeometryProxy, _ category: Binding<BudgetCategory>) -> some View {
+    @ViewBuilder
+    private func previewCategoryLabel(_ p: GeometryProxy, _ category: Binding<BudgetCategory>) -> some View {
         Menu {
             Picker("", selection: category) {
                 ForEach(BudgetCategory.allCases) { c in
@@ -131,7 +127,8 @@ extension CardRect {
         .cornerRadius(Setting.panelCornerRadius)
     }
     
-    var _ContextButtons: some View {
+    @ViewBuilder
+    private func contextButtons() -> some View {
         VStack {
             Button {
                 container.interactor.system.PushActionView(.EditCard(budget, card))
@@ -159,7 +156,8 @@ extension CardRect {
         }
     }
     
-    var _AlertDeleteButton: some View {
+    @ViewBuilder
+    private func alertDeleteButton() -> some View {
         Button("global.delete", role: .destructive) {
             withAnimation(.quick) {
                 container.interactor.data.DeleteCard(budget, card)
@@ -167,7 +165,8 @@ extension CardRect {
         }
     }
     
-    var _AlertArchiveButton: some View {
+    @ViewBuilder
+    private func alertArchiveButton() -> some View {
         Button("global.archive", role: .destructive) {
             withAnimation(.quick) {
                 container.interactor.data.ArchiveCard(budget, card)
@@ -210,6 +209,7 @@ extension CardRect {
     }
 }
 
+#if DEBUG
 struct CardRect_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
@@ -229,3 +229,4 @@ struct CardRect_Previews: PreviewProvider {
         .previewLayout(.sizeThatFits)
     }
 }
+#endif

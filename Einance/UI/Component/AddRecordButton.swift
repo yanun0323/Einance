@@ -33,6 +33,7 @@ extension AddRecordButton {
     }
 }
 
+#if DEBUG
 struct AddRecordButton_Previews: PreviewProvider {
     static var previews: some View {
         ZStack {
@@ -43,3 +44,4 @@ struct AddRecordButton_Previews: PreviewProvider {
         }
     }
 }
+#endif

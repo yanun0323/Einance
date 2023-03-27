@@ -16,8 +16,10 @@ struct ActionPanelConfirmButton: View {
     }
 }
 
+#if DEBUG
 struct ActionPanelConfirmButton_Previews: PreviewProvider {
     static var previews: some View {
         ActionPanelConfirmButton(color: .constant(.red), text: "global.create") {}
     }
 }
+#endif

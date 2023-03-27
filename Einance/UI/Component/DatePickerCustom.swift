@@ -13,22 +13,11 @@ struct DatePickerCustom<S>: View where S : DatePickerStyle {
         HalfSheet(grabber: false) {
             GeometryReader { bounds in
                 VStack(alignment: .center, spacing: 0) {
-                    HStack {
-                        Block(width: 30, height: 10)
-                        Spacer()
-                        Text("日期")
-                            .font(.title3)
-                        Spacer()
-                        Image(systemName: "multiply.circle.fill")
-                            .foregroundColor(.primary25)
-                            .font(.title)
-                    }
-                    .padding([.horizontal, .top])
-                    .onTapGesture {
-                        cancelAction()
-                    }
+                    headerBlock()
+                        .padding([.horizontal, .top])
+                        .onTapGesture { cancelAction() }
                     Spacer()
-                    PickerBlock
+                    pickerBlock()
                     .padding(.horizontal)
                     .frame(width: bounds.size.width*0.9)
                     Spacer()
@@ -36,10 +25,23 @@ struct DatePickerCustom<S>: View where S : DatePickerStyle {
             }
         }
     }
-}
-
-extension DatePickerCustom {
-    var PickerBlock: some View {
+    
+    @ViewBuilder
+    private func headerBlock() -> some View {
+        HStack {
+            Block(width: 30, height: 10)
+            Spacer()
+            Text("日期")
+                .font(.title3)
+            Spacer()
+            Image(systemName: "multiply.circle.fill")
+                .foregroundColor(.primary25)
+                .font(.title)
+        }
+    }
+    
+    @ViewBuilder
+    private func pickerBlock() -> some View {
         VStack {
             if let end = end {
                 if let comp = component {
@@ -72,6 +74,7 @@ extension DatePickerCustom {
     
 }
 
+#if DEBUG
 struct DatePickerCustom_Previews: PreviewProvider {
     static var previews: some View {
         DatePickerCustom(datePicked: .constant(Date.now), start: Date.now, end: nil, style: .graphical) {
@@ -79,3 +82,4 @@ struct DatePickerCustom_Previews: PreviewProvider {
         }
     }
 }
+#endif

@@ -16,9 +16,11 @@ struct ActionPanelCloseButton: View {
     }
 }
 
+#if DEBUG
 struct ActionViewCloseButton_Previews: PreviewProvider {
     static var previews: some View {
         ActionPanelCloseButton()
             .inject(DIContainer.preview)
     }
 }
+#endif

@@ -15,26 +15,26 @@ struct Dashboard: View {
         VStack(spacing: 10) {
             HStack {
                 if isPreview {
-                    _PreviewCategoryLabel($leftCategory)
+                    previewCategoryLabel($leftCategory)
                     Spacer()
-                    _PreviewCategoryLabel($rightCategory)
+                    previewCategoryLabel($rightCategory)
                 } else {
-                    _CategoryLabel(leftCategory)
+                    categoryLabel(leftCategory)
                     Spacer()
-                    _CategoryLabel(rightCategory)
+                    categoryLabel(rightCategory)
                 }
             }
             
             if isPreview || leftCategory == rightCategory || budget.amount.isZero {
-                _SameCategoryBarBlock
+                sameCategoryBarBlock()
             } else {
-                _BarBlock
+                barBlock()
                     .opacity(isPreview ? 0.5 : 1)
             }
             HStack {
-                _CategoryValue(leftCategory)
+                categoryValue(leftCategory)
                 Spacer()
-                _CategoryValue(rightCategory)
+                categoryValue(rightCategory)
             }
             .opacity(isPreview ? 0.1 : 1)
         }
@@ -45,44 +45,34 @@ struct Dashboard: View {
             leftCategory = container.interactor.setting.GetDashboardBudgetCategoryLeft()
             rightCategory = container.interactor.setting.GetDashboardBudgetCategoryRight()
         }
-        .onChange(of: leftCategory) { _ in
-            container.interactor.setting.SetDashboardBudgetCategoryLeft(leftCategory)
-        }
-        .onChange(of: rightCategory) { _ in
-            container.interactor.setting.SetDashboardBudgetCategoryRight(rightCategory)
-        }
-        .onReceive(container.appstate.leftBudgetCategoryPublisher) { output in
+        .onChanged(of: leftCategory) { container.interactor.setting.SetDashboardBudgetCategoryLeft(leftCategory) }
+        .onChanged(of: rightCategory) { container.interactor.setting.SetDashboardBudgetCategoryRight(rightCategory) }
+        .onReceived(container.appstate.leftBudgetCategoryPublisher) {
             if isPreview { return }
-            withAnimation(.quick) {
-                leftCategory = output
-            }
+            leftCategory = $0
         }
-        .onReceive(container.appstate.rightBudgetCategoryPublisher) { output in
+        .onReceived(container.appstate.rightBudgetCategoryPublisher) {
             if isPreview { return }
-            withAnimation(.quick) {
-                rightCategory = output
-            }
+            rightCategory = $0
         }
     }
-}
-
-// MARK: - View Block
-extension Dashboard {
-    var _BarBlock: some View {
+    
+    @ViewBuilder
+    private func barBlock() -> some View {
         GeometryReader { bounds in
             HStack(spacing: 0) {
                 if leftCategory == .Cost {
-                    _costBar(bounds)
+                    costBar(bounds)
                     Spacer()
                 } else if rightCategory == .Cost {
                     Spacer()
-                    _costBar(bounds)
+                    costBar(bounds)
                 } else if leftCategory == .Balance {
-                    _balanceBar(bounds)
+                    balanceBar(bounds)
                     Spacer()
                 } else {
                     Spacer()
-                    _balanceBar(bounds)
+                    balanceBar(bounds)
                 }
             }
         }
@@ -91,7 +81,8 @@ extension Dashboard {
         .cornerRadius(5, antialiased: true)
     }
     
-    var _SameCategoryBarBlock: some View {
+    @ViewBuilder
+    private func sameCategoryBarBlock() -> some View {
         Rectangle()
             .frame(height: 15)
             .foregroundColor(Color.section.opacity(0.5))
@@ -101,17 +92,14 @@ extension Dashboard {
 
 // MARK: - View Function
 extension Dashboard {
-    func _CategoryLabel(_ c: BudgetCategory) -> some View {
-        _categoryText(c)
+    @ViewBuilder
+    private func categoryLabel(_ c: BudgetCategory) -> some View {
+        categoryText(c)
             .opacity(isHighlight(c) ? 1 : 0.5)
     }
     
-    func _CategoryValue(_ c: BudgetCategory) -> some View {
-        _categoryValue(c)
-            .opacity(isHighlight(c) ? 1 : 0.5)
-    }
-    
-    func _PreviewCategoryLabel(_ category: Binding<BudgetCategory>) -> some View {
+    @ViewBuilder
+    private func previewCategoryLabel(_ category: Binding<BudgetCategory>) -> some View {
         Menu {
             Picker("", selection: category) {
                 ForEach(BudgetCategory.allCases) { value in
@@ -132,22 +120,22 @@ extension Dashboard {
         .cornerRadius(5)
     }
 
-    // MARK: Private
-    
-    private func _categoryText(_ category: BudgetCategory) -> some View {
+    @ViewBuilder
+    private func categoryText(_ category: BudgetCategory) -> some View {
         switch category {
             case .Amount:
-                return Text("label.amount")
+                Text("label.amount")
             case .Balance:
-                return Text("label.balance")
+                Text("label.balance")
             case .Cost:
-                return Text("label.cost")
+                Text("label.cost")
             default:
-                return Text("label.cost")
+                Text("label.cost")
         }
     }
     
-    private func _balanceBar(_ bounds: GeometryProxy) -> some View {
+    @ViewBuilder
+    private func balanceBar(_ bounds: GeometryProxy) -> some View {
         HStack(spacing: 0) {
             ForEach(budget.book) { card in
                 if !card.isForever {
@@ -160,7 +148,8 @@ extension Dashboard {
         }
     }
     
-    private func _costBar(_ bounds: GeometryProxy) -> some View {
+    @ViewBuilder
+    private func costBar(_ bounds: GeometryProxy) -> some View {
         HStack(spacing: 0) {
             ForEach(budget.book) { card in
                 if !card.isForever {
@@ -173,21 +162,24 @@ extension Dashboard {
         }
     }
     
-    private func _categoryValue(_ category: BudgetCategory) -> some View {
-        switch category {
-            case .Amount:
-                return Text(budget.amount.description)
-            case .Balance:
-                return Text(budget.balance.description)
-            case .Cost:
-                return Text(budget.cost.description)
-            default:
-                return Text(budget.cost.description)
+    @ViewBuilder
+    private func categoryValue(_ category: BudgetCategory) -> some View {
+        Group {
+            switch category {
+                case .Amount:
+                    Text(budget.amount.description)
+                case .Balance:
+                    Text(budget.balance.description)
+                case .Cost:
+                    Text(budget.cost.description)
+                default:
+                    Text(budget.cost.description)
+            }
         }
+        .opacity(isHighlight(category) ? 1 : 0.5)
     }
 }
 
-// MARK: - Function
 extension Dashboard {
     func isHighlight(_ ctg: BudgetCategory) -> Bool {
         if leftCategory == rightCategory { return true }
@@ -200,6 +192,7 @@ extension Dashboard {
     }
 }
 
+#if DEBUG
 struct Dashboard_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
@@ -210,3 +203,4 @@ struct Dashboard_Previews: PreviewProvider {
         }
     }
 }
+#endif

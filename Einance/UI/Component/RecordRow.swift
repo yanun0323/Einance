@@ -30,38 +30,49 @@ struct RecordRow: View {
         .padding(.horizontal)
         .monospacedDigit()
         .swipeActions(edge: .trailing, allowsFullSwipe: false) {
-            HStack {
-                Button(role: .destructive) {
-                    withAnimation(.quick) {
-                        container.interactor.data.DeleteRecord(budget, card, record)
-                    }
-                } label: {
-                    Label("Delete", systemImage: "trash")
-                }
-                
-                Button(role: .none) {
-                    container.interactor.system.PushActionView(.EditRecord(budget, card, record))
-                } label: {
-                    Label("Edit", systemImage: "square.and.pencil")
-                }
-            }
+            trailingSwapeAction()
         }
         .swipeActions(edge: .leading, allowsFullSwipe: true) {
-            if card.fixed {
-                Button(role: .cancel) {
-                    withAnimation(.quick) {
-                        let fixed = !record.fixed
-                        container.interactor.data.UpdateRecord(budget, card, record, date: record.date, cost: record.cost, memo: record.memo, fixed: fixed)
-                    }
-                } label: {
-                    Label("Fixed", systemImage: "pin")
-                        .foregroundColor(card.color)
+            leadingSwapeAction()
+        }
+    }
+    
+    @ViewBuilder
+    private func trailingSwapeAction() -> some View {
+        HStack {
+            Button(role: .destructive) {
+                withAnimation(.quick) {
+                    container.interactor.data.DeleteRecord(budget, card, record)
                 }
+            } label: {
+                Label("Delete", systemImage: "trash")
+            }
+            
+            Button(role: .none) {
+                container.interactor.system.PushActionView(.EditRecord(budget, card, record))
+            } label: {
+                Label("Edit", systemImage: "square.and.pencil")
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private func leadingSwapeAction() -> some View {
+        if card.fixed {
+            Button(role: .cancel) {
+                withAnimation(.quick) {
+                    let fixed = !record.fixed
+                    container.interactor.data.UpdateRecord(budget, card, record, date: record.date, cost: record.cost, memo: record.memo, fixed: fixed)
+                }
+            } label: {
+                Label("Fixed", systemImage: "pin")
+                    .foregroundColor(card.color)
             }
         }
     }
 }
 
+#if DEBUG
 struct RecordRow_Previews: PreviewProvider {
     static var previews: some View {
         RecordRow(budget: .preview, card: .preview, record: .preview)
@@ -69,3 +80,4 @@ struct RecordRow_Previews: PreviewProvider {
             .previewLayout(.sizeThatFits)
     }
 }
+#endif

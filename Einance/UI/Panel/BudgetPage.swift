@@ -94,9 +94,7 @@ struct BudgetPage: View {
     }
 }
 
-// MARK: - Function
-extension BudgetPage {}
-
+#if DEBUG
 struct BudgetPage_Previews: PreviewProvider {
     static var previews: some View {
         BudgetPage(budget: .preview, current: .preview, selected: .constant(.preview))
@@ -104,3 +102,4 @@ struct BudgetPage_Previews: PreviewProvider {
             .preferredColorScheme(.light)
     }
 }
+#endif

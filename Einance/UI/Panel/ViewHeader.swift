@@ -23,9 +23,11 @@ struct ViewHeader: View {
     }
 }
 
+#if DEBUG
 struct ViewHeader_Previews: PreviewProvider {
     static var previews: some View {
         ViewHeader(title: "加入新的預算卡片")
             .inject(DIContainer.preview)
     }
 }
+#endif

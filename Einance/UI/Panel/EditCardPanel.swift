@@ -29,14 +29,14 @@ struct EditCardPanel: View {
     
     var body: some View {
         VStack {
-            _TitleBlock
+            titleBlock()
                 .padding()
             VStack {
-                _CardNameBlock
-                _CardAmountBlock
-                _CardColorBlock
+                cardNameBlock()
+                cardAmountBlock()
+                cardColorBlock()
 //                _CardDisplayBlock
-                _CardFixedBlock
+                cardFixedBlock()
             }
             .padding(.horizontal)
             ActionPanelConfirmButton(color: $colorInput, text: "global.edit") {
@@ -64,11 +64,9 @@ struct EditCardPanel: View {
             }
         }
     }
-}
-
-// MARK: - View Block
-extension EditCardPanel {
-    var _TitleBlock: some View {
+    
+    @ViewBuilder
+    private func titleBlock() -> some View {
         HStack {
             Text("view.header.edit.card")
                 .font(Setting.panelTitleFont)
@@ -77,7 +75,8 @@ extension EditCardPanel {
         }
     }
     
-    var _CardNameBlock: some View {
+    @ViewBuilder
+    private func cardNameBlock() -> some View {
         HStack {
             Text("panel.card.create.name.label")
                 .font(Setting.cardPanelLabelFont)
@@ -89,7 +88,8 @@ extension EditCardPanel {
         }
     }
     
-    var _CardAmountBlock: some View {
+    @ViewBuilder
+    private func cardAmountBlock() -> some View {
         HStack {
             Text("panel.card.create.amount.label")
                 .font(Setting.cardPanelLabelFont)
@@ -101,7 +101,8 @@ extension EditCardPanel {
         }
     }
     
-    var _CardColorBlock: some View {
+    @ViewBuilder
+    private func cardColorBlock() -> some View {
         HStack {
             Text("panel.card.create.color.label")
                 .font(Setting.cardPanelLabelFont)
@@ -110,7 +111,8 @@ extension EditCardPanel {
         }
     }
     
-    var _CardDisplayBlock: some View {
+    @ViewBuilder
+    private func cardDisplayBlock() -> some View {
         HStack {
             Text("panel.card.create.display.label")
                 .font(Setting.cardPanelLabelFont)
@@ -135,7 +137,8 @@ extension EditCardPanel {
         .disabled(displayInput == .forever)
     }
     
-    var _CardFixedBlock: some View {
+    @ViewBuilder
+    private func cardFixedBlock() -> some View {
         HStack {
             Text("panel.card.create.fixed.label")
                 .font(Setting.cardPanelLabelFont)
@@ -154,9 +157,11 @@ extension EditCardPanel {
     }
 }
 
+#if DEBUG
 struct EditCardPanel_Previews: PreviewProvider {
     static var previews: some View {
         EditCardPanel(budget: .preview, card: .preview2)
             .inject(DIContainer.preview)
     }
 }
+#endif
