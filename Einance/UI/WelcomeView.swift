@@ -10,20 +10,18 @@ struct WelcomeView: View {
     
     var body: some View {
         VStack {
-            _ReturnBlock
+            returnBlock()
             Spacer()
-            _StepRouter
+            stepRouter()
             Spacer()
-            _NextButton
+            nextButton()
                 .offset(x: step >= 2 ? -System.device.screen.width : 0)
-            _DotBlock
+            dotBlock()
         }
-        
     }
-}
-
-extension WelcomeView {
-    var _DotBlock: some View {
+    
+    @ViewBuilder
+    private func dotBlock() -> some View {
         HStack {
             ForEach(0...2, id: \.self) { i in
                 Circle()
@@ -35,7 +33,8 @@ extension WelcomeView {
         .animation(.quick, value: step)
     }
     
-    var _ReturnBlock: some View {
+    @ViewBuilder
+    private func returnBlock() -> some View {
         HStack {
             ButtonCustom(width: 60, height: 70, radius: 5, shadow: 5) {
                 withAnimation(.medium) {
@@ -53,7 +52,8 @@ extension WelcomeView {
         .opacity(step == 0 ? 0 : 1)
     }
     
-    var _NextButton: some View {
+    @ViewBuilder
+    private func nextButton() -> some View {
         ButtonCustom(width: 120, height: 50, color: color, radius: 10, shadow: 5) {
             withAnimation(.medium) {
                 if step >= 2 { return }
@@ -66,14 +66,15 @@ extension WelcomeView {
         }
     }
     
-    var _StepRouter: some View {
+    @ViewBuilder
+    private func stepRouter() -> some View {
         ZStack {
-            _StepLastView
+            stepLastView()
                 .opacity(step == 2 ? 1 : 0)
                 .disabled(step != 2)
                 .offset(x: step != 2 ? System.device.screen.width : 0)
             
-            _Step0View
+            step0View()
                 .opacity(step != 0 ? 0.1 : 1)
                 .scaleEffect(y: step != 0 ? 0.9 : 1, anchor: .top)
                 .offset(
@@ -81,7 +82,7 @@ extension WelcomeView {
                     y: step != 0 ? -System.device.screen.height/4 : 0
                 )
             
-            _Step1View
+            step1View()
                 .opacity(step == 1 ? 1 : 0)
                 .scaleEffect(y: step != 0 ? 1 : 0.9, anchor: .bottom)
                 .offset(
@@ -91,7 +92,8 @@ extension WelcomeView {
         }
     }
     
-    var _Step0View: some View {
+    @ViewBuilder
+    private func step0View() -> some View {
         VStack(spacing: 20) {
             Text("welcome.step.0.title")
                 .font(.title)
@@ -103,7 +105,8 @@ extension WelcomeView {
         .fontWeight(.light)
     }
     
-    var _Step1View: some View {
+    @ViewBuilder
+    private func step1View() -> some View {
         VStack(spacing: 30) {
             Text("welcome.step.1.title")
                 .font(.title)
@@ -130,7 +133,8 @@ extension WelcomeView {
         .fontWeight(.light)
     }
     
-    var _StepLastView: some View {
+    @ViewBuilder
+    private func stepLastView() -> some View {
         VStack(spacing: 20) {
             Text("welcome.step.2.content")
                 .font(.title2)
@@ -163,8 +167,10 @@ extension WelcomeView {
     }
 }
 
+#if DEBUG
 struct WelcomeView_Previews: PreviewProvider {
     static var previews: some View {
         WelcomeView()
     }
 }
+#endif

@@ -15,13 +15,12 @@ extension Sql {
     }
     
     static func Init(isMock: Bool) -> Connection {
-#if DEBUG
-        print("[DEBUG] database file path: \(filePath("database").absoluteString)")
-#endif
-        var conn = try! Connection()
+        var dbName = "development"
         if !isMock {
-            conn = try! Connection(filePath("database").absoluteString)
+            dbName = "production"
         }
+        print(dbName)
+        let conn = try! Connection(filePath(dbName).absoluteString)
         conn.busyTimeout = 5
         conn.Init()
         
@@ -44,3 +43,5 @@ extension Connection {
         }
     }
 }
+
+

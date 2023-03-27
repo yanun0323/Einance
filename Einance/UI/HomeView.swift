@@ -3,58 +3,55 @@ import UIComponent
 
 struct HomeView: View {
     @EnvironmentObject private var container: DIContainer
-    @State private var showAddButton: Bool = false
     
     @ObservedObject var budget: Budget
     @ObservedObject var current: Card
     @Binding var selected: Card
+    @Binding var showAddButton: Bool
     
     var body: some View {
         ZStack {
-            VStack {
-                HomeHeader(budget: budget, current: current)
-                    .padding(.horizontal)
-                
-                if hasCards {
-                    BudgetPage(budget: budget, current: current, selected: $selected)
-                } else {
-                    VStack {
-                        Spacer()
-                        ButtonCustom(width: 100, height: 100) {
-                            container.interactor.system.PushActionView(.CreateCard(budget))
-                        } content: {
-                            Image(systemName: "rectangle.fill.badge.plus")
-                                .font(.title)
-                        }
-                        Spacer()
-                    }
-                }
-            }
-            VStack {
-                Spacer()
-                if hasCards && showAddButton {
-                    AddRecordButton(budget: budget, card: current)
-                        .transition(.move(edge: .bottom))
-                }
-            }
-            .ignoresSafeArea(.all)
+            budgetPageLayer()
+                .ignoresSafeArea(.all, edges: .bottom)
+            addRecordButtonLayer()
+                .ignoresSafeArea(.all, edges: .bottom)
         }
-        .ignoresSafeArea(.keyboard)
-        .onReceive(container.appstate.actionViewEmptyPublisher) { showAddButton = $0 }
-        .animation(.quick, value: showAddButton)
+    }
+    
+    @ViewBuilder
+    private func budgetPageLayer() -> some View {
+        VStack {
+            HomeHeader(budget: budget, current: current)
+                .padding(.horizontal)
+            if budget.HasCard() {
+                BudgetPage(budget: budget, current: current, selected: $selected)
+            } else {
+                Spacer()
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private func addRecordButtonLayer() -> some View {
+        VStack {
+            Spacer()
+            if budget.HasCard() && showAddButton {
+                AddRecordButton(budget: budget, card: current)
+                    .transition(.move(edge: .bottom))
+            }
+        }
     }
 }
 
-extension HomeView {
-    var hasCards: Bool {
-        budget.book.count != 0
-    }
-}
+// MARK: - Function
+extension HomeView {}
 
+#if DEBUG
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
-        HomeView(budget: .preview, current: .preview, selected: .constant(.preview))
+        HomeView(budget: .preview, current: .preview, selected: .constant(.preview), showAddButton: .constant(true))
             .inject(DIContainer.preview)
             .previewDeviceSet()
     }
 }
+#endif

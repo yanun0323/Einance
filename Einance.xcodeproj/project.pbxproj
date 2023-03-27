@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A81F0CAA29D149F400B81476 /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A81F0CA929D149F400B81476 /* HistoryView.swift */; };
 		A8357FDA29293F010086720F /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8357FD929293F010086720F /* HomeView.swift */; };
 		A8357FDD292952230086720F /* OrderedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = A8357FDC292952230086720F /* OrderedCollections */; };
 		A839C78A29BAF3AA0036C096 /* StatisticView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A839C78929BAF3AA0036C096 /* StatisticView.swift */; };
@@ -59,6 +60,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A81F0CA929D149F400B81476 /* HistoryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
 		A8357FD929293F010086720F /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		A839C78929BAF3AA0036C096 /* StatisticView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticView.swift; sourceTree = "<group>"; };
 		A87219EC2967F60700D52995 /* AddRecordButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddRecordButton.swift; sourceTree = "<group>"; };
@@ -181,6 +183,7 @@
 				A8BDCC2E29B7167B0021309B /* BookOrderView.swift */,
 				F6EA06A229B200F5005D08D7 /* WelcomeView.swift */,
 				A839C78929BAF3AA0036C096 /* StatisticView.swift */,
+				A81F0CA929D149F400B81476 /* HistoryView.swift */,
 				A8E52C66295AF2F100AC80B0 /* Panel */,
 				A8B09025291D69CC008D9B33 /* Component */,
 			);
@@ -384,6 +387,7 @@
 				A8FF946A29222BFE00C628BD /* RecordRow.swift in Sources */,
 				A8A75AEB291CCCBC00EF9D8A /* ContentView.swift in Sources */,
 				A8BDCC2D29B6431D0021309B /* LoadingSymbol.swift in Sources */,
+				A81F0CAA29D149F400B81476 /* HistoryView.swift in Sources */,
 				A8B09022291CFF2B008D9B33 /* Mock.swift in Sources */,
 				A87219F32968149C00D52995 /* UserSettingDao.swift in Sources */,
 				F6EA06A929B2276E005D08D7 /* Table.swift in Sources */,

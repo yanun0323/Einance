@@ -5,6 +5,7 @@ struct ContentView: View {
     @EnvironmentObject private var container: DIContainer
     @State private var viewRouter: AppState.ViewRouter = .Empty
     @State private var actionRouter: AppState.ActionRouter = .Empty
+    @State private var isRouterViewEmpty: Bool = true
     @State private var isActionViewEmpty: Bool = true
     @State private var isKeyboardActive = false
     @State private var isPickerActive = false
@@ -20,156 +21,144 @@ struct ContentView: View {
             if budget.isZero {
                 WelcomeView()
             } else {
-                _BudgetExistView
+                budgetExistView()
             }
         }
-        .backgroundColor(.background)
-        .onReceive(container.appstate.routerViewPublisher) { output in
-            withAnimation(.quick) {
-                viewRouter = output
-            }
+        .animation(.quick, value: isActionViewEmpty)
+        .animation(.quick, value: isRouterViewEmpty)
+        .onReceived(container.appstate.pickerPublisher) { isPickerActive = $0 }
+        .onReceived(container.appstate.budgetPublisher) { handleBudgetChange($0) }
+        .onReceived(container.appstate.keyboardPublisher) { isKeyboardActive = $0 }
+        .onReceived(container.appstate.routerViewPublisher) {
+            viewRouter = $0
+            isRouterViewEmpty = $0.isEmpty
         }
-        .onReceive(container.appstate.actionViewPublisher) { output in
-            withAnimation(.quick) {
-                actionRouter = output
-            }
+        .onReceived(container.appstate.actionViewPublisher) {
+            actionRouter = $0
+            isActionViewEmpty = $0.isEmpty
         }
-        .onReceive(container.appstate.keyboardPublisher) { output in
-            withAnimation(.quick) {
-                isKeyboardActive = output
-            }
-        }
-        .onReceive(container.appstate.pickerPublisher) { output in
-            withAnimation(.quick) {
-                isPickerActive = output
-            }
-        }
-        .onSmoothRecive(.quick, container.appstate.actionViewEmptyPublisher) { isActionViewEmpty = $0 }
-        .onReceive(container.appstate.budgetPublisher) { output in
-            if isUpdating { return }
-            guard let b = output else { return }
-            withAnimation(.quick) {
-                isUpdating = true
-                defer { isUpdating = false }
-                
-                budget.Update(b)
-                refreshCurrentCard()
-                
-                // make current card move to first
-                bookCount = b.book.count
-                
-                timer?.invalidate()
-                let start = budget.startAt
-                timer = Timer.scheduledTimer(
-                    withTimeInterval: 15, repeats: true,
-                    block: { t in
-                        if container.interactor.setting.IsExpired(start) {
-                            container.interactor.system.TriggerMonthlyCheck()
-                        }
-                    })
-            }
-        }
-        .onReceive(container.appstate.monthlyCheckPublisher) { output in
-            print("Monthly Publish Received")
-            container.interactor.data.UpdateMonthlyBudget(budget)
-        }
-        .onAppear {
-            container.interactor.data.PublishCurrentBudget()
-        }
-        .onChange(of: budget.book.count) { _ in
-            print("L: \(bookCount), R: \(budget.book.count)")
-            withAnimation(.quick) {
-                refreshCurrentCard()
-            }
-        }
+        .onReceived(container.appstate.monthlyCheckPublisher) { container.interactor.data.UpdateMonthlyBudget(budget) }
+        .onChanged(of: budget.book.count) { refreshCurrentCard() }
+        .onAppear { container.interactor.data.PublishCurrentBudget() }
+        .animation(.quick, value: isActionViewEmpty)
     }
     
     @ViewBuilder
     private func routerView() -> some View {
         switch viewRouter {
-        case .Empty:
-            EmptyView()
-        case let .Setting(di, budget, card):
-            SettingView(injector: di, budget: budget, current: card)
-        case let .BookOrder(budget):
-            BookOrderView(budget: budget)
-        case let .Statistic(budget, card):
-            StatisticView(budget: budget, card: card)
-        case let .Debug(budget):
-            DebugView(budget: budget)
+            case .Empty:
+                EmptyView()
+            case let .Setting(di, budget, card):
+                SettingView(injector: di, budget: budget, current: card)
+            case let .BookOrder(budget):
+                BookOrderView(budget: budget)
+            case let .Statistic(budget, card):
+                StatisticView(budget: budget, card: card)
+            case let .Debug(budget):
+                DebugView(budget: budget)
+            case .History:
+                HistoryView()
         }
     }
     
     @ViewBuilder
     private func actionView() -> some View {
         switch actionRouter {
-        case .Empty:
-            EmptyView()
-        case let .CreateCard(budget):
-            CreateCardPanel(budget: budget)
-        case let .EditCard(budget, card):
-            EditCardPanel(budget: budget, card: card)
-        case let .CreateRecord(budget, card):
-            CreateRecordPanel(budget: budget, card: card)
-        case let .EditRecord(budget, card, record):
-            EditRecordPanel(budget: budget, card: card, record: record)
+            case .Empty:
+                EmptyView()
+            case let .CreateCard(budget):
+                CreateCardPanel(budget: budget)
+            case let .EditCard(budget, card):
+                EditCardPanel(budget: budget, card: card)
+            case let .CreateRecord(budget, card):
+                CreateRecordPanel(budget: budget, card: card)
+            case let .EditRecord(budget, card, record):
+                EditRecordPanel(budget: budget, card: card, record: record)
         }
     }
-}
-
-// MARK: - View Block
-extension ContentView {
-    var _BudgetExistView: some View {
+    
+    @ViewBuilder
+    private func budgetExistView() -> some View {
         ZStack {
-            HomeView(budget: budget, current: current, selected: $current)
+            HomeView(budget: budget, current: current, selected: $current, showAddButton: $isActionViewEmpty)
                 .disabled(!isActionViewEmpty)
             ZStack {
                 routerView()
                 if !isActionViewEmpty {
-                    Rectangle()
-                        .foregroundColor(.black.opacity(0.5))
-                        .animation(.default, value: isActionViewEmpty)
-                        .onTapGesture {
-                            if isKeyboardActive || isPickerActive {
-                                container.interactor.system.PushPickerState(isOn: false)
-                                container.interactor.system.DismissKeyboard()
-                                return
-                            }
-                            container.interactor.system.ClearActionView()
-                        }
-                        .transition(.opacity)
+                    coverViewLayer()
                         .ignoresSafeArea(.all)
-                    VStack {
-                        actionView()
-                        Spacer(minLength: 0)
-                    }
-                    .animation(.default, value: isActionViewEmpty)
-                    .transition(.opacity)
-                    .ignoresSafeArea(.all, edges: .bottom)
+                    actionViewLayer()
+                        .ignoresSafeArea(.all, edges: .bottom)
                 }
             }
         }
-        .ignoresSafeArea(.all, edges: .bottom)
+    }
+    
+    @ViewBuilder
+    private func coverViewLayer() -> some View {
+        Rectangle()
+            .foregroundColor(.black.opacity(0.5))
+            .animation(.default, value: isActionViewEmpty)
+            .onTapGesture {
+                if isKeyboardActive || isPickerActive {
+                    container.interactor.system.PushPickerState(isOn: false)
+                    container.interactor.system.DismissKeyboard()
+                    return
+                }
+                container.interactor.system.ClearActionView()
+            }
+            .transition(.opacity)
+    }
+    
+    @ViewBuilder
+    private func actionViewLayer() -> some View {
+        VStack {
+            actionView()
+            Spacer(minLength: 0)
+        }
+        .transition(.opacity)
     }
 }
 
-// MARK: - Property
+// MARK: - Function
 extension ContentView {
-    var hasCards: Bool {
-        budget.book.count != 0
-    }
     
     func refreshCurrentCard() {
         defer { bookCount = budget.book.count }
-        if !hasCards {
+        if !budget.HasCard() {
             current = .empty
             return
         }
         current = bookCount < budget.book.count ? budget.book.last! : budget.book.first!
     }
+    
+    func handleBudgetChange(_ output: Budget?) {
+        if isUpdating { return }
+        guard let b = output else { return }
+        withAnimation(.quick) {
+            isUpdating = true
+            defer { isUpdating = false }
+            
+            budget.Update(b)
+            
+            // make current card move to first
+            bookCount = b.book.count
+            refreshCurrentCard()
+            
+            timer?.invalidate()
+            let start = budget.startAt
+            timer = Timer.scheduledTimer(
+                withTimeInterval: 15, repeats: true,
+                block: { t in
+                    if container.interactor.setting.IsExpired(start) {
+                        container.interactor.system.TriggerMonthlyCheck()
+                    }
+                })
+        }
+    }
 }
 
-
+#if DEBUG
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
@@ -178,3 +167,5 @@ struct ContentView_Previews: PreviewProvider {
             .inject(DIContainer.preview)
     }
 }
+#endif
+

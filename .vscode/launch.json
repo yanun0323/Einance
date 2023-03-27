@@ -1,0 +1,28 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch  App",
+            "type": "lldb",
+            "request": "launch",
+            "program": "/Users/yanunyang/Library/Developer/Xcode/DerivedData/Einance-hcxdwnwnrbeohvbrdscpveghvciy/Build/Products/Debug-iphoneos/Einance.app",
+            "iosBundleId": "com.yanunyang.Einance",
+            "iosTarget": "select",
+            "preLaunchTask": "${defaultBuildTask}"
+        },
+        {
+            "name": "Launch",
+            "type": "lldb",
+            "request": "launch",
+            // "program": "${workspaceFolder}/<executable file>",
+            "program": "${workspaceFolder}/build/Debug-${command:ios-debug.targetSdk}/Einance.app",
+            "iosBundleId": "Einance",
+            "iosTarget": "select",
+            "preLaunchTask": "${defaultBuildTask}",
+            "cwd": "${workspaceFolder}"
+        }
+    ]
+}

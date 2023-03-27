@@ -87,7 +87,7 @@ extension Dashboard {
             }
         }
         .frame(height: 15)
-        .background(Color.section.opacity(0.5))
+        .backgroundColor(.section.opacity(0.5))
         .cornerRadius(5, antialiased: true)
     }
     

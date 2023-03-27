@@ -1,0 +1,41 @@
+name: Einance
+packages:
+  HotReloading:
+    url: https://github.com/johnno1962/HotReloading.git
+    branch: main
+  Inject:
+    url: https://github.com/krzysztofzablocki/Inject.git
+    branch: main
+  SQLite:
+    url: https://github.com/stephencelis/SQLite.swift.git
+    version: 0.14.1
+  SwiftCollection:
+    url: https://github.com/apple/swift-collections.git
+    version: 1.0.3
+  UIComponent:
+    url: https://github.com/yanun0323/UIComponent.git
+    branch: master
+targets:
+  Einance:
+    type: application
+    platform: iOS
+    deploymentTarget: "16.0"
+    sources: [Einance]
+    settings:
+      configs:
+        debug:
+          CUSTOM_BUILD_SETTING: my_debug_value
+        release:
+          CUSTOM_BUILD_SETTING: my_release_value
+      base:
+        CURRENT_PROJECT_VERSION: 1
+        MARKETING_VERSION: 1
+        OTHER_LDFLAGS: "-Xlinker -interposable -Xlinker -undefined -Xlinker dynamic_lookup"
+        INFOPLIST_FILE: "Einance/Info.plist"
+    dependencies:
+      - sdk: SwiftUI.framework
+      - package: HotReloading
+      - package: Inject
+      - package: SQLite
+      - package: SwiftCollection
+      - package: UIComponent

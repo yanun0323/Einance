@@ -15,7 +15,8 @@ struct StatisticView: View {
         GeometryReader { proxy in
             VStack {
                 ViewHeader(title: "view.header.statistic")
-                _TitleRowButton(proxy)
+                viewCategoryRowButtons(proxy)
+                    .transition(.opacity)
                 
                 ForEach(budgets) { b in
                     HStack {
@@ -30,25 +31,15 @@ struct StatisticView: View {
                 
                 Spacer()
             }
-            .onAppear {
-                width = proxy.size.width/3
-            }
+            .onAppear { width = proxy.size.width/3 }
         }
-        .padding(.horizontal, 30)
         .backgroundColor(.background)
+        .onAppeared { budgets = container.interactor.data.ListBudgets() }
         .transition(.scale(scale: 0.95, anchor: .topLeading).combined(with: .opacity))
-        .onAppear {
-            withAnimation(.quick) {
-                budgets = container.interactor.data.ListBudgets()
-            }
-        }
-
     }
-}
-
-// MARK: - View Block
-extension StatisticView {
-    func _TitleRowButton(_ proxy: GeometryProxy) -> some View {
+    
+    @ViewBuilder
+    private func viewCategoryRowButtons(_ proxy: GeometryProxy) -> some View {
         ZStack(alignment: .leading) {
             RoundedRectangle(cornerRadius: height*0.5)
                 .foregroundColor(.background)
@@ -56,9 +47,9 @@ extension StatisticView {
                 .offset(x: CGFloat(selectedType)*width)
                 .shadow(color: .black.opacity(0.2), radius: 3)
             HStack(spacing: 0) {
-                _RowButton(0, "chart.pie.fill")
-                _RowButton(1, "chart.bar.xaxis")
-                _RowButton(2, "chart.line.uptrend.xyaxis")
+                rowButton(0, "chart.pie.fill")
+                rowButton(1, "chart.bar.xaxis")
+                rowButton(2, "chart.line.uptrend.xyaxis")
             }
         }
         .padding(3)
@@ -68,7 +59,8 @@ extension StatisticView {
         }
     }
     
-    func _RowButton(_ index: Int, _ image: String) -> some View {
+    @ViewBuilder
+    private func rowButton(_ index: Int, _ image: String) -> some View {
         ButtonCustom(width: width, height: height) {
             withAnimation(.quick) {
                 selectedType = index
@@ -81,8 +73,7 @@ extension StatisticView {
     }
 }
 
-extension StatisticView {}
-
+#if DEBUG
 struct StatisticView_Previews: PreviewProvider {
     static var previews: some View {
         StatisticView(budget: .preview)
@@ -92,3 +83,4 @@ struct StatisticView_Previews: PreviewProvider {
             .inject(DIContainer.preview)
     }
 }
+#endif

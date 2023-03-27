@@ -21,16 +21,9 @@ struct EinanceApp: App {
             ContentView()
                 .inject(container)
                 .preferredColorScheme(appearance)
-                .onReceive(container.appstate.appearancePublisher) { output in
-                    withAnimation(.quick) {
-                        appearance = output
-                    }
-                }
-                .onAppear {
-                    withAnimation(.quick) {
-                        appearance = container.interactor.setting.GetAppearance()
-                    }
-                }
+                .backgroundColor(.background, ignoresSafeAreaEdges: .all)
+                .onReceived(container.appstate.appearancePublisher) { appearance = $0 }
+                .onAppeared { appearance = container.interactor.setting.GetAppearance() }
         }
     }
 }

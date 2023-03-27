@@ -17,13 +17,13 @@ extension View {
     func modifyPanelBackground() -> some View {
         self
             .monospacedDigit()
-            .backgroundColor(.backgroundButton)
+            .backgroundColor(.backgroundButton, ignoresSafeAreaEdges: .all)
             .clipShape(RoundedRectangle(cornerRadius: Setting.panelCornerRadius))
             .shadow(radius: 5)
     }
     
-    func backgroundColor(_ color: Color) -> some View {
-        self.background(color)
+    func backgroundColor(_ color: Color, ignoresSafeAreaEdges edges: Edge.Set = []) -> some View {
+        self.background(color, ignoresSafeAreaEdges: edges)
     }
 }
 
@@ -35,15 +35,36 @@ extension Animation {
 }
 
 extension View {
-    func onQuickRecive<P>(_ publisher: P, perform action: @escaping (P.Output) -> Void) -> some View where P : Publisher, P.Failure == Never {
-        onSmoothRecive(.quick, publisher, perform: action)
-    }
-    
-    func onSmoothRecive<P>(_ animation: Animation, _ publisher: P, perform action: @escaping (P.Output) -> Void) -> some View where P : Publisher, P.Failure == Never  {
+    func onReceived<P>(animation: Animation = .quick, _ publisher: P, perform action: @escaping (P.Output) -> Void) -> some View where P : Publisher, P.Failure == Never {
         withAnimation(animation) {
             self.onReceive(publisher, perform: action)
         }
     }
+    
+    func onReceived<P>(animation: Animation = .quick, _ publisher: P, perform action: @escaping () -> Void) -> some View where P : Publisher, P.Failure == Never {
+        withAnimation(animation) {
+            self.onReceive(publisher, perform: { _ in action() })
+        }
+    }
+    
+    func onChanged<V>(_ animation: Animation = .quick, of value: V, perform action: @escaping (_ newValue: V) -> Void) -> some View where V : Equatable {
+        withAnimation(animation) {
+            self.onChange(of: value, perform: action)
+        }
+    }
+    
+    func onChanged<V>(_ animation: Animation = .quick, of value: V, perform action: @escaping () -> Void) -> some View where V : Equatable {
+        withAnimation(animation) {
+            self.onChange(of: value, perform: { _ in action() })
+        }
+    }
+    
+    func onAppeared(_ animation: Animation = .quick, perform action: (() -> Void)?) -> some View {
+        withAnimation(animation) {
+            self.onAppear(perform: action)
+        }
+    }
+    
 }
 
 extension Color {

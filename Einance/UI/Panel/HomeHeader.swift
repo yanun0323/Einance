@@ -16,26 +16,18 @@ struct HomeHeader: View {
                     .font(.title2)
             }
             ButtonCustom(width: buttonSize, height: buttonSize) {
-                container.interactor.system.PushRouterView(.Statistic(budget, current))
+                container.interactor.system.PushRouterView(.History)
             } content: {
-                Image(systemName: "chart.pie")
+                Image(systemName: "doc.text.magnifyingglass")
                     .font(.title2)
             }
             Spacer()
-#if DEBUG
-            ButtonCustom(width: buttonSize, height: buttonSize) {
-                container.interactor.system.PushRouterView(.Debug(budget))
-            } content: {
-                Image(systemName: "hammer.fill")
-                    .font(.title2)
-            }
-            Spacer()
-#endif
+            
             if budget.book.count >= 2 {
                 ButtonCustom(width: buttonSize, height: buttonSize) {
                     container.interactor.system.PushRouterView(.BookOrder(budget))
                 } content: {
-                    Image(systemName: "rectangle.on.rectangle.angled")
+                    Image(systemName: "rectangle.stack")
                         .font(.title2)
                 }
             } else {

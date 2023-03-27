@@ -17,7 +17,7 @@ struct CardRect: View {
     var body: some View {
         GeometryReader { p in
             VStack(alignment: .trailing, spacing: size(p)*0.07) {
-                _TitleBlock(p)
+                titleBlock(p)
                 
                 if isPreview {
                     VStack(alignment: .trailing, spacing: 5) {
@@ -34,7 +34,7 @@ struct CardRect: View {
             .monospacedDigit()
             .padding(.horizontal, size(p)*0.06)
             .frame(width: size(p), height: size(p)*0.66)
-            .background(cardBackgroundColor())
+            .backgroundColor(cardBackgroundColor())
             .cornerRadius(15)
             .contextMenu {
                 if !isPreview && !isOrder {
@@ -75,7 +75,7 @@ struct CardRect: View {
 
 // MARK: - View Block
 extension CardRect {
-    func _TitleBlock(_ p: GeometryProxy) -> some View {
+    func titleBlock(_ p: GeometryProxy) -> some View {
         HStack(alignment: .top, spacing: 10) {
             if card.fixed {
                 Image(systemName: "pin.fill")

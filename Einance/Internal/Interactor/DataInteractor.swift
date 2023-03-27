@@ -67,6 +67,7 @@ extension DataInteractor {
     
     func PublishCurrentBudget() {
         Do("publish current budget") {
+            print("publish current budget")
             let b = try repo.GetLastBudget()
             appstate.budgetPublisher.send(b)
         }

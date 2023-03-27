@@ -35,35 +35,32 @@ struct SettingView: View {
                 .padding(.horizontal)
             ScrollView(.vertical, showsIndicators: false) {
                 VStack(spacing: 30) {
-                    _AppearanceBlock
-                    _DashboardStyleSample
-                    _CardShapeStyleSample
-                    _BaseNumberBlock
-                    _DangerZoneBlock
+                    appearanceBlock()
+                    dashboardStyleSample()
+                    cardShapeStyleSample()
+                    baseNumberBlock()
+                    dangerZoneBlock()
                     Spacer()
                 }
             }
             .frame(width: System.device.screen.width - 30)
         }
-        .background(Color.background)
+        .backgroundColor(.background)
         .animation(.medium, value: dateNumberEdit)
         .transition(.scale(scale: 0.95, anchor: .topLeading).combined(with: .opacity))
         .alert("確定要變更更新日期？", isPresented: $showDateNumberAlert, actions: {
-            _DateNumberAlertButton
+            dateNumberAlertButton()
         }, message: {
-            Text("下次更新日期")+Text(" ")+Text(_CalculateNextDate().String("yyyy.MM.dd"))
+            Text("下次更新日期")+Text(" ")+Text(calculateNextDate().String("yyyy.MM.dd"))
                 .kerning(1)
         })
         .alert(dangerAlertTitle, isPresented: $showDangerAlert, actions: {
             Button("global.confirm", role: .destructive, action: dangerAction)
         })
     }
-}
-
-// MARK: - ViewBlock
-extension SettingView {
     
-    var _BaseNumberBlock: some View {
+    @ViewBuilder
+    private func baseNumberBlock() -> some View {
         VStack(alignment: .leading, spacing: 5) {
             if dateNumberEdit != 0 {
                 Text("更新日期")
@@ -72,10 +69,10 @@ extension SettingView {
                     .padding(.leading)
                 RoundedRectangle(cornerRadius: Setting.globalCornerRadius)
                     .foregroundColor(.section)
-                    .frame(height: isDateNumberChanged ? 200: 160)
+                    .frame(height: isDateNumberChanged() ? 200: 160)
                     .overlay {
                         VStack(spacing: 0) {
-                            _BaseNumberContentEdit
+                            baseNumberContentEdit()
                             Spacer()
                         }
                     }
@@ -83,7 +80,8 @@ extension SettingView {
         }
     }
     
-    var _BaseNumberContentEdit: some View {
+    @ViewBuilder
+    private func baseNumberContentEdit() -> some View {
         ZStack {
             HStack(spacing: 20) {
                 ButtonCustom(width: 100, height: 33, color: .section.opacity(0.5), radius: 5, shadow: 5) {
@@ -103,10 +101,10 @@ extension SettingView {
                         .foregroundColor(.white)
                 }
             }
-            .scaleEffect(y: isDateNumberChanged ? 1 : 0.2, anchor: .top)
+            .scaleEffect(y: isDateNumberChanged() ? 1 : 0.2, anchor: .top)
             .offset(y: 95)
-            .opacity(isDateNumberChanged ? 1 : 0)
-            .disabled(!isDateNumberChanged)
+            .opacity(isDateNumberChanged() ? 1 : 0)
+            .disabled(!isDateNumberChanged())
             
             VStack {
                 HStack {
@@ -131,13 +129,13 @@ extension SettingView {
                     }
                     HStack(spacing: 10) {
                         Text("下次更新日期")
-                        Text(_CalculateNextDate().String("yyyy.MM.dd"))
+                        Text(calculateNextDate().String("yyyy.MM.dd"))
                             .kerning(1)
 
                     }
-                    .foregroundColor(isDateNumberChanged ? color : .gray)
-                    .fontWeight(isDateNumberChanged ? .regular : .light)
-                    .animation(.quick, value: isDateNumberChanged)
+                    .foregroundColor(isDateNumberChanged() ? color : .gray)
+                    .fontWeight(isDateNumberChanged() ? .regular : .light)
+                    .animation(.quick, value: isDateNumberChanged())
                     .animation(.none, value: dateNumberEdit)
                 }
                 .font(.caption)
@@ -149,7 +147,8 @@ extension SettingView {
         }
     }
     
-    var _DateNumberAlertButton: some View {
+    @ViewBuilder
+    private func dateNumberAlertButton() -> some View {
         Button("global.change", role: .destructive) {
             withAnimation(.medium) {
                 dateNumber = dateNumberEdit
@@ -158,7 +157,8 @@ extension SettingView {
         }
     }
     
-    var _CardShapeStyleSample: some View {
+    @ViewBuilder
+    private func cardShapeStyleSample() -> some View {
         VStack(alignment: .leading, spacing: 5) {
             Text("卡片樣式")
                 .foregroundColor(.primary25)
@@ -166,13 +166,14 @@ extension SettingView {
                 .padding(.leading)
             CardRect(budget: budget, card: current, isPreview: true, previewColor: color)
                 .frame(
-                    width: widthWithPadding,
-                    height: widthWithPadding*0.66
+                    width: widthWithPadding(),
+                    height: widthWithPadding()*0.66
                 )
         }
     }
     
-    var _DashboardStyleSample: some View {
+    @ViewBuilder
+    private func dashboardStyleSample() -> some View {
         VStack(alignment: .leading, spacing: 5) {
             Text("儀表板樣式")
                 .foregroundColor(.primary25)
@@ -188,7 +189,8 @@ extension SettingView {
         }
     }
     
-    var _AppearanceBlock: some View {
+    @ViewBuilder
+    private func appearanceBlock() -> some View {
         VStack(spacing: 5) {
             Section {
                 RoundedRectangle(cornerRadius: Setting.globalCornerRadius)
@@ -203,7 +205,7 @@ extension SettingView {
                                     container.interactor.setting.SetAppearance(nil)
                                 }
                             } content: {
-                                _ScreenSystem
+                                screenSystem()
                             }
                             
                             Spacer()
@@ -213,7 +215,7 @@ extension SettingView {
                                     container.interactor.setting.SetAppearance(.light)
                                 }
                             } content: {
-                                _ScreenLight
+                                screenLight()
                             }
                             Spacer()
                             ButtonCustom(width: 80, height: 200) {
@@ -222,7 +224,7 @@ extension SettingView {
                                     container.interactor.setting.SetAppearance(.dark)
                                 }
                             } content: {
-                                _ScreenDark
+                                screenDark()
                             }
                             Spacer()
                         }
@@ -239,10 +241,11 @@ extension SettingView {
         }
     }
     
-    var _ScreenSystem: some View {
+    @ViewBuilder
+    private func screenSystem() -> some View {
         VStack {
             ZStack {
-                _AppearanceImage(.light)
+                appearanceImage(.light)
                     .mask {
                         HStack {
                             Rectangle()
@@ -250,7 +253,7 @@ extension SettingView {
                             Spacer()
                         }
                     }
-                _AppearanceImage(.dark)
+                appearanceImage(.dark)
                     .mask {
                         HStack {
                             Spacer()
@@ -280,9 +283,10 @@ extension SettingView {
         }
     }
     
-    var _ScreenLight: some View {
+    @ViewBuilder
+    private func screenLight() -> some View {
         VStack {
-            _AppearanceImage(.light)
+            appearanceImage(.light)
                 .cornerRadius(10, antialiased: true)
                 .overlay(
                     RoundedRectangle(cornerRadius: 10)
@@ -304,9 +308,10 @@ extension SettingView {
         }
     }
     
-    var _ScreenDark: some View {
+    @ViewBuilder
+    private func screenDark() -> some View {
         VStack {
-            _AppearanceImage(.dark)
+            appearanceImage(.dark)
                 .cornerRadius(10, antialiased: true)
                 .overlay(
                     RoundedRectangle(cornerRadius: 10)
@@ -328,7 +333,8 @@ extension SettingView {
         }
     }
     
-    var _DangerZoneBlock: some View {
+    @ViewBuilder
+    private func dangerZoneBlock() -> some View {
         VStack(alignment: .leading, spacing: 5) {
             Text("危險區域")
                 .foregroundColor(.red)
@@ -340,14 +346,15 @@ extension SettingView {
                 .overlay {
                     VStack(spacing: 0) {
                         Spacer()
-                        _DangerForceUpdateBudgetButton
+                        dangerForceUpdateBudgetButton()
                         Spacer()
                     }
                 }
         }
     }
     
-    var _DangerForceUpdateBudgetButton: some View {
+    @ViewBuilder
+    private func dangerForceUpdateBudgetButton() -> some View {
         Button {
             withAnimation(.quick) {
                 dangerAlertTitle = "確定要強制更新卡片到下個月?"
@@ -365,30 +372,10 @@ extension SettingView {
         .padding(.vertical, 7)
         .backgroundColor(.red)
         .cornerRadius(7)
-
-
     }
     
-}
-
-// MARK: - Property
-extension SettingView {
-//    var window: UIWindow? {
-//        (UIApplication.shared.connectedScenes.first as? UIWindowScene)?.windows.first
-//    }
-    
-    var widthWithPadding: CGFloat {
-        System.device.screen.width-30
-    }
-    
-    var isDateNumberChanged: Bool {
-        dateNumber != dateNumberEdit
-    }
-}
-
-// MARK: - Function
-extension SettingView {
-    func _AppearanceImage(_ theme: ColorScheme) -> some View {
+    @ViewBuilder
+    private func appearanceImage(_ theme: ColorScheme) -> some View {
         ZStack {
             Image(theme == .dark ? "ScreenDark" : "ScreenLight")
                 .resizable()
@@ -398,18 +385,31 @@ extension SettingView {
                 Text(Date.now.String("HH:mm"))
                     .foregroundColor(.white)
                 RoundedRectangle(cornerRadius: 3)
-                    .foregroundColor(_AppearanceColor(theme))
+                    .foregroundColor(appearanceColor(theme))
                     .frame(width: 50, height: 16)
                     .opacity(0.8)
                 RoundedRectangle(cornerRadius: 3)
-                    .foregroundColor(_AppearanceColor(theme))
+                    .foregroundColor(appearanceColor(theme))
                     .frame(width: 50, height: 16)
                     .opacity(0.8)
             }
         }
     }
     
-    func _AppearanceColor(_ theme: ColorScheme) -> Color {
+}
+
+// MARK: - Function
+extension SettingView {
+    
+    private func widthWithPadding() -> CGFloat {
+        System.device.screen.width-30
+    }
+    
+    private func isDateNumberChanged() -> Bool {
+        dateNumber != dateNumberEdit
+    }
+    
+    private func appearanceColor(_ theme: ColorScheme) -> Color {
         let light = 0.8
         let dark = 0.2
         switch theme {
@@ -422,7 +422,7 @@ extension SettingView {
         }
     }
     
-    func _CalculateNextDate() -> Date {
+    private func calculateNextDate() -> Date {
         let nextDay1 = budget.startAt.AddMonth(1).firstDayOfMonth
         if nextDay1.daysOfMonth < dateNumberEdit {
             return nextDay1.AddMonth(1).AddDay(-1)
@@ -431,6 +431,7 @@ extension SettingView {
     }
 }
 
+#if DEBUG
 struct SettingView_Previews: PreviewProvider {
     static var previews: some View {
         SettingView(injector: .preview, budget: .preview, current: .preview)
@@ -440,3 +441,4 @@ struct SettingView_Previews: PreviewProvider {
             .preferredColorScheme(.dark)
     }
 }
+#endif

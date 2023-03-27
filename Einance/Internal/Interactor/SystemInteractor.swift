@@ -27,14 +27,12 @@ extension SystemInteractor {
     func PushActionView(_ router: AppState.ActionRouter) {
         System.Async {
             appstate.actionViewPublisher.send(router)
-            appstate.actionViewEmptyPublisher.send(false)
         }
     }
     
     func ClearActionView() {
         System.Async {
             appstate.actionViewPublisher.send(.Empty)
-            appstate.actionViewEmptyPublisher.send(true)
         }
     }
     

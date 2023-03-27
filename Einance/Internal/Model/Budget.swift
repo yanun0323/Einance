@@ -75,4 +75,8 @@ extension Budget {
     func IsExpired(_ baseNumber: Int) -> Bool {
         return Date.now >= NextStartDate(baseNumber)
     }
+    
+    func HasCard() -> Bool {
+        return self.book.count != 0
+    }
 }

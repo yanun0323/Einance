@@ -22,18 +22,16 @@ struct BookOrderView: View {
         VStack(spacing: 30) {
             ViewHeader(title: "view.header.book.order")
             GeometryReader { proxy in
-                _ListBlock(getCardOffset(proxy))
+                listBlock(getCardOffset(proxy))
                     .padding()
             }
         }
         .padding(.horizontal)
         .backgroundColor(.background)
     }
-}
-
-// MARK: - View Block
-extension BookOrderView {
-    func _ListBlock(_ cardOffset: CGFloat) -> some View {
+    
+    @ViewBuilder
+    private func listBlock(_ cardOffset: CGFloat) -> some View {
         ZStack {
             ForEach(budget.book) { card in
                 CardRect(budget: budget, card: card, isOrder: true)
@@ -107,12 +105,14 @@ extension BookOrderView {
     }
 }
 
+#if DEBUG
 struct BookOrderView_Previews: PreviewProvider {
     static var previews: some View {
         BookOrderView(budget: Budget.preview)
             .inject(DIContainer.preview)
     }
 }
+#endif
 
 struct DragRelocateDelegate: DropDelegate {
     let item: Card

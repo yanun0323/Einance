@@ -14,16 +14,24 @@ struct BudgetPage: View {
         VStack(spacing: 0) {
             Dashboard(budget: budget, current: current)
                 .padding(.horizontal)
-            
-            TabView(selection: $selected) {
-                ForEach(budget.book) { card in
-                    CardRect(budget: budget, card: card)
-                        .padding()
-                        .tag(card)
+                .onTapGesture {
+                    container.interactor.system.PushRouterView(.Statistic(budget, current))
                 }
+            
+            ScrollView {
+                TabView(selection: $selected) {
+                    ForEach(budget.book) { card in
+                        CardRect(budget: budget, card: card)
+                            .padding(.horizontal)
+                            .tag(card)
+                            .offset(y: System.device.screen.height*0.01)
+                    }
+                }
+                .tabViewStyle(.page(indexDisplayMode: .always))
+                .frame(height: System.device.screen.height*0.335)
             }
-            .tabViewStyle(.page(indexDisplayMode: .always))
-            .frame(height: System.device.screen.height*0.36)
+            .ignoresSafeArea(.keyboard)
+            .scrollDisabled(true)
             
             if !current.dateDict.isEmpty || !current.fixedArray.isEmpty {
                 List {
@@ -93,6 +101,6 @@ struct BudgetPage_Previews: PreviewProvider {
     static var previews: some View {
         BudgetPage(budget: .preview, current: .preview, selected: .constant(.preview))
             .inject(DIContainer.preview)
-            .preferredColorScheme(.dark)
+            .preferredColorScheme(.light)
     }
 }
