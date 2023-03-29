@@ -28,41 +28,54 @@ struct CreateRecordPanel: View {
     }
     
     var body: some View {
-        ZStack {
-            VStack {
-                VStack {
-                    titleBlock()
-                        .padding()
-                    VStack {
-                        recordCostBlock()
-                        recordMemoBlock()
-                        recordDateBlock()
-                        recordFixedBlock()
-                    }
-                    .padding(.horizontal)
-                    
-                    confirmButton()
-                        .disabled(invalid)
-                }
-                .modifyPanelBackground()
-                .padding()
-                Spacer()
-            }
-            .sheet(isPresented: $showDatePicker) {
-                DatePickerCustom(datePicked: $dateInput, start: dateStart, end: dateEnd, style: .graphical) {
-                    container.interactor.system.PushPickerState(isOn: false)
-                }
-            }
-            .onReceived(container.appstate.keyboardPublisher) {
-                if !$0 { return }
+        VStack(spacing: 0) {
+            createRecordBlock()
+                .padding([.horizontal, .top])
+            
+            Spacer()
+            
+            externalKeyboardPanel()
+        }
+        .sheet(isPresented: $showDatePicker) {
+            DatePickerCustom(datePicked: $dateInput, start: dateStart, end: dateEnd, style: .graphical) {
                 container.interactor.system.PushPickerState(isOn: false)
             }
-            .onReceived(container.appstate.pickerPublisher) {
-                if $0 { return }
-                showDatePicker = $0
-            }
-            .onAppeared { focus = .input }
         }
+        .onReceived(container.appstate.keyboardPublisher) {
+            if !$0 { return }
+            container.interactor.system.PushPickerState(isOn: false)
+        }
+        .onReceived(container.appstate.pickerPublisher) {
+            if $0 { return }
+            showDatePicker = $0
+        }
+        .onAppeared { focus = .number }
+    }
+    
+    @ViewBuilder
+    private func externalKeyboardPanel() -> some View {
+        ExternalKeyboardPanel(text: $memoInput, number: $costInput, focus: _focus) {
+            focus = focus != .number ? .number : .input
+        }
+    }
+    
+    @ViewBuilder
+    private func createRecordBlock() -> some View {
+        VStack {
+            titleBlock()
+                .padding()
+            VStack {
+                recordCostBlock()
+                recordMemoBlock()
+                recordDateBlock()
+                recordFixedBlock()
+            }
+            .padding(.horizontal)
+            
+            confirmButton()
+                .disabled(invalid)
+        }
+        .modifyPanelBackground()
     }
     
     @ViewBuilder
@@ -86,7 +99,7 @@ struct CreateRecordPanel: View {
                 .keyboardType(.decimalPad)
                 .font(Setting.cardPanelInputFont)
                 .multilineTextAlignment(.trailing)
-                .focused($focus, equals: .input)
+                .focused($focus, equals: .number)
         }
     }
     
@@ -99,6 +112,7 @@ struct CreateRecordPanel: View {
                 .textFieldStyle(.plain)
                 .font(Setting.cardPanelInputFont)
                 .multilineTextAlignment(.trailing)
+                .focused($focus, equals: .input)
         }
     }
     

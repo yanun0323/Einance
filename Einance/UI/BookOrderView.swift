@@ -26,8 +26,8 @@ struct BookOrderView: View {
                     .padding()
             }
         }
-        .padding(.horizontal)
-        .backgroundColor(.background)
+        .modifyRouterBackground()
+        .transition(.scale(scale: 0.95, anchor: .topTrailing).combined(with: .opacity))
     }
     
     @ViewBuilder

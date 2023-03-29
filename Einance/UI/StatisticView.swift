@@ -5,41 +5,30 @@ struct StatisticView: View {
     @EnvironmentObject private var container: DIContainer
     @State private var selectedType: Int = 0
     @State private var height: CGFloat = 30
-    @State private var width: CGFloat = 50
-    @State private var budgets: [Budget] = []
+    @State private var width: CGFloat
+    private let buttonCount: CGFloat = 3
     
     @ObservedObject var budget: Budget
-    @State var card: Card? = nil
+    
+    init(budget: Budget) {
+        self._budget = .init(wrappedValue: budget)
+        self.width = System.device.screen.width/(buttonCount+1)
+    }
     
     var body: some View {
-        GeometryReader { proxy in
-            VStack {
-                ViewHeader(title: "view.header.statistic")
-                viewCategoryRowButtons(proxy)
-                    .transition(.opacity)
-                
-                ForEach(budgets) { b in
-                    HStack {
-                        Text(b.id.description)
-                            .frame(width: 50)
-                        Text(b.startAt.String("yyyy.MM.dd"))
-                            .frame(width: 100)
-                        Text(b.archiveAt?.String("yyyy.MM.dd") ?? "-")
-                            .frame(width: 100)
-                    }
-                }
-                
-                Spacer()
-            }
-            .onAppear { width = proxy.size.width/3 }
+        VStack {
+            ViewHeader(title: "view.header.statistic")
+            viewCategoryRowButtons()
+                .transition(.opacity)
+            
+            Spacer()
         }
-        .backgroundColor(.background)
-        .onAppeared { budgets = container.interactor.data.ListBudgets() }
-        .transition(.scale(scale: 0.95, anchor: .topLeading).combined(with: .opacity))
+        .modifyRouterBackground()
+        .transition(.scale(scale: 0.95, anchor: .top).combined(with: .opacity))
     }
     
     @ViewBuilder
-    private func viewCategoryRowButtons(_ proxy: GeometryProxy) -> some View {
+    private func viewCategoryRowButtons() -> some View {
         ZStack(alignment: .leading) {
             RoundedRectangle(cornerRadius: height*0.5)
                 .foregroundColor(.background)

@@ -19,7 +19,6 @@ extension Sql {
         if !isMock {
             dbName = "production"
         }
-        print(dbName)
         let conn = try! Connection(filePath(dbName).absoluteString)
         conn.busyTimeout = 5
         conn.Init()

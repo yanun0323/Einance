@@ -28,6 +28,26 @@ struct EditCardPanel: View {
     }
     
     var body: some View {
+        VStack(spacing: 0) {
+            editCardBlock()
+                .padding([.horizontal, .top])
+            
+            Spacer()
+            
+            externalKeyboardPanel()
+        }
+        .onAppeared { focus = .input }
+    }
+    
+    @ViewBuilder
+    private func externalKeyboardPanel() -> some View {
+        ExternalKeyboardPanel(text: $nameInput, number: $amountInput) {
+            focus = focus != .input ? .input : .number
+        }
+    }
+    
+    @ViewBuilder
+    private func editCardBlock() -> some View {
         VStack {
             titleBlock()
                 .padding()
@@ -35,34 +55,14 @@ struct EditCardPanel: View {
                 cardNameBlock()
                 cardAmountBlock()
                 cardColorBlock()
-//                _CardDisplayBlock
+                //                _CardDisplayBlock
                 cardFixedBlock()
             }
             .padding(.horizontal)
-            ActionPanelConfirmButton(color: $colorInput, text: "global.edit") {
-                withAnimation(.quick) {
-                    if updating { return }
-                    updating = true
-                    
-                    guard let amount = Decimal(string: amountInput) else {
-                        print("[ERROR] transform amount input to decimal failed")
-                        updating = false
-                        return
-                    }
-                    
-                    container.interactor.data.UpdateCard(budget, card, name: nameInput, index: card.index, amount: amount, color: colorInput, display: displayInput, fixed: fixedInput)
-                    container.interactor.system.ClearActionView()
-                }
-            }
-            .disabled(invalid)
+            
+            confirmButton()
         }
         .modifyPanelBackground()
-        .padding()
-        .onAppear {
-            withAnimation(.quick) {
-                focus = .input
-            }
-        }
     }
     
     @ViewBuilder
@@ -98,6 +98,7 @@ struct EditCardPanel: View {
                 .keyboardType(.decimalPad)
                 .font(Setting.cardPanelInputFont)
                 .multilineTextAlignment(.trailing)
+                .focused($focus, equals: .number)
         }
     }
     
@@ -147,6 +148,26 @@ struct EditCardPanel: View {
         }
         .opacity(displayInput == .forever ? 0.1 : 1)
         .disabled(displayInput == .forever)
+    }
+    
+    @ViewBuilder
+    private func confirmButton() -> some View {
+        ActionPanelConfirmButton(color: $colorInput, text: "global.edit") {
+            withAnimation(.quick) {
+                if updating { return }
+                updating = true
+                
+                guard let amount = Decimal(string: amountInput) else {
+                    print("[ERROR] transform amount input to decimal failed")
+                    updating = false
+                    return
+                }
+                
+                container.interactor.data.UpdateCard(budget, card, name: nameInput, index: card.index, amount: amount, color: colorInput, display: displayInput, fixed: fixedInput)
+                container.interactor.system.ClearActionView()
+            }
+        }
+        .disabled(invalid)
     }
 }
 

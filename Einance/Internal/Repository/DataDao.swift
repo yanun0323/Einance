@@ -191,6 +191,8 @@ extension DataDao where Self: DataRepository {
         try Sql.GetDriver().run(Record.GetTable().filter(Record.cardID == cardID).delete())
     }
     
+    // MARK: - Tag
+    
 }
 
 // MARK: - Private Function

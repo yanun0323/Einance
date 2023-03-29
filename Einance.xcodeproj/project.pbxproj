@@ -8,10 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		A81F0CAA29D149F400B81476 /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A81F0CA929D149F400B81476 /* HistoryView.swift */; };
+		A81F0D0729D4AACB00B81476 /* ExternalKeyboardPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A81F0D0629D4AACB00B81476 /* ExternalKeyboardPanel.swift */; };
+		A81F0D0929D4DD6800B81476 /* Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = A81F0D0829D4DD6800B81476 /* Tag.swift */; };
 		A8357FDA29293F010086720F /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8357FD929293F010086720F /* HomeView.swift */; };
 		A8357FDD292952230086720F /* OrderedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = A8357FDC292952230086720F /* OrderedCollections */; };
 		A839C78A29BAF3AA0036C096 /* StatisticView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A839C78929BAF3AA0036C096 /* StatisticView.swift */; };
-		A87219ED2967F60700D52995 /* AddRecordButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A87219EC2967F60700D52995 /* AddRecordButton.swift */; };
+		A87219ED2967F60700D52995 /* AddRecordButtonLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A87219EC2967F60700D52995 /* AddRecordButtonLayer.swift */; };
 		A87219EF2968131F00D52995 /* SettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A87219EE2968131F00D52995 /* SettingView.swift */; };
 		A87219F12968144400D52995 /* UserSettingInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A87219F02968144400D52995 /* UserSettingInteractor.swift */; };
 		A87219F32968149C00D52995 /* UserSettingDao.swift in Sources */ = {isa = PBXBuildFile; fileRef = A87219F22968149C00D52995 /* UserSettingDao.swift */; };
@@ -61,9 +63,11 @@
 
 /* Begin PBXFileReference section */
 		A81F0CA929D149F400B81476 /* HistoryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
+		A81F0D0629D4AACB00B81476 /* ExternalKeyboardPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExternalKeyboardPanel.swift; sourceTree = "<group>"; };
+		A81F0D0829D4DD6800B81476 /* Tag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tag.swift; sourceTree = "<group>"; };
 		A8357FD929293F010086720F /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		A839C78929BAF3AA0036C096 /* StatisticView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticView.swift; sourceTree = "<group>"; };
-		A87219EC2967F60700D52995 /* AddRecordButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddRecordButton.swift; sourceTree = "<group>"; };
+		A87219EC2967F60700D52995 /* AddRecordButtonLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddRecordButtonLayer.swift; sourceTree = "<group>"; };
 		A87219EE2968131F00D52995 /* SettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingView.swift; sourceTree = "<group>"; };
 		A87219F02968144400D52995 /* UserSettingInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettingInteractor.swift; sourceTree = "<group>"; };
 		A87219F22968149C00D52995 /* UserSettingDao.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettingDao.swift; sourceTree = "<group>"; };
@@ -207,6 +211,7 @@
 		A8A75AFC291CCE1200EF9D8A /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				A81F0D0829D4DD6800B81476 /* Tag.swift */,
 				A8A75B0C291CF07100EF9D8A /* Budget.swift */,
 				A8A75B0E291CF24A00EF9D8A /* Card.swift */,
 				A8A75B10291CF25000EF9D8A /* Record.swift */,
@@ -268,7 +273,6 @@
 			isa = PBXGroup;
 			children = (
 				A8FF946929222BFE00C628BD /* RecordRow.swift */,
-				A87219EC2967F60700D52995 /* AddRecordButton.swift */,
 				A8E52C67295B063F00AC80B0 /* ActionPanelCloseButton.swift */,
 				A8E52C6B295BE62E00AC80B0 /* ActionPanelConfirmButton.swift */,
 				A8E52C6D295BE91600AC80B0 /* DatePickerCustom.swift */,
@@ -289,6 +293,8 @@
 				A8E52C69295B342E00AC80B0 /* CreateRecordPanel.swift */,
 				A8E52C75296477C200AC80B0 /* EditRecordPanel.swift */,
 				A87219F4296830E600D52995 /* ViewHeader.swift */,
+				A81F0D0629D4AACB00B81476 /* ExternalKeyboardPanel.swift */,
+				A87219EC2967F60700D52995 /* AddRecordButtonLayer.swift */,
 			);
 			path = Panel;
 			sourceTree = "<group>";
@@ -396,6 +402,7 @@
 				A8E52C6C295BE62E00AC80B0 /* ActionPanelConfirmButton.swift in Sources */,
 				A87219F5296830E600D52995 /* ViewHeader.swift in Sources */,
 				A87219F12968144400D52995 /* UserSettingInteractor.swift in Sources */,
+				A81F0D0929D4DD6800B81476 /* Tag.swift in Sources */,
 				A8F43BFC2951600400C89EDE /* CreateCardPanel.swift in Sources */,
 				A8C0A101291D88B800AD5E97 /* DataDao.swift in Sources */,
 				A8A75B03291CCE4300EF9D8A /* DependencyInjector.swift in Sources */,
@@ -410,9 +417,10 @@
 				A8A75B0B291CD1E700EF9D8A /* Dao.swift in Sources */,
 				A8F43BFF2951C52E00C89EDE /* Setting.swift in Sources */,
 				A8E52C68295B063F00AC80B0 /* ActionPanelCloseButton.swift in Sources */,
+				A81F0D0729D4AACB00B81476 /* ExternalKeyboardPanel.swift in Sources */,
 				A8E52C74296477B400AC80B0 /* EditCardPanel.swift in Sources */,
 				A8E52C6E295BE91600AC80B0 /* DatePickerCustom.swift in Sources */,
-				A87219ED2967F60700D52995 /* AddRecordButton.swift in Sources */,
+				A87219ED2967F60700D52995 /* AddRecordButtonLayer.swift in Sources */,
 				A87219EF2968131F00D52995 /* SettingView.swift in Sources */,
 				A87219F7296D67C200D52995 /* BudgetCategory.swift in Sources */,
 				A8A75B09291CD1D800EF9D8A /* Repository.swift in Sources */,

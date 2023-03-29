@@ -12,6 +12,10 @@ struct HomeHeader: View {
             settingButton()
             historyButton()
             Spacer()
+            #if DEBUG
+            debugButton()
+            Spacer()
+            #endif
             reorderButton()
             createCardButton()
         }
@@ -58,6 +62,16 @@ struct HomeHeader: View {
             container.interactor.system.PushActionView(.CreateCard(budget))
         } content: {
             Image(systemName: "rectangle.fill.badge.plus")
+                .font(.title2)
+        }
+    }
+    
+    @ViewBuilder
+    private func debugButton() -> some View {
+        ButtonCustom(width: buttonSize, height: buttonSize) {
+            container.interactor.system.PushRouterView(.Debug(budget))
+        } content: {
+            Image(systemName: "hammer")
                 .font(.title2)
         }
     }

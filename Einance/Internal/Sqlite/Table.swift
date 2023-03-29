@@ -77,3 +77,22 @@ extension Record {
         })
     }
 }
+
+// MARK: - Tag
+extension Tag {
+    static func GetTable() -> SQLite.Table { .init("tags") }
+    
+    static let id = Expression<Int64>("id")
+    static let type = Expression<TagType>("type")
+    static let value = Expression<String>("value")
+    static let ts = Expression<Int64>("ts")
+    
+    static func migrate(_ conn: Connection) throws {
+        try conn.run(GetTable().create(ifNotExists: true) { t in
+            t.column(id, primaryKey: .autoincrement)
+            t.column(type)
+            t.column(value)
+            t.column(ts)
+        })
+    }
+}

@@ -13,6 +13,7 @@
 
 /* view header */
 "view.header.setting" = "Setting";
+"view.header.history" = "History";
 "view.header.book.order" = "Cards Order";
 "view.header.statistic" = "Statistic";
 "view.header.create.card" = "Create Card";
@@ -36,7 +37,7 @@
 "panel.card.create.name.label" = "Name";
 "panel.card.create.name.label.placeholder" = "New Card";
 "panel.card.create.amount.label" = "Budget";
-"panel.card.create.amount.label.placeholder" = "5000";
+"panel.card.create.amount.label.placeholder" = "10000";
 "panel.card.create.color.label" = "Color";
 "panel.card.create.display.label" = "Type";
 "panel.card.create.fixed.label" = "Fixed";

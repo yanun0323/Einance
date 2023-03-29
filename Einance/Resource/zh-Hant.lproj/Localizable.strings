@@ -13,6 +13,7 @@
 
 /* view header */
 "view.header.setting" = "設定";
+"view.header.history" = "歷史";
 "view.header.book.order" = "調整卡片順序";
 "view.header.statistic" = "統計";
 "view.header.create.card" = "新增預算卡片";
@@ -36,7 +37,7 @@
 "panel.card.create.name.label" = "名稱";
 "panel.card.create.name.label.placeholder" = "新卡片";
 "panel.card.create.amount.label" = "預算";
-"panel.card.create.amount.label.placeholder" = "5000";
+"panel.card.create.amount.label.placeholder" = "10000";
 "panel.card.create.color.label" = "顏色";
 "panel.card.create.display.label" = "週期";
 "panel.card.create.fixed.label" = "固定卡片";

@@ -7,14 +7,13 @@ struct HomeView: View {
     @ObservedObject var budget: Budget
     @ObservedObject var current: Card
     @Binding var selected: Card
-    @Binding var showAddButton: Bool
     
     var body: some View {
         ZStack {
             budgetPageLayer()
                 .ignoresSafeArea(.all, edges: .bottom)
-            addRecordButtonLayer()
-                .ignoresSafeArea(.all, edges: .bottom)
+            AddRecordButtonLayer(budget: budget, card: current)
+                .ignoresSafeArea(.all)
         }
     }
     
@@ -30,17 +29,6 @@ struct HomeView: View {
             }
         }
     }
-    
-    @ViewBuilder
-    private func addRecordButtonLayer() -> some View {
-        VStack {
-            Spacer()
-            if budget.HasCard() && showAddButton {
-                AddRecordButton(budget: budget, card: current)
-                    .transition(.move(edge: .bottom))
-            }
-        }
-    }
 }
 
 // MARK: - Function
@@ -49,7 +37,7 @@ extension HomeView {}
 #if DEBUG
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
-        HomeView(budget: .preview, current: .preview, selected: .constant(.preview), showAddButton: .constant(true))
+        HomeView(budget: .preview, current: .preview, selected: .constant(.preview))
             .inject(DIContainer.preview)
             .previewDeviceSet()
     }

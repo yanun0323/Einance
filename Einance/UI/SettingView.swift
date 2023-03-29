@@ -32,7 +32,6 @@ struct SettingView: View {
     var body: some View {
         VStack(spacing: 0) {
             ViewHeader(title: "view.header.setting")
-                .padding(.horizontal)
             ScrollView(.vertical, showsIndicators: false) {
                 VStack(spacing: 30) {
                     appearanceBlock()
@@ -45,7 +44,7 @@ struct SettingView: View {
             }
             .frame(width: System.device.screen.width - 30)
         }
-        .backgroundColor(.background)
+        .modifyRouterBackground()
         .animation(.medium, value: dateNumberEdit)
         .transition(.scale(scale: 0.95, anchor: .topLeading).combined(with: .opacity))
         .alert("確定要變更更新日期？", isPresented: $showDateNumberAlert, actions: {

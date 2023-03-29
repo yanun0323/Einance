@@ -17,9 +17,15 @@ extension View {
     func modifyPanelBackground() -> some View {
         self
             .monospacedDigit()
-            .backgroundColor(.backgroundButton, ignoresSafeAreaEdges: .all)
+            .backgroundColor(.backgroundButton, ignoresSafeAreaEdges: .bottom)
             .clipShape(RoundedRectangle(cornerRadius: Setting.panelCornerRadius))
             .shadow(radius: 5)
+    }
+    
+    func modifyRouterBackground() -> some View {
+        self
+            .padding(.horizontal)
+            .backgroundColor(.background, ignoresSafeAreaEdges: .bottom)
     }
     
     func backgroundColor(_ color: Color, ignoresSafeAreaEdges edges: Edge.Set = []) -> some View {

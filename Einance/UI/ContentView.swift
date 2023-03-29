@@ -15,19 +15,27 @@ struct ContentView: View {
     @State private var current: Card = .empty
     @State private var timer: Timer?
     @State private var bookCount: Int = 0
+    @State private var isInit: Bool = true
     
     var body: some View {
-        VStack {
-            if budget.isZero {
-                WelcomeView()
+        ZStack {
+            if isInit {
+                LoadingSymbol()
             } else {
-                budgetExistView()
+                if budget.isZero {
+                    WelcomeView()
+                } else {
+                    budgetExistView()
+                }
             }
         }
         .animation(.quick, value: isActionViewEmpty)
         .animation(.quick, value: isRouterViewEmpty)
         .onReceived(container.appstate.pickerPublisher) { isPickerActive = $0 }
-        .onReceived(container.appstate.budgetPublisher) { handleBudgetChange($0) }
+        .onReceived(container.appstate.budgetPublisher) {
+            handleBudgetChange($0)
+            isInit = false
+        }
         .onReceived(container.appstate.keyboardPublisher) { isKeyboardActive = $0 }
         .onReceived(container.appstate.routerViewPublisher) {
             viewRouter = $0
@@ -52,8 +60,8 @@ struct ContentView: View {
                 SettingView(injector: di, budget: budget, current: card)
             case let .BookOrder(budget):
                 BookOrderView(budget: budget)
-            case let .Statistic(budget, card):
-                StatisticView(budget: budget, card: card)
+            case let .Statistic(budget):
+                StatisticView(budget: budget)
             case let .Debug(budget):
                 DebugView(budget: budget)
             case .History:
@@ -80,7 +88,7 @@ struct ContentView: View {
     @ViewBuilder
     private func budgetExistView() -> some View {
         ZStack {
-            HomeView(budget: budget, current: current, selected: $current, showAddButton: $isActionViewEmpty)
+            HomeView(budget: budget, current: current, selected: $current)
                 .disabled(!isActionViewEmpty)
             ZStack {
                 routerView()
@@ -88,7 +96,6 @@ struct ContentView: View {
                     coverViewLayer()
                         .ignoresSafeArea(.all)
                     actionViewLayer()
-                        .ignoresSafeArea(.all, edges: .bottom)
                 }
             }
         }
@@ -114,7 +121,6 @@ struct ContentView: View {
     private func actionViewLayer() -> some View {
         VStack {
             actionView()
-            Spacer(minLength: 0)
         }
         .transition(.opacity)
     }

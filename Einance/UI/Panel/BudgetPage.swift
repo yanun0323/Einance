@@ -12,77 +12,10 @@ struct BudgetPage: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            Dashboard(budget: budget, current: current)
-                .padding(.horizontal)
-                .onTapGesture {
-                    container.interactor.system.PushRouterView(.Statistic(budget, current))
-                }
-            
-            ScrollView {
-                TabView(selection: $selected) {
-                    ForEach(budget.book) { card in
-                        CardRect(budget: budget, card: card)
-                            .padding(.horizontal)
-                            .tag(card)
-                            .offset(y: System.device.screen.height*0.01)
-                    }
-                }
-                .tabViewStyle(.page(indexDisplayMode: .always))
-                .frame(height: System.device.screen.height*0.335)
-            }
-            .ignoresSafeArea(.keyboard)
-            .scrollDisabled(true)
-            
-            if !current.dateDict.isEmpty || !current.fixedArray.isEmpty {
-                List {
-                    if !current.fixedArray.isEmpty {
-                        HStack {
-                            Text("view.record.row.title.fixed")
-                            Block(height: 1, color: .section)
-                            Text("\(current.fixedCost.description) $")
-                        }
-                        .foregroundColor(.gray)
-                        .font(.caption)
-                        .navigationBarHidden(true)
-                        .listRowSeparator(.hidden)
-                        .listRowBackground(Color.clear)
-                    }
-                    
-                    ForEach(current.fixedArray) { record in
-                        RecordRow(budget: budget, card: current, record: record)
-                    }
-                    .navigationBarHidden(true)
-                    .listRowSeparator(.hidden)
-                    .listRowBackground(Color.clear)
-                    
-                    ForEach(current.dateDict.keys.reversed(), id: \.self) { date in
-                        HStack {
-                            Text(date.String("MM/dd EEEE", .init(identifier: Locale.preferredLanguages[0])))
-                            Block(height: 1, color: .section)
-                            Text("\(current.dateDict[date]!.cost.description) $")
-                        }
-                        .foregroundColor(.gray)
-                        .font(.caption)
-                        ForEach(current.dateDict[date]!.records, id: \.id) { record in
-                            RecordRow(budget: budget, card: current, record: record)
-                        }
-                    }
-                    .navigationBarHidden(true)
-                    .listRowSeparator(.hidden)
-                    .listRowBackground(Color.clear)
-                }
-                .animation(.none, value: current)
-                .scrollContentBackground(.hidden)
-                .environment(\.defaultMinListRowHeight, 0)
-                .listStyle(.plain)
-                .backgroundColor(.clear)
-                .monospacedDigit()
-                .padding(.horizontal)
-                
-            }
-            
-            Block(height: 65)
-            Spacer(minLength: 0)
+            dashboardView()
+            cardTableView()
+            recordListView()
+            Block(height: 90)
         }
         .transition(.opacity)
         .animation(.quick, value: current)
@@ -92,6 +25,94 @@ struct BudgetPage: View {
             UIPageControl.appearance().tintColor = .lightGray
         }
     }
+    
+    @ViewBuilder
+    private func dashboardView() -> some View {
+        Dashboard(budget: budget, current: current)
+            .padding(.horizontal)
+            .onTapGesture {
+                container.interactor.system.PushRouterView(.Statistic(budget))
+            }
+    }
+    
+    @ViewBuilder
+    private func cardTableView() -> some View {
+        ScrollView {
+            TabView(selection: $selected) {
+                ForEach(budget.book) { card in
+                    CardRect(budget: budget, card: card)
+                        .padding(.horizontal)
+                        .tag(card)
+                        .offset(y: System.device.screen.height*0.01)
+                }
+            }
+            .tabViewStyle(.page(indexDisplayMode: .always))
+            .frame(height: System.device.screen.height*0.34)
+        }
+        .ignoresSafeArea(.keyboard)
+        .scrollDisabled(true)
+    }
+    
+    @ViewBuilder
+    private func recordListView() -> some View {
+        if current.hasRecord {
+            List {
+                fixedRecordList()
+                dateRecordList()
+            }
+            .animation(.none, value: current)
+            .scrollContentBackground(.hidden)
+            .environment(\.defaultMinListRowHeight, 0)
+            .listStyle(.plain)
+            .backgroundColor(.clear)
+            .monospacedDigit()
+            .padding(.horizontal)
+            
+        }
+    }
+    
+    @ViewBuilder
+    private func fixedRecordList() -> some View {
+        if current.hasFixRecord {
+            HStack {
+                Text("view.record.row.title.fixed")
+                Block(height: 1, color: .section)
+                Text("\(current.fixedCost.description) $")
+            }
+            .foregroundColor(.gray)
+            .font(.caption)
+            .navigationBarHidden(true)
+            .listRowSeparator(.hidden)
+            .listRowBackground(Color.clear)
+            
+            ForEach(current.fixedArray) { record in
+                RecordRow(budget: budget, card: current, record: record)
+            }
+            .navigationBarHidden(true)
+            .listRowSeparator(.hidden)
+            .listRowBackground(Color.clear)
+        }
+    }
+    
+    @ViewBuilder
+    private func dateRecordList() -> some View {
+        ForEach(current.dateDict.keys.reversed(), id: \.self) { date in
+            HStack {
+                Text(date.String("MM/dd EEEE", .init(identifier: Locale.preferredLanguages[0])))
+                Block(height: 1, color: .section)
+                Text("\(current.dateDict[date]!.cost.description) $")
+            }
+            .foregroundColor(.gray)
+            .font(.caption)
+            ForEach(current.dateDict[date]!.records, id: \.id) { record in
+                RecordRow(budget: budget, card: current, record: record)
+            }
+        }
+        .navigationBarHidden(true)
+        .listRowSeparator(.hidden)
+        .listRowBackground(Color.clear)
+    }
+    
 }
 
 #if DEBUG
@@ -100,6 +121,7 @@ struct BudgetPage_Previews: PreviewProvider {
         BudgetPage(budget: .preview, current: .preview, selected: .constant(.preview))
             .inject(DIContainer.preview)
             .preferredColorScheme(.light)
+            .backgroundColor(.background)
     }
 }
 #endif

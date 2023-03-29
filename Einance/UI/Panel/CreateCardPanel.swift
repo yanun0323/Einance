@@ -7,13 +7,33 @@ struct CreateCardPanel: View {
     @State private var nameInput = ""
     @State private var amountInput = ""
     @State private var displayInput: Card.Display = .month
-    @State private var colorInput: Color = .blue
-    @State private var fixedInput = false
+    @State private var colorInput: Color = .cyan
+    @State private var fixedInput = true
     @State private var creating = false
     
     @ObservedObject var budget: Budget
     
     var body: some View {
+        VStack(spacing: 0) {
+            createCardBlock()
+                .padding([.horizontal, .top])
+            
+            Spacer()
+            
+            externalKeyboardPanel()
+        }
+        .onAppeared { focus = .input }
+    }
+    
+    @ViewBuilder
+    private func externalKeyboardPanel() -> some View {
+        ExternalKeyboardPanel(text: $nameInput, number: $amountInput) {
+            focus = focus != .input ? .input : .number
+        }
+    }
+    
+    @ViewBuilder
+    private func createCardBlock() -> some View {
         VStack {
             titleBlock()
                 .padding()
@@ -28,8 +48,6 @@ struct CreateCardPanel: View {
             confirmButton()
         }
         .modifyPanelBackground()
-        .padding()
-        .onAppeared { focus = .input }
     }
     
     @ViewBuilder
@@ -65,6 +83,7 @@ struct CreateCardPanel: View {
                 .keyboardType(.decimalPad)
                 .font(Setting.cardPanelInputFont)
                 .multilineTextAlignment(.trailing)
+                .focused($focus, equals: .number)
         }
     }
     

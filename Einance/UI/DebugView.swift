@@ -42,8 +42,7 @@ struct DebugView: View {
             }
             Divider()
             
-            anyButton("Delete Last Budget") {
-                container.interactor.data.DebugDeleteLastBudget()
+            anyButton("Force Refresh") {
                 container.interactor.data.PublishCurrentBudget()
             }
             

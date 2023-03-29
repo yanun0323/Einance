@@ -35,7 +35,7 @@ extension AppState {
         case Empty
         case Setting(DIContainer, Budget, Card)
         case BookOrder(Budget)
-        case Statistic(Budget, Card?)
+        case Statistic(Budget)
         case History
         case Debug(Budget)
         

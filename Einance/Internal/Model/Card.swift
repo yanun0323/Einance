@@ -72,6 +72,12 @@ extension Card: Hashable {
 // MARK: Property
 extension Card {
     var isForever: Bool { self.display == .forever }
+    
+    var hasFixRecord: Bool { !self.fixedArray.isEmpty }
+    
+    var hasDateRecord: Bool { !self.dateDict.isEmpty }
+    
+    var hasRecord: Bool { hasFixRecord || hasDateRecord }
 }
 
 // MARK: Method

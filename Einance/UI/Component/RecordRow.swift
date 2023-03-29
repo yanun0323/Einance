@@ -22,6 +22,8 @@ struct RecordRow: View {
             }
             Text(record.memo)
                 .foregroundColor(.primary50)
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
             Spacer()
             Text("\(record.cost.description) $")
         }

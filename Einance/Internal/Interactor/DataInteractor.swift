@@ -323,7 +323,7 @@ extension DataInteractor {
                 b.balance = b.amount - b.cost
             }
             
-            try repo.DeleteBudget(r.id)
+            try repo.DeleteRecord(r.id)
             try repo.UpdateCard(c)
             try repo.UpdateBudget(b)
         }
