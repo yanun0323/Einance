@@ -21,7 +21,7 @@ struct ExternalKeyboardPanel: View {
     ]
     
     let defaultNumberRow: [String] = [
-        "50","100","200"
+        "10","50","100","150","200","300","500","1000"
     ]
     
     var body: some View {
