@@ -36,6 +36,7 @@ extension Sql {
 extension Connection {
     func Init() {
         System.Catch("migrate tables") {
+            try Tag.migrate(self)
             try Record.migrate(self)
             try Card.migrate(self)
             try Budget.migrate(self)

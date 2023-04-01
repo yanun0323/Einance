@@ -31,11 +31,10 @@ struct CreateRecordPanel: View {
         VStack(spacing: 0) {
             createRecordBlock()
                 .padding([.horizontal, .top])
-            
             Spacer()
-            
             externalKeyboardPanel()
         }
+        .animation(.quick, value: focus)
         .sheet(isPresented: $showDatePicker) {
             DatePickerCustom(datePicked: $dateInput, start: dateStart, end: dateEnd, style: .graphical) {
                 container.interactor.system.PushPickerState(isOn: false)
@@ -47,15 +46,27 @@ struct CreateRecordPanel: View {
         }
         .onReceived(container.appstate.pickerPublisher) {
             if $0 { return }
-            showDatePicker = $0
+            showDatePicker = false
         }
         .onAppeared { focus = .number }
     }
     
     @ViewBuilder
     private func externalKeyboardPanel() -> some View {
-        ExternalKeyboardPanel(text: $memoInput, number: $costInput, focus: _focus) {
+        ExternalKeyboardPanel(chainID: card.chainID, time: $dateInput, text: $memoInput, number: $costInput, focus: _focus) {
             focus = focus != .number ? .number : .input
+        }
+    }
+    
+    @ViewBuilder
+    private func calculatorKeyboard() -> some View {
+        VStack {
+            Spacer()
+            CalculatorKeyboard(input: $costInput) {
+                self.focus = .input
+            }
+            .disabled(focus != .number)
+            .offset(y: focus == .number ? 0 : System.device.screen.height/2)
         }
     }
     
@@ -64,7 +75,7 @@ struct CreateRecordPanel: View {
         VStack {
             titleBlock()
                 .padding()
-            VStack {
+            VStack(spacing: 10) {
                 recordCostBlock()
                 recordMemoBlock()
                 recordDateBlock()
@@ -96,10 +107,10 @@ struct CreateRecordPanel: View {
                 .font(Setting.cardPanelLabelFont)
             TextField("panel.record.create.cost.placeholder", text: $costInput)
                 .textFieldStyle(.plain)
-                .keyboardType(.decimalPad)
                 .font(Setting.cardPanelInputFont)
                 .multilineTextAlignment(.trailing)
                 .focused($focus, equals: .number)
+                .keyboardType(.decimalPad)
         }
     }
     
@@ -162,6 +173,8 @@ struct CreateRecordPanel: View {
                 }
                 
                 container.interactor.data.CreateRecord(budget, card, date: dateInput, cost: cost, memo: memoInput, fixed: fixedInput)
+                container.interactor.data.UpsertTags(card.chainID, .text, memoInput, dateInput.in24H)
+                container.interactor.data.UpsertTags(card.chainID, .number, costInput, dateInput.in24H)
                 container.interactor.system.ClearActionView()
             }
         }

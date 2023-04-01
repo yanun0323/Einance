@@ -15,7 +15,7 @@ struct AppState {
     var belowBudgetCategoryPubliser: PassthroughSubject<BudgetCategory, Never> = .init()
     var leftBudgetCategoryPublisher: PassthroughSubject<BudgetCategory, Never> = .init()
     var rightBudgetCategoryPublisher: PassthroughSubject<BudgetCategory, Never> = .init()
-    
+        
     var keyboardPublisher: AnyPublisher<Bool, Never> {
         Publishers.Merge(
             NotificationCenter.default

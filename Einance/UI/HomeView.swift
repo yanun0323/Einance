@@ -13,8 +13,9 @@ struct HomeView: View {
             budgetPageLayer()
                 .ignoresSafeArea(.all, edges: .bottom)
             AddRecordButtonLayer(budget: budget, card: current)
-                .ignoresSafeArea(.all)
+                .ignoresSafeArea(.all, edges: .bottom)
         }
+        .ignoresSafeArea(.all, edges: .bottom)
     }
     
     @ViewBuilder

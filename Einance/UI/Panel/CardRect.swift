@@ -71,6 +71,22 @@ struct CardRect: View {
     @ViewBuilder
     private func titleBlock(_ p: GeometryProxy) -> some View {
         HStack(alignment: .top, spacing: 10) {
+            detailInfoBlock(p)
+            Spacer()
+            Text(card.name)
+                .font(.system(size: size(p)*0.11, weight: .medium, design: .rounded))
+                .foregroundColor(cardTitleColor())
+        }
+        .frame(height: size(p)*0.11)
+    }
+    
+    @ViewBuilder
+    private func detailInfoBlock(_ p: GeometryProxy) -> some View {
+        HStack {
+            Text(card.display.cardTag)
+                .font(.system(size: size(p)*0.05, weight: .light, design: .rounded))
+                .foregroundColor(cardTitleColor())
+            
             if card.fixed {
                 Image(systemName: "pin.fill")
                     .font(.system(size: size(p)*0.04, weight: .light, design: .rounded))
@@ -78,23 +94,7 @@ struct CardRect: View {
                     .offset(y: size(p)*0.008)
                     .rotationEffect(Angle(degrees: 45))
             }
-            #if DEBUG
-            if isOrder {
-                Text(card.index.description)
-                    .font(.system(size: size(p)*0.05, weight: .light, design: .rounded))
-                    .foregroundColor(cardTitleColor())
-                    .opacity(5)
-            }
-            #endif
-            Text(card.display.cardTag)
-                .font(.system(size: size(p)*0.05, weight: .light, design: .rounded))
-                .foregroundColor(cardTitleColor())
-            Spacer()
-            Text(card.name)
-                .font(.system(size: size(p)*0.11, weight: .medium, design: .rounded))
-                .foregroundColor(cardTitleColor())
         }
-        .frame(height: size(p)*0.11)
     }
     
     @ViewBuilder

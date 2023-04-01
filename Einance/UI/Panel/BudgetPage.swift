@@ -17,6 +17,7 @@ struct BudgetPage: View {
             recordListView()
             Block(height: 90)
         }
+        .ignoresSafeArea(.keyboard)
         .transition(.opacity)
         .animation(.quick, value: current)
         .onAppear {
@@ -47,7 +48,7 @@ struct BudgetPage: View {
                 }
             }
             .tabViewStyle(.page(indexDisplayMode: .always))
-            .frame(height: System.device.screen.height*0.34)
+            .frame(height: System.device.screen.height*0.34, alignment: .top)
         }
         .ignoresSafeArea(.keyboard)
         .scrollDisabled(true)
@@ -77,7 +78,7 @@ struct BudgetPage: View {
             HStack {
                 Text("view.record.row.title.fixed")
                 Block(height: 1, color: .section)
-                Text("\(current.fixedCost.description) $")
+                Text("\(current.pinnedCost.description) $")
             }
             .foregroundColor(.gray)
             .font(.caption)
@@ -85,7 +86,7 @@ struct BudgetPage: View {
             .listRowSeparator(.hidden)
             .listRowBackground(Color.clear)
             
-            ForEach(current.fixedArray) { record in
+            ForEach(current.pinnedArray) { record in
                 RecordRow(budget: budget, card: current, record: record)
             }
             .navigationBarHidden(true)

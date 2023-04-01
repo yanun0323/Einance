@@ -7,6 +7,8 @@ enum InputType {
 
 struct ExternalKeyboardPanel: View {
     @EnvironmentObject private var container: DIContainer
+    @State var chainID: UUID? = nil
+    @Binding var time: Date
     @Binding var text: String
     @Binding var number: String
     @FocusState var focus: FocusField?
@@ -16,23 +18,23 @@ struct ExternalKeyboardPanel: View {
     var show: Bool = false
     #endif
     
-    let defaultTextRow: [String] = [
-        "早餐","午餐","晚餐","飲料","零食","宵夜"
-    ]
-    
-    let defaultNumberRow: [String] = [
-        "10","50","100","150","200","300","500","1000"
-    ]
+    @State var textRow: [String] = []
+    @State var numRow: [String] = []
     
     var body: some View {
         VStack(spacing: 0) {
             swithInputView()
                 .padding(.horizontal, 10)
-                .padding(.bottom, focus == .input || focus == .number ? 0 : 10)
-            scrollRow()
-                .padding(.vertical, 10)
-                .backgroundColor(.transparent)
+                .padding(.bottom, showRow() ? 0 : 10)
+            if !chainID.isNil {
+                scrollRow()
+                    .padding(.vertical, 10)
+                    .backgroundColor(.transparent)
+            }
         }
+        .onAppear { handleRefreshTags() }
+        .onChange(of: time) { _ in handleRefreshTags() }
+        .animation(.none, value: focus)
     }
     
     @ViewBuilder
@@ -52,14 +54,14 @@ struct ExternalKeyboardPanel: View {
     private func scrollRow() -> some View {
         #if DEBUG
         if show {
-            numberScrollRow()
+            textScrollRow()
         }
         #endif
         switch focus {
             case .input:
                 textScrollRow()
             case .number:
-                numberScrollRow()
+                numScrollRow()
             default:
                 EmptyView()
         }
@@ -67,21 +69,25 @@ struct ExternalKeyboardPanel: View {
     
     @ViewBuilder
     private func textScrollRow() -> some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 0) {
-                ForEach(defaultTextRow, id: \.self) { text in
-                    scrollButton(.text, text)
+        if textRow.count != 0 {
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 0) {
+                    ForEach(textRow, id: \.self) { text in
+                        scrollButton(.text, text)
+                    }
                 }
             }
         }
     }
     
     @ViewBuilder
-    private func numberScrollRow() -> some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 0) {
-                ForEach(defaultNumberRow, id: \.self) { number in
-                    scrollButton(.number, number)
+    private func numScrollRow() -> some View {
+        if numRow.count != 0 {
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 0) {
+                    ForEach(numRow, id: \.self) { num in
+                        scrollButton(.number, num)
+                    }
                 }
             }
         }
@@ -90,10 +96,11 @@ struct ExternalKeyboardPanel: View {
     @ViewBuilder
     private func scrollButton(_ t: InputType, _ value: String) -> some View {
         Button {
-            if t == .text {
-                text = value
-            } else {
-                number = value
+            switch t {
+                case .text:
+                    text = value
+                case .number:
+                    number = value
             }
         } label: {
             Text(value)
@@ -110,10 +117,30 @@ struct ExternalKeyboardPanel: View {
     
 }
 
+extension ExternalKeyboardPanel {
+    func showRow() -> Bool {
+        if chainID.isNil { return false }
+        switch focus {
+            case .input:
+                return textRow.count != 0
+            case .number:
+                return numRow.count != 0
+            default:
+                return false
+        }
+    }
+    
+    func handleRefreshTags() {
+        guard let cID = chainID else { return }
+        textRow = container.interactor.data.GetTags(cID, .text, time.in24H)
+        numRow = container.interactor.data.GetTags(cID, .number, time.in24H)
+    }
+}
+
 #if DEBUG
 struct ExternalKeyboardPanel_Previews: PreviewProvider {
     static var previews: some View {
-        ExternalKeyboardPanel(text: .constant(""), number: .constant(""), action: {}, show: true)
+        ExternalKeyboardPanel(chainID: .init(), time: .constant(.now), text: .constant(""), number: .constant(""), action: {}, show: true)
             .preferredColorScheme(.dark)
             .inject(DIContainer.preview)
     }

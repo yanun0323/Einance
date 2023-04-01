@@ -17,9 +17,7 @@ struct CreateCardPanel: View {
         VStack(spacing: 0) {
             createCardBlock()
                 .padding([.horizontal, .top])
-            
             Spacer()
-            
             externalKeyboardPanel()
         }
         .onAppeared { focus = .input }
@@ -27,7 +25,7 @@ struct CreateCardPanel: View {
     
     @ViewBuilder
     private func externalKeyboardPanel() -> some View {
-        ExternalKeyboardPanel(text: $nameInput, number: $amountInput) {
+        ExternalKeyboardPanel(time: .constant(.zero), text: $nameInput, number: $amountInput) {
             focus = focus != .input ? .input : .number
         }
     }
@@ -37,7 +35,7 @@ struct CreateCardPanel: View {
         VStack {
             titleBlock()
                 .padding()
-            VStack {
+            VStack(spacing: 10) {
                 cardNameBlock()
                 cardAmountBlock()
                 cardColorBlock()

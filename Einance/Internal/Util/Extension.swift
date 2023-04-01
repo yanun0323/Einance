@@ -83,6 +83,10 @@ extension Date {
     var key: Date {
         return Date(from: self.String(.Numeric), .Numeric) ?? .zero
     }
+    
+    var in24H : Int {
+        return self.unix%86400
+    }
 }
 
 extension System {
@@ -93,5 +97,31 @@ extension System {
             print("[ERROR] \(log) failed, err: \(error)")
         }
         return nil
+    }
+}
+
+extension TimeInterval {
+    static var day: TimeInterval = 86400
+    static var hour: TimeInterval = 3600
+    static var minute: TimeInterval = 60
+}
+
+extension LocalizedStringKey {
+    
+    /**
+     Return localized value of thisLocalizedStringKey
+     */
+    public var string: String {
+        return ""
+    }
+}
+
+extension String {
+    var localizedKey: LocalizedStringKey {
+        return .init(self)
+    }
+    
+    var localized: String {
+        return String(localized: LocalizedStringResource(stringLiteral: self))
     }
 }

@@ -15,7 +15,6 @@ struct DatePickerCustom<S>: View where S : DatePickerStyle {
                 VStack(alignment: .center, spacing: 0) {
                     headerBlock()
                         .padding([.horizontal, .top])
-                        .onTapGesture { cancelAction() }
                     Spacer()
                     pickerBlock()
                     .padding(.horizontal)
@@ -37,6 +36,7 @@ struct DatePickerCustom<S>: View where S : DatePickerStyle {
             Image(systemName: "multiply.circle.fill")
                 .foregroundColor(.primary25)
                 .font(.title)
+                .onTapGesture { cancelAction() }
         }
     }
     

@@ -6,19 +6,27 @@ enum TagType: Int {
 
 struct Tag {
     var id: Int64
+    var chainID: UUID
     var type: TagType
     var value: String
-    var ts: Int64
+    var count: Int
+    var UpdatedAti: Int
     
     init(
         id: Int64 = 0,
+        chainID: UUID = UUID(),
         type: TagType,
         value: String,
-        ts: Int64 = Int64(Date.now.unix%86400)
+        count: Int = 0,
+        updatedAti: Int = Date.now.in24H
     ) {
         self.id = id
+        self.chainID = chainID
         self.type = type
         self.value = value
-        self.ts = ts
+        self.count = count
+        self.UpdatedAti = updatedAti
     }
 }
+
+extension Tag: Hashable {}

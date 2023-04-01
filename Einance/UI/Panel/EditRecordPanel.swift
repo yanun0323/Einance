@@ -59,7 +59,7 @@ struct EditRecordPanel: View {
     
     @ViewBuilder
     private func externalKeyboardPanel() -> some View {
-        ExternalKeyboardPanel(text: $memoInput, number: $costInput, focus: _focus) {
+        ExternalKeyboardPanel(chainID: card.chainID, time: $dateInput, text: $memoInput, number: $costInput, focus: _focus) {
             focus = focus != .number ? .number : .input
         }
     }
@@ -69,7 +69,7 @@ struct EditRecordPanel: View {
         VStack {
             titleBlock()
                 .padding()
-            VStack {
+            VStack(spacing: 10) {
                 recordCostBlock()
                 recordMemoBlock()
                 recordDateBlock()
@@ -164,7 +164,12 @@ struct EditRecordPanel: View {
                     updating = false
                     return
                 }
-                
+                if memoInput != record.memo {
+                    container.interactor.data.UpsertTags(card.chainID, .text, memoInput, dateInput.in24H)
+                }
+                if cost != record.cost {
+                    container.interactor.data.UpsertTags(card.chainID, .number, costInput, dateInput.in24H)
+                }
                 container.interactor.data.UpdateRecord(budget, card, record, date: dateInput, cost: cost, memo: memoInput, fixed: fixedInput)
                 container.interactor.system.ClearActionView()
             }

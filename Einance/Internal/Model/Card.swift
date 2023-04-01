@@ -5,6 +5,7 @@ import SQLite
 
 final class Card: ObservableObject {
     var id: Int64
+    var chainID: UUID
     var budgetID: Int64
     @Published var index: Int
     @Published var name: String
@@ -15,11 +16,12 @@ final class Card: ObservableObject {
     @Published var color: Color
     @Published var fixed: Bool
     @Published var dateDict: OrderedDictionary<Date, RecordSet>
-    @Published var fixedArray: [Record] = []
-    @Published var fixedCost: Decimal = 0
+    @Published var pinnedArray: [Record] = []
+    @Published var pinnedCost: Decimal = 0
     
     init(
         id: Int64 = 0,
+        chainID: UUID = UUID(),
         budgetID: Int64 = 0,
         index: Int = 0,
         name: String,
@@ -30,6 +32,7 @@ final class Card: ObservableObject {
         fixed: Bool = false
     ) {
         self.id = id
+        self.chainID = chainID
         self.budgetID = budgetID
         self.index = index
         self.name = name
@@ -73,7 +76,7 @@ extension Card: Hashable {
 extension Card {
     var isForever: Bool { self.display == .forever }
     
-    var hasFixRecord: Bool { !self.fixedArray.isEmpty }
+    var hasFixRecord: Bool { !self.pinnedArray.isEmpty }
     
     var hasDateRecord: Bool { !self.dateDict.isEmpty }
     
@@ -101,13 +104,13 @@ extension Card {
     }
     
     func AddRecordToFixed(_ r: Record) {
-        fixedArray.append(r)
-        fixedCost += r.cost
+        pinnedArray.append(r)
+        pinnedCost += r.cost
     }
     
     func RemoveRecordFromFixed(_ r: Record) {
-        fixedArray.removeAll(where: { $0.id == r.id })
-        fixedCost -= r.cost
+        pinnedArray.removeAll(where: { $0.id == r.id })
+        pinnedCost -= r.cost
     }
     
     func MoveRecordDictToFixed(_ r: Record) {

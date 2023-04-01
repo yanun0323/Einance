@@ -13,7 +13,7 @@ struct ContentView: View {
     
     @StateObject private var budget: Budget = .empty
     @State private var current: Card = .empty
-    @State private var timer: Timer?
+    @State private var expiredTimer: Timer?
     @State private var bookCount: Int = 0
     @State private var isInit: Bool = true
     
@@ -151,11 +151,11 @@ extension ContentView {
             bookCount = b.book.count
             refreshCurrentCard()
             
-            timer?.invalidate()
+            expiredTimer?.invalidate()
             let start = budget.startAt
-            timer = Timer.scheduledTimer(
-                withTimeInterval: 15, repeats: true,
-                block: { t in
+            expiredTimer = Timer.scheduledTimer(
+                withTimeInterval: 5, repeats: true,
+                block: { _ in
                     if container.interactor.setting.IsExpired(start) {
                         container.interactor.system.TriggerMonthlyCheck()
                     }

@@ -23,7 +23,9 @@ struct LoadingSymbol: View {
                     .offset(x: self.isLoading ? 0 : CGFloat(2*index-2), y: self.isLoading ? 0 : -5)
                     .animation(.easeInOut(duration: duration).repeatForever(autoreverses: true).delay(0.15 * Double(index)), value: isLoading)
             }
+            .backgroundColor(.background)
         }
+        .backgroundColor(.background)
         .onAppeared { isLoading = true }
     }
     

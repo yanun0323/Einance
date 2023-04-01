@@ -11,10 +11,11 @@ struct DataInteractor {
     }
 }
 
-enum DataInteractorError: Error {
+enum Err: Error {
     case budgetNotFound
     case cardNotFound
     case recordNotFound
+    case emptyValue
 }
 
 // MARK: Public Function
@@ -125,7 +126,7 @@ extension DataInteractor {
         }
     }
     
-    func  GetArchivedCards() -> [Card] {
+    func GetArchivedCards() -> [Card] {
         return DoTx("get archived card") {
             return try repo.ListCards(-1)
         }!
@@ -206,7 +207,7 @@ extension DataInteractor {
     func DeleteCard(_ b: Budget, _ c: Card) {
         DoTx("delete card") {
             guard let index = b.book.firstIndex(where: { $0.id == c.id }) else {
-                throw DataInteractorError.cardNotFound
+                throw Err.cardNotFound
             }
             
             b.book.remove(at: index)
@@ -224,6 +225,7 @@ extension DataInteractor {
             try repo.UpdateBudget(b)
             try repo.DeleteCard(c.id)
             try repo.DeleteRecords(c.id)
+            try repo.DeleteTags(c.chainID)
         }
     }
     
@@ -233,6 +235,7 @@ extension DataInteractor {
             b.book.removeAll(where: { $0.id == c.id })
             c.budgetID = -1
             try repo.UpdateCard(c)
+            try repo.DeleteTags(c.chainID)
         }
     }
     
@@ -329,7 +332,36 @@ extension DataInteractor {
         }
     }
     
+    // MARK: - Tag
+    
+    func GetTags(_ chainID: UUID, _ type: TagType, _ updatedAt: Int) -> [String] {
+        return DoTx("get tags") {
+            return try repo.GetTagValues(chainID, type, updatedAt, 4 * .hour, 20)
+        } ?? []
+    }
+    
+    func UpsertTags(_ chainID: UUID, _ type: TagType, _ value: String, _ updatedAt: Int) {
+        DoTx("upsert tags") {
+            if value.isEmpty {
+                #if DEBUG
+                print("empty value")
+                #endif
+                return
+            }
+            let exist = try repo.IsTagExist(chainID, type, value)
+            if exist {
+                try repo.UpdateTagWith(chainID, type, value, updatedAt)
+            } else {
+                _ = try repo.CreateTag(Tag(chainID: chainID, type: type, value: value, count: 1, updatedAti: updatedAt))
+            }
+        }
+    }
+    
 #if DEBUG
+    
+    func Repo() -> Repository {
+        return repo
+    }
     
     func DebugDeleteLastBudget() {
         DoTx("[DEBUG] delete all budgets") {
@@ -357,9 +389,12 @@ extension DataInteractor {
             return
         }
         
-        if !card.fixed { return }
+        if card.fixed {
+            try handleCardFixed(b, card)
+            return
+        }
         
-        try handleCardFixed(b, card)
+        try repo.DeleteTags(card.chainID)
     }
     
     private func handleCardForever(_ b: Budget, _ card: Card) throws {
@@ -371,6 +406,7 @@ extension DataInteractor {
     
     private func handleCardFixed(_ b: Budget, _ card: Card) throws {
         let c = Card(
+            chainID: card.chainID,
             budgetID: b.id,
             index: b.book.count,
             name: card.name,
@@ -383,7 +419,7 @@ extension DataInteractor {
         
         c.id = try repo.CreateCard(c)
 
-        for record in card.fixedArray {
+        for record in card.pinnedArray {
             let r = Record(
                 cardID: c.id,
                 date: b.startAt,

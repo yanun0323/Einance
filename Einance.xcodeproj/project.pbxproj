@@ -46,6 +46,8 @@
 		A8E52C6E295BE91600AC80B0 /* DatePickerCustom.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E52C6D295BE91600AC80B0 /* DatePickerCustom.swift */; };
 		A8E52C74296477B400AC80B0 /* EditCardPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E52C73296477B400AC80B0 /* EditCardPanel.swift */; };
 		A8E52C76296477C200AC80B0 /* EditRecordPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E52C75296477C200AC80B0 /* EditRecordPanel.swift */; };
+		A8F1CE2529D6B22C008DD113 /* CalculatorKeyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8F1CE2429D6B22C008DD113 /* CalculatorKeyboard.swift */; };
+		A8F1CE2729D6B4F3008DD113 /* TextFieldCustom.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8F1CE2629D6B4F3008DD113 /* TextFieldCustom.swift */; };
 		A8F43BFC2951600400C89EDE /* CreateCardPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8F43BFB2951600400C89EDE /* CreateCardPanel.swift */; };
 		A8F43BFF2951C52E00C89EDE /* Setting.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8F43BFE2951C52E00C89EDE /* Setting.swift */; };
 		A8F43C01295208DC00C89EDE /* FocusField.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8F43C00295208DB00C89EDE /* FocusField.swift */; };
@@ -101,6 +103,9 @@
 		A8E52C6D295BE91600AC80B0 /* DatePickerCustom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatePickerCustom.swift; sourceTree = "<group>"; };
 		A8E52C73296477B400AC80B0 /* EditCardPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditCardPanel.swift; sourceTree = "<group>"; };
 		A8E52C75296477C200AC80B0 /* EditRecordPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditRecordPanel.swift; sourceTree = "<group>"; };
+		A8F1CE2229D6A82A008DD113 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A8F1CE2429D6B22C008DD113 /* CalculatorKeyboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculatorKeyboard.swift; sourceTree = "<group>"; };
+		A8F1CE2629D6B4F3008DD113 /* TextFieldCustom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldCustom.swift; sourceTree = "<group>"; };
 		A8F43BFB2951600400C89EDE /* CreateCardPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateCardPanel.swift; sourceTree = "<group>"; };
 		A8F43BFE2951C52E00C89EDE /* Setting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Setting.swift; sourceTree = "<group>"; };
 		A8F43C00295208DB00C89EDE /* FocusField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocusField.swift; sourceTree = "<group>"; };
@@ -111,7 +116,6 @@
 		F691B86B29AE043700E05E05 /* Sql.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sql.swift; sourceTree = "<group>"; };
 		F691B86F29AE233F00E05E05 /* Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
 		F6EA069F29AFEDC2005D08D7 /* DebugView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugView.swift; sourceTree = "<group>"; };
-		F6EA06A129B0AC83005D08D7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		F6EA06A229B200F5005D08D7 /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
 		F6EA06A829B2276E005D08D7 /* Table.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Table.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -158,7 +162,7 @@
 		A8A75AE7291CCCBC00EF9D8A /* Einance */ = {
 			isa = PBXGroup;
 			children = (
-				F6EA06A129B0AC83005D08D7 /* Info.plist */,
+				A8F1CE2229D6A82A008DD113 /* Info.plist */,
 				A8A75AE8291CCCBC00EF9D8A /* EinanceApp.swift */,
 				A8A75AF7291CCCD300EF9D8A /* UI */,
 				A8A75AF8291CCCDB00EF9D8A /* Internal */,
@@ -199,8 +203,8 @@
 			children = (
 				A8F43BFD2951C52100C89EDE /* Config */,
 				A8A75B01291CCE3000EF9D8A /* Util */,
-				A8A75AFC291CCE1200EF9D8A /* Model */,
 				A8A75B00291CCE2900EF9D8A /* Sqlite */,
+				A8A75AFC291CCE1200EF9D8A /* Model */,
 				A8A75AFF291CCE2600EF9D8A /* System */,
 				A8A75AFE291CCE2000EF9D8A /* Interactor */,
 				A8A75AFD291CCE1600EF9D8A /* Repository */,
@@ -277,6 +281,9 @@
 				A8E52C6B295BE62E00AC80B0 /* ActionPanelConfirmButton.swift */,
 				A8E52C6D295BE91600AC80B0 /* DatePickerCustom.swift */,
 				A8BDCC2C29B6431D0021309B /* LoadingSymbol.swift */,
+				A81F0D0629D4AACB00B81476 /* ExternalKeyboardPanel.swift */,
+				A8F1CE2429D6B22C008DD113 /* CalculatorKeyboard.swift */,
+				A8F1CE2629D6B4F3008DD113 /* TextFieldCustom.swift */,
 			);
 			path = Component;
 			sourceTree = "<group>";
@@ -293,7 +300,6 @@
 				A8E52C69295B342E00AC80B0 /* CreateRecordPanel.swift */,
 				A8E52C75296477C200AC80B0 /* EditRecordPanel.swift */,
 				A87219F4296830E600D52995 /* ViewHeader.swift */,
-				A81F0D0629D4AACB00B81476 /* ExternalKeyboardPanel.swift */,
 				A87219EC2967F60700D52995 /* AddRecordButtonLayer.swift */,
 			);
 			path = Panel;
@@ -354,6 +360,7 @@
 			knownRegions = (
 				en,
 				"zh-Hant",
+				Base,
 			);
 			mainGroup = A8A75ADC291CCCBC00EF9D8A;
 			packageReferences = (
@@ -403,6 +410,7 @@
 				A87219F5296830E600D52995 /* ViewHeader.swift in Sources */,
 				A87219F12968144400D52995 /* UserSettingInteractor.swift in Sources */,
 				A81F0D0929D4DD6800B81476 /* Tag.swift in Sources */,
+				A8F1CE2529D6B22C008DD113 /* CalculatorKeyboard.swift in Sources */,
 				A8F43BFC2951600400C89EDE /* CreateCardPanel.swift in Sources */,
 				A8C0A101291D88B800AD5E97 /* DataDao.swift in Sources */,
 				A8A75B03291CCE4300EF9D8A /* DependencyInjector.swift in Sources */,
@@ -423,6 +431,7 @@
 				A87219ED2967F60700D52995 /* AddRecordButtonLayer.swift in Sources */,
 				A87219EF2968131F00D52995 /* SettingView.swift in Sources */,
 				A87219F7296D67C200D52995 /* BudgetCategory.swift in Sources */,
+				A8F1CE2729D6B4F3008DD113 /* TextFieldCustom.swift in Sources */,
 				A8A75B09291CD1D800EF9D8A /* Repository.swift in Sources */,
 				A8A75AE9291CCCBC00EF9D8A /* EinanceApp.swift in Sources */,
 				A8357FDA29293F010086720F /* HomeView.swift in Sources */,
@@ -602,6 +611,7 @@
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_PRECOMPILE_BRIDGING_HEADER = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -639,6 +649,7 @@
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_PRECOMPILE_BRIDGING_HEADER = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
