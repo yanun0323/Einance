@@ -38,6 +38,7 @@ struct CreateRecordPanel: View {
         .sheet(isPresented: $showDatePicker) {
             DatePickerCustom(datePicked: $dateInput, start: dateStart, end: dateEnd, style: .graphical) {
                 container.interactor.system.PushPickerState(isOn: false)
+                focus = .number
             }
         }
         .onReceived(container.appstate.keyboardPublisher) {
@@ -138,7 +139,6 @@ struct CreateRecordPanel: View {
                 container.interactor.system.PushPickerState(isOn: true)
                 withAnimation(.quick) {
                     showDatePicker = true
-                    focus = .number
                 }
             } label: {
                 Text(dateInput.String("yyyy.MM.dd hh:mm"))
