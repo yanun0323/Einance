@@ -38,9 +38,11 @@ extension Card {
     static let balance = Expression<Decimal>("balance")
     static let display = Expression<Card.Display>("display")
     static let fixed = Expression<Bool>("fixed")
+    static let fontColor = Expression<Color>("font_color")
     static let color = Expression<Color>("color")
     
     static func migrate(_ conn: Connection) throws {
+        try conn.run(Table().addColumn(fontColor, defaultValue: .white))
         try conn.run(Table().create(ifNotExists: true) { t in
             t.column(id, primaryKey: .autoincrement)
             t.column(chainID)
@@ -52,9 +54,9 @@ extension Card {
             t.column(balance)
             t.column(display)
             t.column(fixed)
+            t.column(fontColor)
             t.column(color)
         })
-//        try conn.run(Table().addColumn(chainID, defaultValue: .init()))
         try conn.run(Table().createIndex(chainID, ifNotExists: true))
         try conn.run(Table().createIndex(budgetID, ifNotExists: true))
     }

@@ -7,6 +7,7 @@ struct CreateCardPanel: View {
     @State private var nameInput = ""
     @State private var amountInput = ""
     @State private var displayInput: Card.Display = .month
+    @State private var fontColorInput: Color = .white
     @State private var colorInput: Color = .cyan
     @State private var fixedInput = true
     @State private var creating = false
@@ -88,9 +89,16 @@ struct CreateCardPanel: View {
     @ViewBuilder
     private func cardColorBlock() -> some View {
         HStack {
+            Text("panel.card.create.font_color.label")
+                .font(Setting.cardPanelLabelFont)
+            ColorPicker(selection: $fontColorInput, label: {})
+                .frame(width: 30)
+                .padding(.horizontal, 10)
+            Spacer()
             Text("panel.card.create.color.label")
                 .font(Setting.cardPanelLabelFont)
             ColorPicker(selection: $colorInput, label: {})
+                .frame(width: 30)
                 .padding(.horizontal, 10)
         }
     }
@@ -152,7 +160,7 @@ struct CreateCardPanel: View {
                 }
                 
                 fixedInput = fixedInput || displayInput == .forever
-                container.interactor.data.CreateCard(budget, name: nameInput, amount: amount, display: displayInput, color: colorInput, fixed: fixedInput)
+                container.interactor.data.CreateCard(budget, name: nameInput, amount: amount, display: displayInput, fontColor: fontColorInput, color: colorInput, fixed: fixedInput)
                 container.interactor.system.ClearActionView()
             }
         }

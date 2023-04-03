@@ -15,7 +15,7 @@ extension Sql {
     }
     
     static func Init(isMock: Bool) -> Connection {
-        var dbName = "development"
+        var dbName = UserDefaults.mockDBName ?? "development"
         if !isMock {
             dbName = "production"
         }

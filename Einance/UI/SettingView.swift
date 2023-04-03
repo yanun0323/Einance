@@ -16,6 +16,8 @@ struct SettingView: View {
     @State private var dangerAlertTitle: LocalizedStringKey = ""
     @State private var dangerAction: () -> Void = {}
     
+    @State private var forceUpdateFailed: Bool = false
+    
     @ObservedObject var budget: Budget
     @ObservedObject var current: Card
     
@@ -47,22 +49,23 @@ struct SettingView: View {
         .modifyRouterBackground()
         .animation(.medium, value: dateNumberEdit)
         .transition(.scale(scale: 0.95, anchor: .topLeading).combined(with: .opacity))
-        .alert("確定要變更更新日期？", isPresented: $showDateNumberAlert, actions: {
+        .alert("確定要變更更新日期？", isPresented: $showDateNumberAlert) {
             dateNumberAlertButton()
-        }, message: {
-            Text("下次更新日期")+Text(" ")+Text(calculateNextDate().String("yyyy.MM.dd"))
+        } message: {
+            Text("setting.update_date.next")+Text(" ")+Text(calculateNextDate().String("yyyy.MM.dd"))
                 .kerning(1)
-        })
-        .alert(dangerAlertTitle, isPresented: $showDangerAlert, actions: {
+        }
+        .alert(dangerAlertTitle, isPresented: $showDangerAlert) {
             Button("global.confirm", role: .destructive, action: dangerAction)
-        })
+        }
+        .alert("今日已更新過日期", isPresented: $forceUpdateFailed) {}
     }
     
     @ViewBuilder
     private func baseNumberBlock() -> some View {
         VStack(alignment: .leading, spacing: 5) {
             if dateNumberEdit != 0 {
-                Text("更新日期")
+                Text("setting.update_date.label")
                     .foregroundColor(.primary25)
                     .font(.caption)
                     .padding(.leading)
@@ -122,12 +125,12 @@ struct SettingView: View {
                 
                 VStack {
                     HStack(spacing: 10) {
-                        Text("上次更新日期")
+                        Text("setting.update_date.prevous")
                         Text(budget.startAt.String("yyyy.MM.dd"))
                             .kerning(1)
                     }
                     HStack(spacing: 10) {
-                        Text("下次更新日期")
+                        Text("setting.update_date.next")
                         Text(calculateNextDate().String("yyyy.MM.dd"))
                             .kerning(1)
 
@@ -159,7 +162,7 @@ struct SettingView: View {
     @ViewBuilder
     private func cardShapeStyleSample() -> some View {
         VStack(alignment: .leading, spacing: 5) {
-            Text("卡片樣式")
+            Text("setting.card_style.label")
                 .foregroundColor(.primary25)
                 .font(.caption)
                 .padding(.leading)
@@ -174,7 +177,7 @@ struct SettingView: View {
     @ViewBuilder
     private func dashboardStyleSample() -> some View {
         VStack(alignment: .leading, spacing: 5) {
-            Text("儀表板樣式")
+            Text("setting.dashboard_style.label")
                 .foregroundColor(.primary25)
                 .font(.caption)
                 .padding(.leading)
@@ -230,7 +233,7 @@ struct SettingView: View {
                     }
             } header: {
                 HStack {
-                    Text("APP 外觀")
+                    Text("setting.appearance.label")
                         .foregroundColor(.primary50)
                         .font(.caption)
                     Spacer()
@@ -267,7 +270,7 @@ struct SettingView: View {
                     .stroke(color, style: StrokeStyle(lineWidth: 3))
                     .opacity(appearance == nil ? 1 : 0)
             )
-            Text("系統")
+            Text("setting.appearance.system")
             Block(width: 5, height: 5)
             ZStack {
                 Image(systemName: "circle")
@@ -292,7 +295,7 @@ struct SettingView: View {
                         .stroke(color, style: StrokeStyle(lineWidth: 3))
                         .opacity(appearance == .light ? 1 : 0)
                 )
-            Text("淺色")
+            Text("setting.appearance.light")
             Block(width: 5, height: 5)
             ZStack {
                 Image(systemName: "circle")
@@ -317,7 +320,7 @@ struct SettingView: View {
                         .stroke(color, style: StrokeStyle(lineWidth: 3))
                         .opacity(appearance == .dark ? 1 : 0)
                 )
-            Text("深色")
+            Text("setting.appearance.dark")
             Block(width: 5, height: 5)
             ZStack {
                 Image(systemName: "circle")
@@ -335,7 +338,7 @@ struct SettingView: View {
     @ViewBuilder
     private func dangerZoneBlock() -> some View {
         VStack(alignment: .leading, spacing: 5) {
-            Text("危險區域")
+            Text("setting.danger_zone.label")
                 .foregroundColor(.red)
                 .font(.caption)
                 .padding(.leading)
@@ -358,12 +361,12 @@ struct SettingView: View {
             withAnimation(.quick) {
                 dangerAlertTitle = "確定要強制更新卡片到下個月?"
                 dangerAction = {
-                    container.interactor.data.UpdateMonthlyBudget(budget, force: true)
+                    forceUpdateFailed = !container.interactor.data.UpdateMonthlyBudget(budget, force: true)
                 }
                 showDangerAlert = true
             }
         } label: {
-            Text("強制更新卡片到下個月")
+            Text("setting.danger_zone.force_update_budget")
                 .font(.body)
                 .foregroundColor(.white)
         }
@@ -435,6 +438,7 @@ struct SettingView_Previews: PreviewProvider {
     static var previews: some View {
         SettingView(injector: .preview, budget: .preview, current: .preview)
             .inject(DIContainer.preview)
+            .environment(\.locale, Locale.init(identifier: "en"))
         SettingView(injector: .preview, budget: .preview, current: .preview)
             .inject(DIContainer.preview)
             .preferredColorScheme(.dark)

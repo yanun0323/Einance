@@ -7,6 +7,7 @@ struct EditCardPanel: View {
     @State private var nameInput: String
     @State private var amountInput: String
     @State private var displayInput: Card.Display
+    @State private var fontColorInput: Color
     @State private var colorInput: Color
     @State private var fixedInput: Bool
     private let isFixed: Bool
@@ -22,6 +23,7 @@ struct EditCardPanel: View {
         self._nameInput = .init(wrappedValue: card.name)
         self._amountInput = .init(wrappedValue: card.amount.description)
         self._displayInput = .init(wrappedValue: card.display)
+        self._fontColorInput = .init(wrappedValue: card.fontColor)
         self._colorInput = .init(wrappedValue: card.color)
         self._fixedInput = .init(wrappedValue: card.fixed)
         self.isFixed = card.fixed || card.display == .forever
@@ -104,9 +106,16 @@ struct EditCardPanel: View {
     @ViewBuilder
     private func cardColorBlock() -> some View {
         HStack {
+            Text("panel.card.create.font_color.label")
+                .font(Setting.cardPanelLabelFont)
+            ColorPicker(selection: $fontColorInput, label: {})
+                .frame(width: 30)
+                .padding(.horizontal, 10)
+            Spacer()
             Text("panel.card.create.color.label")
                 .font(Setting.cardPanelLabelFont)
             ColorPicker(selection: $colorInput, label: {})
+                .frame(width: 30)
                 .padding(.horizontal, 10)
         }
     }
@@ -162,7 +171,7 @@ struct EditCardPanel: View {
                     return
                 }
                 
-                container.interactor.data.UpdateCard(budget, card, name: nameInput, index: card.index, amount: amount, color: colorInput, display: displayInput, fixed: fixedInput)
+                container.interactor.data.UpdateCard(budget, card, name: nameInput, index: card.index, amount: amount, fontColor: fontColorInput, color: colorInput, display: displayInput, fixed: fixedInput)
                 container.interactor.system.ClearActionView()
             }
         }

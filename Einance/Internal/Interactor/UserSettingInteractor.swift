@@ -85,6 +85,16 @@ extension UserSettingInteractor {
     func IsExpired(_ start: Date) -> Bool {
         return repo.IsExpired(start)
     }
+    
+    func GetMockDBName() -> String {
+        return UserDefaults.mockDBName ?? "development"
+    }
+    
+    func SetMockDBName(_ name: String) {
+        UserDefaults.mockDBName = name
+    }
+    
+    
 }
 
 // MARK: - Helper

@@ -138,6 +138,7 @@ struct CreateRecordPanel: View {
                 container.interactor.system.PushPickerState(isOn: true)
                 withAnimation(.quick) {
                     showDatePicker = true
+                    focus = .number
                 }
             } label: {
                 Text(dateInput.String("yyyy.MM.dd hh:mm"))

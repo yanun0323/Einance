@@ -39,7 +39,7 @@ struct Dashboard: View {
             .opacity(isPreview ? 0.1 : 1)
         }
         .font(.system(size: 20, weight: .regular, design: .rounded))
-        .kerning(5)
+        .kerning(isPreview ? 0 : 5)
         .monospacedDigit()
         .onAppear {
             leftCategory = container.interactor.setting.GetDashboardBudgetCategoryLeft()

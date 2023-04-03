@@ -101,7 +101,7 @@ struct CardRect: View {
     private func categoryValue(_ p: GeometryProxy, _ category: BudgetCategory, opacity: CGFloat) -> some View {
         Text(getCardMoney(category).description)
             .font(.system(size: size(p)*0.13, weight: .semibold, design: .rounded))
-            .foregroundColor(.white)
+            .foregroundColor(card.fontColor)
             .opacity(opacity)
     }
     
@@ -192,7 +192,7 @@ extension CardRect {
         if isPreview {
             return .section
         }
-        return .white
+        return card.fontColor
     }
     
     func getCardMoney(_ category: BudgetCategory) -> Decimal {

@@ -35,12 +35,17 @@ extension DataInteractor {
         }
     }
     
-    func UpdateMonthlyBudget(_ budget: Budget, force: Bool = false) {
+    func UpdateMonthlyBudget(_ budget: Budget, force: Bool = false) -> Bool {
         DoTx("update monthly budget") {
-            var nextStartDate = repo.GetNextStartDate(budget.startAt)
+            let nextStartDate = repo.GetNextStartDate(budget.startAt)
+            var archivedDate = nextStartDate.AddDay(-1)
             if force {
-                nextStartDate = Date(from: Date.now.String("yyyyMMdd", .US), .Numeric)!
+                archivedDate = Date.now.AddDay(-1).key
+                if try repo.IsDateBudgetArchived(archivedDate) {
+                    return false
+                }
             }
+            
             budget.archiveAt = nextStartDate.AddDay(-1)
             
             let b = Budget(startAt: nextStartDate)
@@ -55,7 +60,8 @@ extension DataInteractor {
             try repo.UpdateBudget(budget)
             
             PublishCurrentBudget()
-        }
+            return true
+        }!
     }
     
     // MARK: - Current Budget
@@ -76,6 +82,12 @@ extension DataInteractor {
     
     
     // MARK: Budget
+    
+    func IsDateBudgetArchived(_ archivedAt: Date) -> Bool {
+        return DoTx("is date budget archived at") {
+            return try repo.IsDateBudgetArchived(archivedAt)
+        } ?? true
+    }
     
     func GetBudget(_ id: Int64) -> Budget? {
         return DoTx("get budget by id") {
@@ -135,9 +147,9 @@ extension DataInteractor {
     /**
      Create card into budget and update budget
      */
-    func CreateCard(_ b: Budget, name: String, amount: Decimal, display: Card.Display, color: Color, fixed: Bool ) {
+    func CreateCard(_ b: Budget, name: String, amount: Decimal, display: Card.Display, fontColor: Color, color: Color, fixed: Bool ) {
         DoTx("create card") {
-            let c = Card(budgetID: b.id, index: b.book.count, name: name, amount: amount, display: display, color: color, fixed: fixed || display == .forever)
+            let c = Card(budgetID: b.id, index: b.book.count, name: name, amount: amount, display: display, fontColor: fontColor, color: color, fixed: fixed || display == .forever)
             
             if !c.isForever {
                 b.amount += amount
@@ -154,7 +166,7 @@ extension DataInteractor {
     /**
     Update card parameter and parent budget into database without updating records
      */
-    func UpdateCard(_ b: Budget, _ c: Card, name: String, index: Int, amount: Decimal, color: Color, display: Card.Display, fixed: Bool) {
+    func UpdateCard(_ b: Budget, _ c: Card, name: String, index: Int, amount: Decimal, fontColor: Color, color: Color, display: Card.Display, fixed: Bool) {
         DoTx("update card") {
             let updateOrder = (c.index != index)
             let changeFixed = (c.fixed != fixed && !fixed)
@@ -168,6 +180,7 @@ extension DataInteractor {
             c.index = index
             c.amount = amount
             c.balance = c.amount - c.cost
+            c.fontColor = fontColor
             c.color = color
             c.display = display
             c.fixed = fixed || display == .forever

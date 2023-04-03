@@ -20,6 +20,12 @@ extension DataDao where Self: DataRepository {
     
     // MARK: - Budgets
     
+    func IsDateBudgetArchived(_ archivedAt: Date) throws -> Bool {
+        let query = Budget.Table().filter(Budget.archiveAt == archivedAt).exists
+        return try Sql.GetDriver().scalar(query)
+    }
+
+    
     func GetBudgetCount() throws -> Int {
         return try countBudget()
     }
@@ -122,6 +128,7 @@ extension DataDao where Self: DataRepository {
             Card.cost <- c.cost,
             Card.balance <- c.balance,
             Card.display <- c.display,
+            Card.fontColor <- c.fontColor,
             Card.color <- c.color,
             Card.fixed <- c.fixed
         )
@@ -138,6 +145,7 @@ extension DataDao where Self: DataRepository {
             Card.cost <- c.cost,
             Card.balance <- c.balance,
             Card.display <- c.display,
+            Card.fontColor <- c.fontColor,
             Card.color <- c.color,
             Card.fixed <- c.fixed
         )
@@ -337,6 +345,7 @@ extension DataDao {
             name: try row.get(Card.name),
             amount: try row.get(Card.amount),
             display: try row.get(Card.display),
+            fontColor: try row.get(Card.fontColor),
             color: try row.get(Card.color),
             fixed: try row.get(Card.fixed)
         )

@@ -13,6 +13,7 @@ final class Card: ObservableObject {
     @Published var cost: Decimal
     @Published var balance: Decimal
     @Published var display: Card.Display
+    @Published var fontColor: Color
     @Published var color: Color
     @Published var fixed: Bool
     @Published var dateDict: OrderedDictionary<Date, RecordSet>
@@ -28,6 +29,7 @@ final class Card: ObservableObject {
         amount: Decimal,
         display: Card.Display = .month,
         records: [Record] = [],
+        fontColor: Color = .white,
         color: Color,
         fixed: Bool = false
     ) {
@@ -38,6 +40,7 @@ final class Card: ObservableObject {
         self.name = name
         self.amount = amount
         self.display = display
+        self.fontColor = fontColor
         self.color = color
         self.fixed = fixed || display == .forever
         

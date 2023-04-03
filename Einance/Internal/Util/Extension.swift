@@ -98,6 +98,16 @@ extension System {
         }
         return nil
     }
+    
+    static func device(with padding: CGFloat) -> CGRect {
+        let d = Self.device.screen
+        return CGRect(x: d.minX, y: d.minY, width: d.width - 2*padding, height: d.height - 2*padding)
+    }
+    
+    static func square(with padding: CGFloat) -> CGRect {
+        let d = Self.device.screen
+        return CGRect(x: d.minX, y: d.minY, width: d.width - 2*padding, height: d.width - 2*padding)
+    }
 }
 
 extension TimeInterval {

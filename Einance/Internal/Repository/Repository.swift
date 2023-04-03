@@ -9,6 +9,7 @@ protocol DataRepository {
     func ListBudgets() throws -> [Budget]
     func ListBudgetsWithoutChildren(_:Int64) throws -> [Budget]
     
+    func IsDateBudgetArchived(_:Date) throws -> Bool
     func GetBudget(_:Int64) throws -> Budget?
     func GetLastBudget() throws -> Budget?
     func CreateBudget(_:Budget) throws -> Int64

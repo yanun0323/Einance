@@ -15,9 +15,12 @@ struct DebugView: SwiftUI.View {
     @ObservedObject var budget: Budget
     
     @State private var TODO: [String] = [
+        "教學畫面",
+        "Setting Localized",
         "~計算機",
+        "~Card Name Color",
         "強制更新卡片(調到之前的日期，顯示應為之後的)",
-        "強制更新卡片(同一天不能重複更新)check db budget start date exist?",
+        "~強制更新卡片(同一天不能重複更新)",
         "~修改record 標籤要跟著 picked date",
         "歷史圖表",
         "統計圖表",
@@ -26,7 +29,7 @@ struct DebugView: SwiftUI.View {
         "排查重開閃退資料遺失問題",
         "[訂閱] 串接雲端發票",
         "[訂閱] 雲端發票移動",
-        "[訂閱] 卡片系統上線",
+        "[訂閱] 卡片系統上限",
         "[訂閱] 圖片功能",
     ]
     
@@ -61,9 +64,9 @@ struct DebugView: SwiftUI.View {
                 Text("Card Count: \(cardCount)")
                 Text("Record Count: \(recordCount)")
                 Text("Tag Count: \(tagCount)")
+                Text("DB: \(UserDefaults.mockDBName ?? "development")")
             }
             Divider()
-            
             VStack {
                 anyButton("Force Refresh") {
                     container.interactor.data.PublishCurrentBudget()
@@ -71,19 +74,36 @@ struct DebugView: SwiftUI.View {
                 
                 anyButton("Delete All Tags") {
                     System.Catch("DELETE ALL TAGS") {
-                        let query = Tag.Table().delete()
-                        try Sql.GetDriver().run(query)
+                       _ = try Sql.GetDriver().run(Tag.Table().delete())
                     }
                 }
                 
-                anyButton("Regen Card ChainID") {
-                    System.Catch("Regen Card ChainID") {
-                        try budget.book.forEach { c in
-                            c.chainID = UUID()
-                            try container.interactor.data.Repo().UpdateCard(c)
-                        }
+                anyButton("Delete All Budget") {
+                    System.Catch("DELETE ALL") {
+                        let db = Sql.GetDriver()
+                        _ = try db.run(Tag.Table().delete())
+                        _ = try db.run(Record.Table().delete())
+                        _ = try db.run(Card.Table().delete())
+                        _ = try db.run(Budget.Table().delete())
                     }
                 }
+                
+                anyButton("Switch DB") {
+                    if UserDefaults.mockDBName != "development" {
+                        UserDefaults.mockDBName = "development"
+                    } else {
+                        UserDefaults.mockDBName = "testing"
+                    }
+                }
+                
+//                anyButton("Regen Card ChainID") {
+//                    System.Catch("Regen Card ChainID") {
+//                        try budget.book.forEach { c in
+//                            c.chainID = UUID()
+//                            try container.interactor.data.Repo().UpdateCard(c)
+//                        }
+//                    }
+//                }
             }
             
             Spacer()

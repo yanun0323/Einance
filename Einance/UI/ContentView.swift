@@ -17,6 +17,8 @@ struct ContentView: View {
     @State private var bookCount: Int = 0
     @State private var isInit: Bool = true
     
+    @State private var cleanTagTimer: Timer?
+    
     var body: some View {
         ZStack {
             if isInit {
@@ -45,9 +47,9 @@ struct ContentView: View {
             actionRouter = $0
             isActionViewEmpty = $0.isEmpty
         }
-        .onReceived(container.appstate.monthlyCheckPublisher) { container.interactor.data.UpdateMonthlyBudget(budget) }
+        .onReceived(container.appstate.monthlyCheckPublisher) { _ = container.interactor.data.UpdateMonthlyBudget(budget) }
         .onChanged(of: budget.book.count) { refreshCurrentCard() }
-        .onAppear { container.interactor.data.PublishCurrentBudget() }
+        .onAppeared { container.interactor.data.PublishCurrentBudget() }
         .animation(.quick, value: isActionViewEmpty)
     }
     
@@ -153,15 +155,15 @@ extension ContentView {
             
             expiredTimer?.invalidate()
             let start = budget.startAt
-            expiredTimer = Timer.scheduledTimer(
-                withTimeInterval: 5, repeats: true,
-                block: { _ in
+            expiredTimer = .scheduledTimer(
+                withTimeInterval: 5, repeats: true) { _ in
                     if container.interactor.setting.IsExpired(start) {
                         container.interactor.system.TriggerMonthlyCheck()
                     }
-                })
+                }
         }
     }
+    
 }
 
 #if DEBUG
