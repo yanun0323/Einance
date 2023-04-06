@@ -165,13 +165,11 @@ struct EditRecordPanel: View {
                     updating = false
                     return
                 }
-                if memoInput != record.memo {
-                    container.interactor.data.UpsertTags(card.chainID, .text, memoInput, dateInput.in24H)
-                }
-                if cost != record.cost {
-                    container.interactor.data.UpsertTags(card.chainID, .number, costInput, dateInput.in24H)
-                }
+                
                 container.interactor.data.UpdateRecord(budget, card, record, date: dateInput, cost: cost, memo: memoInput, fixed: fixedInput)
+                let tagDate = dateInput.in24H
+                container.interactor.data.EditTag(card.chainID, .text, tagDate, old: record.memo, new: memoInput)
+                container.interactor.data.EditTag(card.chainID, .number, tagDate, old: record.cost.description, new: costInput)
                 container.interactor.system.ClearActionView()
             }
         }

@@ -18,8 +18,8 @@ struct ExternalKeyboardPanel: View {
     var show: Bool = false
     #endif
     
-    @State var textRow: [String] = []
-    @State var numRow: [String] = []
+    @State var textTags: [Tag] = []
+    @State var numTags: [Tag] = []
     
     var body: some View {
         VStack(spacing: 0) {
@@ -69,11 +69,11 @@ struct ExternalKeyboardPanel: View {
     
     @ViewBuilder
     private func textScrollRow() -> some View {
-        if textRow.count != 0 {
+        if textTags.count != 0 {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 0) {
-                    ForEach(textRow, id: \.self) { text in
-                        scrollButton(.text, text)
+                    ForEach(textTags, id: \.self) { t in
+                        scrollButton(.text, t.value)
                     }
                 }
             }
@@ -82,11 +82,11 @@ struct ExternalKeyboardPanel: View {
     
     @ViewBuilder
     private func numScrollRow() -> some View {
-        if numRow.count != 0 {
+        if numTags.count != 0 {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 0) {
-                    ForEach(numRow, id: \.self) { num in
-                        scrollButton(.number, num)
+                    ForEach(numTags, id: \.self) { t in
+                        scrollButton(.number, t.value)
                     }
                 }
             }
@@ -122,9 +122,9 @@ extension ExternalKeyboardPanel {
         if chainID.isNil { return false }
         switch focus {
             case .input:
-                return textRow.count != 0
+                return textTags.count != 0
             case .number:
-                return numRow.count != 0
+                return numTags.count != 0
             default:
                 return false
         }
@@ -132,8 +132,8 @@ extension ExternalKeyboardPanel {
     
     func handleRefreshTags() {
         guard let cID = chainID else { return }
-        textRow = container.interactor.data.GetTags(cID, .text, time.in24H)
-        numRow = container.interactor.data.GetTags(cID, .number, time.in24H)
+        textTags = container.interactor.data.GetTags(cID, .text, time.in24H)
+        numTags = container.interactor.data.GetTags(cID, .number, time.in24H)
     }
 }
 

@@ -347,26 +347,70 @@ extension DataInteractor {
     
     // MARK: - Tag
     
-    func GetTags(_ chainID: UUID, _ type: TagType, _ updatedAt: Int) -> [String] {
+    func GetTags(_ chainID: UUID, _ type: TagType, _ updatedAt: Int) -> [Tag] {
         return DoTx("get tags") {
-            return try repo.GetTagValues(chainID, type, updatedAt, 4 * .hour, 20)
+            return try repo.ListTags(chainID, type, updatedAt, 4 * .hour, 20)
         } ?? []
     }
     
-    func UpsertTags(_ chainID: UUID, _ type: TagType, _ value: String, _ updatedAt: Int) {
-        DoTx("upsert tags") {
-            if value.isEmpty {
-                #if DEBUG
-                print("empty value")
-                #endif
-                return
-            }
-            let exist = try repo.IsTagExist(chainID, type, value)
-            if exist {
-                try repo.UpdateTagWith(chainID, type, value, updatedAt)
+    func CreateTag(_ chainID: UUID, _ type: TagType, _ value: String, _ updatedAt: Int) {
+        if UnavailableTag(type, value: value) {
+            #if DEBUG
+            print("[DEBUG] unavailable value")
+            #endif
+            return
+        }
+        DoTx("create tag") {
+            if let tag = try repo.GetTag(chainID, type, value) {
+                var t = tag
+                t.count += 1
+                t.UpdatedAti = Date.now.in24H
+                try repo.UpdateTag(t)
             } else {
                 _ = try repo.CreateTag(Tag(chainID: chainID, type: type, value: value, count: 1, updatedAti: updatedAt))
             }
+        }
+    }
+    
+    func EditTag(_ chainID: UUID, _ type: TagType, _ updatedAt: Int, old : String, new : String) {
+        DoTx("edit tag: delete old tag") {
+            if UnavailableTag(type, value: old) {
+                #if DEBUG
+                print("[DEBUG] unavailable old tag")
+                #endif
+                return
+            }
+            
+            guard let tag = try repo.GetTag(chainID, type, old) else {
+                #if DEBUG
+                print("[DEBUG] cannot find old tag in database")
+                #endif
+                return
+            }
+            
+            if tag.count <= 1 {
+                try repo.DeleteTag(tag.id)
+            } else {
+                var t = tag
+                t.count -= 1
+                t.UpdatedAti = Date.now.in24H
+                try repo.UpdateTag(t)
+            }
+        }
+        
+        CreateTag(chainID, type, new, updatedAt)
+    }
+    
+    func UnavailableTag(_ type: TagType, value: String) -> Bool {
+        let v = value.trimmingCharacters(in: [" "])
+        switch type {
+            case .text:
+                return v.isEmpty
+            case .number:
+                guard let n = Decimal(string: value) else { return true }
+                return n.isZero
+            default:
+                return true
         }
     }
     

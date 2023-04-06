@@ -41,6 +41,7 @@ struct HomeView_Previews: PreviewProvider {
         HomeView(budget: .preview, current: .preview, selected: .constant(.preview))
             .inject(DIContainer.preview)
             .previewDeviceSet()
+            .environment(\.locale, .US)
     }
 }
 #endif

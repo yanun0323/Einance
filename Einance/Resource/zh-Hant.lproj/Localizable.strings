@@ -43,9 +43,11 @@
 "setting.update_date.label" = "卡片更新日期";
 "setting.update_date.prevous" = "上次更新日期";
 "setting.update_date.next" = "下次更新日期";
+"setting.update_date.check" = "確定要變更更新日期？";
+"setting.update_date.udpated" = "今日已更新過日期";
 "setting.danger_zone.label" = "危險區域";
 "setting.danger_zone.force_update_budget" = "強制更新卡片";
-
+"setting.danger_zone.force_update_budget.check" = "確定要強制更新卡片到下個月?";
 
 /* create card */
 "panel.card.create.name.label" = "名稱";

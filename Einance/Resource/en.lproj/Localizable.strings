@@ -43,8 +43,11 @@
 "setting.update_date.label" = "Update Date";
 "setting.update_date.prevous" = "Last Update Date";
 "setting.update_date.next" = "Next Update Date";
+"setting.update_date.check" = "Are you sure to update date？";
+"setting.update_date.udpated" = "Already updated today";
 "setting.danger_zone.label" = "Danger Zone";
 "setting.danger_zone.force_update_budget" = "Force Update Card";
+"setting.danger_zone.force_update_budget.check" = "Are you sure to force update card?";
 
 /* create card */
 "panel.card.create.name.label" = "Name";

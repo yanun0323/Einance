@@ -110,6 +110,7 @@ struct BookOrderView_Previews: PreviewProvider {
     static var previews: some View {
         BookOrderView(budget: Budget.preview)
             .inject(DIContainer.preview)
+            .environment(\.locale, .US)
     }
 }
 #endif

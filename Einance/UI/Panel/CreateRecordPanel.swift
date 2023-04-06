@@ -174,8 +174,10 @@ struct CreateRecordPanel: View {
                 }
                 
                 container.interactor.data.CreateRecord(budget, card, date: dateInput, cost: cost, memo: memoInput, fixed: fixedInput)
-                container.interactor.data.UpsertTags(card.chainID, .text, memoInput, dateInput.in24H)
-                container.interactor.data.UpsertTags(card.chainID, .number, costInput, dateInput.in24H)
+                let tagDate = dateInput.in24H
+                container.interactor.data.CreateTag(card.chainID, .text, memoInput, tagDate)
+                container.interactor.data.CreateTag(card.chainID, .number, costInput, tagDate)
+                
                 container.interactor.system.ClearActionView()
             }
         }

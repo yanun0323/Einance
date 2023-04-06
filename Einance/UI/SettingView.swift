@@ -49,7 +49,7 @@ struct SettingView: View {
         .modifyRouterBackground()
         .animation(.medium, value: dateNumberEdit)
         .transition(.scale(scale: 0.95, anchor: .topLeading).combined(with: .opacity))
-        .alert("確定要變更更新日期？", isPresented: $showDateNumberAlert) {
+        .alert("setting.update_date.check", isPresented: $showDateNumberAlert) {
             dateNumberAlertButton()
         } message: {
             Text("setting.update_date.next")+Text(" ")+Text(calculateNextDate().String("yyyy.MM.dd"))
@@ -58,7 +58,7 @@ struct SettingView: View {
         .alert(dangerAlertTitle, isPresented: $showDangerAlert) {
             Button("global.confirm", role: .destructive, action: dangerAction)
         }
-        .alert("今日已更新過日期", isPresented: $forceUpdateFailed) {}
+        .alert("setting.update_date.udpated", isPresented: $forceUpdateFailed) {}
     }
     
     @ViewBuilder
@@ -359,7 +359,7 @@ struct SettingView: View {
     private func dangerForceUpdateBudgetButton() -> some View {
         Button {
             withAnimation(.quick) {
-                dangerAlertTitle = "確定要強制更新卡片到下個月?"
+                dangerAlertTitle = "setting.danger_zone.force_update_budget.check"
                 dangerAction = {
                     forceUpdateFailed = !container.interactor.data.UpdateMonthlyBudget(budget, force: true)
                 }
@@ -438,7 +438,7 @@ struct SettingView_Previews: PreviewProvider {
     static var previews: some View {
         SettingView(injector: .preview, budget: .preview, current: .preview)
             .inject(DIContainer.preview)
-            .environment(\.locale, Locale.init(identifier: "en"))
+            .environment(\.locale, .US)
         SettingView(injector: .preview, budget: .preview, current: .preview)
             .inject(DIContainer.preview)
             .preferredColorScheme(.dark)

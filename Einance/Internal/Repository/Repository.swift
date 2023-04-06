@@ -30,10 +30,11 @@ protocol DataRepository {
     func DeleteRecords(_ cardID:Int64) throws
     
     func IsTagExist(_:UUID, _:TagType, _:String) throws -> Bool
-    func GetTagValues(_:UUID, _:TagType, _ time:Int, _:TimeInterval, _ count:Int) throws -> [String]
+    func ListTags(_:UUID, _:TagType, _ time:Int, _:TimeInterval, _ count:Int) throws -> [Tag]
+    func GetTag(_:UUID, _:TagType, _:String) throws -> Tag?
     func CreateTag(_:Tag) throws -> Int64
     func UpdateTag(_:Tag) throws
-    func UpdateTagWith(_:UUID, _:TagType, _:String, _:Int) throws
+    func DeleteTag(_:Int64) throws
     func DeleteTags(_:UUID) throws
 }
 

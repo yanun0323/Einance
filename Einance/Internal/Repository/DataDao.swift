@@ -203,16 +203,7 @@ extension DataDao where Self: DataRepository {
     
     // MARK: - Tag
     
-    func IsTagExist(_ chainID: UUID, _ type: TagType, _ value: String) throws -> Bool {
-        let query = Tag.Table().filter(
-            Tag.chainID == chainID &&
-            Tag.type == type &&
-            Tag.value == value
-        ).exists
-        return try Sql.GetDriver().scalar(query)
-    }
-    
-    func GetTagValues(_ chainID: UUID, _ type: TagType, _ time: Int, _ interval: TimeInterval, _ count: Int) throws -> [String] {
+    func ListTagValues(_ chainID: UUID, _ type: TagType, _ time: Int, _ interval: TimeInterval, _ count: Int) throws -> [String] {
         var values: [String] = []
         let start = time - Int(interval)
         let end = time + Int(interval)
@@ -233,7 +224,7 @@ extension DataDao where Self: DataRepository {
         return values
     }
     
-    func GetTags(_ chainID: UUID, _ type: TagType, _ time: Int, _ interval: TimeInterval, _ count: Int) throws -> [Tag] {
+    func ListTags(_ chainID: UUID, _ type: TagType, _ time: Int, _ interval: TimeInterval, _ count: Int) throws -> [Tag] {
         var tags: [Tag] = []
         let now = Date.now
         let start = now.addingTimeInterval(-interval).in24H
@@ -243,13 +234,35 @@ extension DataDao where Self: DataRepository {
             Tag.chainID == chainID &&
             Tag.type == type &&
             Tag.updatedAti >= start &&
-            Tag.updatedAti <= end
+            Tag.updatedAti <= end &&
+            Tag.count > 0
         ).order(Tag.count.desc).limit(count)
         let result = try Sql.GetDriver().prepare(query)
         for row in result {
             tags.append(try parseTag(row))
         }
         return tags
+    }
+    
+    func IsTagExist(_ chainID: UUID, _ type: TagType, _ value: String) throws -> Bool {
+        let query = Tag.Table().filter(
+            Tag.chainID == chainID &&
+            Tag.type == type &&
+            Tag.value == value
+        ).exists
+        return try Sql.GetDriver().scalar(query)
+    }
+    
+    func GetTag(_ chainID: UUID, _ type: TagType, _ value: String) throws -> Tag? {
+        let query = Tag.Table().filter(
+            Tag.chainID == chainID &&
+            Tag.type == type
+        )
+        let result = try Sql.GetDriver().prepare(query)
+        for row in result {
+            return try parseTag(row)
+        }
+        return nil
     }
     
     func CreateTag(_ t: Tag) throws -> Int64 {
@@ -274,16 +287,8 @@ extension DataDao where Self: DataRepository {
         try Sql.GetDriver().run(update)
     }
     
-    func UpdateTagWith(_ chainID: UUID, _ type: TagType, _ value: String, _ updatedAti: Int) throws {
-        let update = Tag.Table().filter(
-            Tag.chainID == chainID &&
-            Tag.type == type &&
-            Tag.value == value
-        ).update(
-            Tag.count += 1,
-            Tag.updatedAti <- updatedAti
-        )
-        try Sql.GetDriver().run(update)
+    func DeleteTag(_ id: Int64) throws {
+        try Sql.GetDriver().run(Tag.Table().filter(Tag.id == id).delete())
     }
     
     func DeleteTags(_ chainID: UUID) throws {
