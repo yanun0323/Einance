@@ -36,12 +36,15 @@ struct CreateCardPanel: View {
         VStack {
             titleBlock()
                 .padding()
-            VStack(spacing: 10) {
+            VStack(spacing: 15) {
                 cardNameBlock()
                 cardAmountBlock()
+                HStack {
+                    cardDisplayBlock()
+                    Spacer()
+                    cardFixedBlock()
+                }
                 cardColorBlock()
-                cardDisplayBlock()
-                cardFixedBlock()
             }
             .padding(.horizontal)
             confirmButton()
@@ -108,7 +111,6 @@ struct CreateCardPanel: View {
         HStack {
             Text("panel.card.create.display.label")
                 .font(Setting.cardPanelLabelFont)
-            Spacer()
             Menu {
                 Picker("", selection: $displayInput) {
                     ForEach(Card.Display.avaliable) { display in
@@ -118,7 +120,7 @@ struct CreateCardPanel: View {
             } label: {
                 Text(displayInput.string)
                     .font(Setting.cardPanelInputFont)
-                    .frame(width: 50)
+                    .frame(width: 80)
                     .animation(.none, value: displayInput)
                     .foregroundColor(colorInput)
             }
@@ -131,8 +133,8 @@ struct CreateCardPanel: View {
         HStack {
             Text("panel.card.create.fixed.label")
                 .font(Setting.cardPanelLabelFont)
-            Spacer()
             ToggleCustom(isOn: $fixedInput, color: $colorInput, size: 24)
+                .frame(width: 50)
         }
         .opacity(displayInput == .forever ? 0.1 : 1)
         .disabled(displayInput == .forever)
@@ -172,5 +174,6 @@ struct CreateCardPanel_Previews: PreviewProvider {
     static var previews: some View {
         CreateCardPanel(budget: .preview)
             .inject(DIContainer.preview)
+            .environment(\.locale, .TW)
     }
 }

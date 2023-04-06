@@ -52,12 +52,12 @@ struct EditCardPanel: View {
         VStack {
             titleBlock()
                 .padding()
-            VStack(spacing: 10) {
+            VStack(spacing: 15) {
                 cardNameBlock()
                 cardAmountBlock()
-                cardColorBlock()
                 // cardDisplayBlock
                 cardFixedBlock()
+                cardColorBlock()
             }
             .padding(.horizontal)
             

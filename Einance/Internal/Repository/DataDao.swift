@@ -256,7 +256,8 @@ extension DataDao where Self: DataRepository {
     func GetTag(_ chainID: UUID, _ type: TagType, _ value: String) throws -> Tag? {
         let query = Tag.Table().filter(
             Tag.chainID == chainID &&
-            Tag.type == type
+            Tag.type == type &&
+            Tag.value == value
         )
         let result = try Sql.GetDriver().prepare(query)
         for row in result {

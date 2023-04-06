@@ -356,7 +356,7 @@ extension DataInteractor {
     func CreateTag(_ chainID: UUID, _ type: TagType, _ value: String, _ updatedAt: Int) {
         if UnavailableTag(type, value: value) {
             #if DEBUG
-            print("[DEBUG] unavailable value")
+            print("[WARN] unavailable value")
             #endif
             return
         }
@@ -364,7 +364,7 @@ extension DataInteractor {
             if let tag = try repo.GetTag(chainID, type, value) {
                 var t = tag
                 t.count += 1
-                t.UpdatedAti = Date.now.in24H
+                t.UpdatedAti = updatedAt
                 try repo.UpdateTag(t)
             } else {
                 _ = try repo.CreateTag(Tag(chainID: chainID, type: type, value: value, count: 1, updatedAti: updatedAt))
@@ -373,17 +373,23 @@ extension DataInteractor {
     }
     
     func EditTag(_ chainID: UUID, _ type: TagType, _ updatedAt: Int, old : String, new : String) {
+        if old == new {
+            #if DEBUG
+            print("[WARN] same tag value: \(old)")
+            #endif
+            return
+        }
         DoTx("edit tag: delete old tag") {
             if UnavailableTag(type, value: old) {
                 #if DEBUG
-                print("[DEBUG] unavailable old tag")
+                print("[WARN] unavailable old tag")
                 #endif
                 return
             }
             
             guard let tag = try repo.GetTag(chainID, type, old) else {
                 #if DEBUG
-                print("[DEBUG] cannot find old tag in database")
+                print("[WARN] cannot find old tag in database")
                 #endif
                 return
             }
@@ -393,7 +399,7 @@ extension DataInteractor {
             } else {
                 var t = tag
                 t.count -= 1
-                t.UpdatedAti = Date.now.in24H
+                t.UpdatedAti = updatedAt
                 try repo.UpdateTag(t)
             }
         }

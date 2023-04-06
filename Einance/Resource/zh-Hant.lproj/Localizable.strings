@@ -57,7 +57,7 @@
 "panel.card.create.font_color.label" = "字體顏色";
 "panel.card.create.color.label" = "顏色";
 "panel.card.create.display.label" = "週期";
-"panel.card.create.fixed.label" = "固定卡片";
+"panel.card.create.fixed.label" = "固定";
 
 /* card context alert */
 "card.context.alert.delete.title" = "刪除預算卡片";

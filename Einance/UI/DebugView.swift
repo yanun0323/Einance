@@ -140,7 +140,7 @@ extension DebugView {
             cardCount = try db.scalar(Card.Table().count)
             budgetCount = try db.scalar(Budget.Table().count)
             tagCount = try db.scalar(Tag.Table().count)
-            return
+//            return
             let rows = try db.prepare(Tag.Table())
             for r in rows {
                 tags.append(try parseTag(r))

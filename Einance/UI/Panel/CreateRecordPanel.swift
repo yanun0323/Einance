@@ -76,7 +76,7 @@ struct CreateRecordPanel: View {
         VStack {
             titleBlock()
                 .padding()
-            VStack(spacing: 10) {
+            VStack(spacing: 15) {
                 recordCostBlock()
                 recordMemoBlock()
                 recordDateBlock()

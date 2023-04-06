@@ -70,7 +70,7 @@ struct EditRecordPanel: View {
         VStack {
             titleBlock()
                 .padding()
-            VStack(spacing: 10) {
+            VStack(spacing: 15) {
                 recordCostBlock()
                 recordMemoBlock()
                 recordDateBlock()
@@ -166,10 +166,11 @@ struct EditRecordPanel: View {
                     return
                 }
                 
-                container.interactor.data.UpdateRecord(budget, card, record, date: dateInput, cost: cost, memo: memoInput, fixed: fixedInput)
                 let tagDate = dateInput.in24H
                 container.interactor.data.EditTag(card.chainID, .text, tagDate, old: record.memo, new: memoInput)
                 container.interactor.data.EditTag(card.chainID, .number, tagDate, old: record.cost.description, new: costInput)
+                container.interactor.data.UpdateRecord(budget, card, record, date: dateInput, cost: cost, memo: memoInput, fixed: fixedInput)
+                
                 container.interactor.system.ClearActionView()
             }
         }
