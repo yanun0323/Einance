@@ -16,8 +16,8 @@ extension UserSettingDao where Self: UserSettingRepository {
         return UserDefaults.baseDateNumber ?? 5
     }
     
-    func SetBaseDateNumber(_ number: Int?) {
-        UserDefaults.baseDateNumber = number
+    func SetBaseDateNumber(_ value: Int?) {
+        UserDefaults.baseDateNumber = value
     }
     
     func GetFirstStartDate() -> Date {
@@ -35,34 +35,37 @@ extension UserSettingDao where Self: UserSettingRepository {
         return result
     }
     
-    func GetNextStartDate(_ start: Date) -> Date {
-        let days = GetBaseDateNumber()
-        let nextDay1 = start.AddMonth(1).firstDayOfMonth
-        
-        if nextDay1.daysOfMonth < days {
-            return nextDay1.AddMonth(1).AddDay(-1)
-        }
-        return nextDay1.AddDay(days-1)
-    }
-    
-    func IsExpired(_ start: Date) -> Bool {
-        return Date.now >= GetNextStartDate(start)
-    }
-    
     func GetCardBudgetCategoryAbove() -> Int? {
         return UserDefaults.cardBudgetCategoryAbove
     }
     
-    func SetCardBudgetCategoryAbove(_ category: Int?) {
-        UserDefaults.cardBudgetCategoryAbove = category
+    func SetCardBudgetCategoryAbove(_ value: Int?) {
+        UserDefaults.cardBudgetCategoryAbove = value
     }
     
     func GetCardBudgetCategoryBelow() -> Int? {
         return UserDefaults.cardBudgetCategoryBelow
     }
     
-    func SetCardBudgetCategoryBelow(_ category: Int?) {
-        UserDefaults.cardBudgetCategoryBelow = category
+    func SetCardBudgetCategoryBelow(_ value: Int?) {
+        UserDefaults.cardBudgetCategoryBelow = value
+    }
+    
+    func GetDashboardBudgetCategoryRight() -> Int? {
+        return UserDefaults.dashboardBudgetCategoryRight
+    }
+    
+    func SetDashboardBudgetCategoryRight(_ value: Int?) {
+        UserDefaults.dashboardBudgetCategoryRight = value
+    }
+    
+    func GetDashboardBudgetCategoryLeft() -> Int? {
+    
+        return UserDefaults.dashboardBudgetCategoryLeft
+    }
+    
+    func SetDashboardBudgetCategoryLeft(_ value: Int?) {
+        UserDefaults.dashboardBudgetCategoryLeft = value
     }
     
     func GetLastTimerCheckedDate() -> Date? {
@@ -71,6 +74,52 @@ extension UserSettingDao where Self: UserSettingRepository {
     
     func SetLastTimerCheckedDate(_ date: Date) {
         UserDefaults.lastTimerCheckedDate = date
+    }
+    
+    func GetMockDBName() -> String {
+        return UserDefaults.mockDBName ?? "development"
+    }
+    
+    func SetMockDBName(_ name: String) {
+        UserDefaults.mockDBName = name
+    }
+    
+    func GetLocale() -> Locale {
+        return Locale(data: UserDefaults.locale)
+    }
+    
+    func SetLocale(_ l: Locale) {
+        UserDefaults.locale = l.Int()
+    }
+    
+    // MARK: - Private Function
+}
+
+extension Locale {
+    public init(data: Int?) {
+        switch data {
+            case 1:
+                self = .TW
+            case 2:
+                self = .US
+            case 3:
+                self = .JP
+            default:
+                self = .current
+        }
+    }
+    
+    public func Int() -> Int {
+        switch self {
+            case .TW:
+                return 1
+            case .US:
+                return 2
+            case .JP:
+                return 3
+            default:
+                return 0
+        }
     }
 }
 
@@ -95,6 +144,9 @@ extension UserDefaults {
     
     @UserDefault(key: "MockDBName")
     static var mockDBName: String?
+    
+    @UserDefault(key: "Locale")
+    static var locale: Int?
     
     /**
      User stored appearance

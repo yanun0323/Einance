@@ -24,18 +24,20 @@ protocol DataRepository {
     func DeleteCards(_ budgetID:Int64) throws
     
     func GetRecord(_:Int64) throws -> Record?
+    func ListRecords(after:Date) throws -> [Record]
     func CreateRecord(_:Record) throws -> Int64
     func UpdateRecord(_:Record) throws
     func DeleteRecord(_:Int64) throws
     func DeleteRecords(_ cardID:Int64) throws
     
     func IsTagExist(_:UUID, _:TagType, _:String) throws -> Bool
-    func ListTags(_:UUID, _:TagType, _ time:Int, _:TimeInterval, _ count:Int) throws -> [Tag]
     func GetTag(_:UUID, _:TagType, _:String) throws -> Tag?
+    func ListTags(_:UUID, _:TagType, _ time:Int, _:TimeInterval, _ count:Int) throws -> [Tag]
     func CreateTag(_:Tag) throws -> Int64
     func UpdateTag(_:Tag) throws
     func DeleteTag(_:Int64) throws
     func DeleteTags(_:UUID) throws
+    func DeleteTags(before:Date) throws
 }
 
 protocol UserSettingRepository {
@@ -45,11 +47,23 @@ protocol UserSettingRepository {
     func GetBaseDateNumber() -> Int
     func SetBaseDateNumber(_:Int?)
     func GetFirstStartDate() -> Date
-    func GetNextStartDate(_:Date) -> Date
-    func IsExpired(_:Date) -> Bool
     
     func GetCardBudgetCategoryAbove() -> Int?
     func SetCardBudgetCategoryAbove(_:Int?)
     func GetCardBudgetCategoryBelow() -> Int?
     func SetCardBudgetCategoryBelow(_:Int?)
+    
+    func GetDashboardBudgetCategoryRight() -> Int?
+    func SetDashboardBudgetCategoryRight(_:Int?)
+    func GetDashboardBudgetCategoryLeft() -> Int?
+    func SetDashboardBudgetCategoryLeft(_:Int?)
+    
+    func GetLastTimerCheckedDate() -> Date?
+    func SetLastTimerCheckedDate(_ date: Date)
+    
+    func GetMockDBName() -> String
+    func SetMockDBName(_:String)
+    
+    func GetLocale() -> Locale
+    func SetLocale(_ :Locale)
 }

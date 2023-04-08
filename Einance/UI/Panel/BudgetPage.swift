@@ -3,6 +3,7 @@ import UIComponent
 
 struct BudgetPage: View {
     @EnvironmentObject private var container: DIContainer
+    @Environment(\.locale) private var locale: Locale
     @State private var aboveBudgetCategory: BudgetCategory = .Cost
     @State private var belowBudgetCategory: BudgetCategory = .Amount
     
@@ -99,7 +100,7 @@ struct BudgetPage: View {
     private func dateRecordList() -> some View {
         ForEach(current.dateDict.keys.reversed(), id: \.self) { date in
             HStack {
-                Text(date.String("MM/dd EEEE", .init(identifier: Locale.preferredLanguages[0])))
+                Text(date.String("MM/dd EEEE", locale))
                 Block(height: 1, color: .section)
                 Text("\(current.dateDict[date]!.cost.description) $")
             }
@@ -123,6 +124,7 @@ struct BudgetPage_Previews: PreviewProvider {
             .inject(DIContainer.preview)
             .preferredColorScheme(.light)
             .backgroundColor(.background)
+            .environment(\.locale, .US)
     }
 }
 #endif

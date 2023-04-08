@@ -10,6 +10,7 @@ struct AppState {
     
     var pickerPublisher: PassthroughSubject<Bool, Never> = .init()
     var appearancePublisher: PassthroughSubject<ColorScheme?, Never> = .init()
+    var localePublisher: PassthroughSubject<Locale, Never> = .init()
     
     var aboveBudgetCategoryPubliser: PassthroughSubject<BudgetCategory, Never> = .init()
     var belowBudgetCategoryPubliser: PassthroughSubject<BudgetCategory, Never> = .init()

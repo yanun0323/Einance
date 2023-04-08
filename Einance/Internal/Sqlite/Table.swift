@@ -11,16 +11,20 @@ extension Budget {
     static let amount = Expression<Decimal>("amount")
     static let cost = Expression<Decimal>("cost")
     static let balance = Expression<Decimal>("balance")
+    static let updatedAt = Expression<Date>("updated_at")
     
     static func migrate(_ conn: Connection) throws {
+        try conn.run(Table().addColumn(updatedAt, defaultValue: .now))
         try conn.run(Table().create { t in
             t.column(id, primaryKey: .autoincrement)
-            t.column(startAt) //, unique: true)
+            t.column(startAt, unique: true)
             t.column(archiveAt)
             t.column(amount)
             t.column(cost)
             t.column(balance)
+            t.column(updatedAt)
         })
+        try conn.run(Table().createIndex(startAt, ifNotExists: true))
     }
 }
 
@@ -40,9 +44,10 @@ extension Card {
     static let fixed = Expression<Bool>("fixed")
     static let fontColor = Expression<Color>("font_color")
     static let color = Expression<Color>("color")
+    static let updatedAt = Expression<Date>("updated_at")
     
     static func migrate(_ conn: Connection) throws {
-        try conn.run(Table().addColumn(fontColor, defaultValue: .white))
+        try conn.run(Table().addColumn(updatedAt, defaultValue: .now))
         try conn.run(Table().create(ifNotExists: true) { t in
             t.column(id, primaryKey: .autoincrement)
             t.column(chainID)
@@ -56,6 +61,7 @@ extension Card {
             t.column(fixed)
             t.column(fontColor)
             t.column(color)
+            t.column(updatedAt)
         })
         try conn.run(Table().createIndex(chainID, ifNotExists: true))
         try conn.run(Table().createIndex(budgetID, ifNotExists: true))
@@ -72,6 +78,7 @@ extension Record {
     static let cost = Expression<Decimal>("cost")
     static let memo = Expression<String>("memo")
     static let fixed = Expression<Bool>("fixed")
+    static let updatedAt = Expression<Date>("udpated_at")
     
     static func migrate(_ conn: Connection) throws {
         try conn.run(Table().create(ifNotExists: true) { t in
@@ -81,9 +88,12 @@ extension Record {
             t.column(cost)
             t.column(memo)
             t.column(fixed)
+            t.column(updatedAt)
         })
         try conn.run(Table().createIndex(cardID, ifNotExists: true))
         try conn.run(Table().createIndex(date, ifNotExists: true))
+        try conn.run(Table().createIndex(fixed, ifNotExists: true))
+        try conn.run(Table().createIndex(updatedAt, ifNotExists: true))
     }
 }
 
@@ -96,7 +106,8 @@ extension Tag {
     static let value = Expression<String>("value")
     static let count = Expression<Int>("count")
     static let type = Expression<TagType>("type")
-    static let updatedAti = Expression<Int>("updated_ati")
+    static let key = Expression<Int>("key")
+    static let updatedAt = Expression<Date>("updated_at")
     
     static func migrate(_ conn: Connection) throws {
         try conn.run(Table().create(ifNotExists: true) { t in
@@ -105,11 +116,14 @@ extension Tag {
             t.column(value)
             t.column(type)
             t.column(count)
-            t.column(updatedAti)
+            t.column(key)
+            t.column(updatedAt)
         })
         try conn.run(Table().createIndex(chainID, ifNotExists: true))
         try conn.run(Table().createIndex(value, ifNotExists: true))
         try conn.run(Table().createIndex(type, ifNotExists: true))
-        try conn.run(Table().createIndex(updatedAti, ifNotExists: true))
+        try conn.run(Table().createIndex(count, ifNotExists: true))
+        try conn.run(Table().createIndex(key, ifNotExists: true))
+        try conn.run(Table().createIndex(updatedAt, ifNotExists: true))
     }
 }

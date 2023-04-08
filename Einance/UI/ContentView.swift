@@ -49,7 +49,7 @@ struct ContentView: View {
         }
         .onReceived(container.appstate.monthlyCheckPublisher) { _ = container.interactor.data.UpdateMonthlyBudget(budget) }
         .onChanged(of: budget.book.count) { refreshCurrentCard() }
-        .onAppeared { container.interactor.data.PublishCurrentBudget() }
+        .onAppeared { handleOnAppear() }
         .animation(.quick, value: isActionViewEmpty)
     }
     
@@ -140,6 +140,13 @@ extension ContentView {
         current = bookCount < budget.book.count ? budget.book.last! : budget.book.first!
     }
     
+    func handleOnAppear() {
+        container.interactor.data.PublishCurrentBudget()
+        cleanTagTimer = .scheduledTimer(withTimeInterval: .day, repeats: true) { _ in
+            container.interactor.data.DeleteExpiredTags()
+        }
+    }
+    
     func handleBudgetChange(_ output: Budget?) {
         if isUpdating { return }
         guard let b = output else { return }
@@ -156,7 +163,7 @@ extension ContentView {
             expiredTimer?.invalidate()
             let start = budget.startAt
             expiredTimer = .scheduledTimer(
-                withTimeInterval: 5, repeats: true) { _ in
+                withTimeInterval: 15, repeats: true) { _ in
                     if container.interactor.setting.IsExpired(start) {
                         container.interactor.system.TriggerMonthlyCheck()
                     }

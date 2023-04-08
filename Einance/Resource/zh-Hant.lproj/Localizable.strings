@@ -38,6 +38,10 @@
 "setting.appearance.system" = "系統";
 "setting.appearance.light" = "淺色";
 "setting.appearance.dark" = "深色";
+"setting.locale.label" = "語言";
+"setting.locale.system" = "系統";
+"setting.locale.tw" = "繁體中文";
+"setting.locale.us" = "English";
 "setting.dashboard_style.label" = "統計樣式";
 "setting.card_style.label" = "卡片樣式";
 "setting.update_date.label" = "卡片更新日期";
@@ -66,12 +70,13 @@
 "card.context.alert.archive.content" = "確定要封存這張卡片?";
 
 /* create record */
+"panel.record.create.target_card.label" = "卡片";
 "panel.record.create.cost.label" = "花費";
 "panel.record.create.cost.placeholder" = "100";
 "panel.record.create.date.label" = "日期";
 "panel.record.create.memo.label" = "備註";
 "panel.record.create.memo.placeholder" = "晚餐";
-"panel.record.create.fixed.label" = "固定花費";
+"panel.record.create.fixed.label" = "固定";
 "button.record.create" = "新增花費";
 
 /* budget page view */

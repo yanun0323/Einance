@@ -119,12 +119,11 @@ struct CardRect: View {
             Text(category.wrappedValue.string)
                 .font(.system(size: size(p)*0.075, weight: .light))
                 .foregroundColor(previewColor)
-                .frame(height: size(p)*0.1)
+                .frame(width: 150, height: size(p)*0.1)
+                .padding(5)
+                .backgroundColor(.section.opacity(0.5))
+                .cornerRadius(Setting.panelCornerRadius)
         }
-        .frame(width: 120)
-        .padding(5)
-        .backgroundColor(.section)
-        .cornerRadius(Setting.panelCornerRadius)
     }
     
     @ViewBuilder

@@ -10,7 +10,7 @@ struct Tag {
     var type: TagType
     var value: String
     var count: Int
-    var UpdatedAti: Int
+    var key: Int
     
     init(
         id: Int64 = 0,
@@ -18,14 +18,14 @@ struct Tag {
         type: TagType,
         value: String,
         count: Int = 0,
-        updatedAti: Int = Date.now.in24H
+        key: Int = Date.now.in24H
     ) {
         self.id = id
         self.chainID = chainID
         self.type = type
         self.value = value
         self.count = count
-        self.UpdatedAti = updatedAti
+        self.key = key
     }
 }
 

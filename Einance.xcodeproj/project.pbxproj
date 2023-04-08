@@ -20,6 +20,8 @@
 		A87219F5296830E600D52995 /* ViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = A87219F4296830E600D52995 /* ViewHeader.swift */; };
 		A87219F7296D67C200D52995 /* BudgetCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = A87219F6296D67C200D52995 /* BudgetCategory.swift */; };
 		A890D0F52942E03100D7267B /* SystemInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A890D0F42942E03100D7267B /* SystemInteractor.swift */; };
+		A8A403A629E10F17007A1DD0 /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8A403A529E10F17007A1DD0 /* Utility.swift */; };
+		A8A403AA29E116A5007A1DD0 /* General.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8A403A929E116A5007A1DD0 /* General.swift */; };
 		A8A75AE9291CCCBC00EF9D8A /* EinanceApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8A75AE8291CCCBC00EF9D8A /* EinanceApp.swift */; };
 		A8A75AEB291CCCBC00EF9D8A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8A75AEA291CCCBC00EF9D8A /* ContentView.swift */; };
 		A8A75AED291CCCBD00EF9D8A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A8A75AEC291CCCBD00EF9D8A /* Assets.xcassets */; };
@@ -76,6 +78,8 @@
 		A87219F4296830E600D52995 /* ViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewHeader.swift; sourceTree = "<group>"; };
 		A87219F6296D67C200D52995 /* BudgetCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgetCategory.swift; sourceTree = "<group>"; };
 		A890D0F42942E03100D7267B /* SystemInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemInteractor.swift; sourceTree = "<group>"; };
+		A8A403A529E10F17007A1DD0 /* Utility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utility.swift; sourceTree = "<group>"; };
+		A8A403A929E116A5007A1DD0 /* General.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = General.swift; sourceTree = "<group>"; };
 		A8A75AE5291CCCBC00EF9D8A /* Einance.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Einance.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A8A75AE8291CCCBC00EF9D8A /* EinanceApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EinanceApp.swift; sourceTree = "<group>"; };
 		A8A75AEA291CCCBC00EF9D8A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -239,6 +243,7 @@
 		A8A75AFE291CCE2000EF9D8A /* Interactor */ = {
 			isa = PBXGroup;
 			children = (
+				A8A403A929E116A5007A1DD0 /* General.swift */,
 				A890D0F42942E03100D7267B /* SystemInteractor.swift */,
 				A8C0A102291D892700AD5E97 /* DataInteractor.swift */,
 				A87219F02968144400D52995 /* UserSettingInteractor.swift */,
@@ -269,6 +274,7 @@
 			isa = PBXGroup;
 			children = (
 				A8FF946D2922B74F00C628BD /* Extension.swift */,
+				A8A403A529E10F17007A1DD0 /* Utility.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -408,7 +414,9 @@
 				F6EA06A329B200F5005D08D7 /* WelcomeView.swift in Sources */,
 				A8E52C6C295BE62E00AC80B0 /* ActionPanelConfirmButton.swift in Sources */,
 				A87219F5296830E600D52995 /* ViewHeader.swift in Sources */,
+				A8A403AA29E116A5007A1DD0 /* General.swift in Sources */,
 				A87219F12968144400D52995 /* UserSettingInteractor.swift in Sources */,
+				A8A403A629E10F17007A1DD0 /* Utility.swift in Sources */,
 				A81F0D0929D4DD6800B81476 /* Tag.swift in Sources */,
 				A8F1CE2529D6B22C008DD113 /* CalculatorKeyboard.swift in Sources */,
 				A8F43BFC2951600400C89EDE /* CreateCardPanel.swift in Sources */,

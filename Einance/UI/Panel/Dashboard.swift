@@ -112,12 +112,11 @@ extension Dashboard {
             Text(category.wrappedValue.string)
                 .font(.system(size: 20, weight: .light))
                 .foregroundColor(previewColor)
-                .frame(height: 20)
+                .frame(width: 100, height: 20)
+                .padding(5)
+                .backgroundColor(.section.opacity(0.5))
+                .cornerRadius(5)
         }
-        .frame(width: 80)
-        .padding(5)
-        .backgroundColor(.section)
-        .cornerRadius(5)
     }
 
     @ViewBuilder

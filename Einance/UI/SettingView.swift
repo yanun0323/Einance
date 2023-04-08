@@ -6,11 +6,13 @@ struct SettingView: View {
     @State private var aboveBudgetCategory: BudgetCategory = .Cost
     @State private var belowBudgetCategory: BudgetCategory = .Amount
     @State private var appearance: ColorScheme? = nil
+    @State private var locale: Locale
     @State private var color: Color
     
     @State private var showDateNumberAlert: Bool = false
     @State private var dateNumberEdit: Int
     @State private var dateNumber: Int
+    @State private var calculatedNextDate: Date
     
     @State private var showDangerAlert: Bool = false
     @State private var dangerAlertTitle: LocalizedStringKey = ""
@@ -29,6 +31,9 @@ struct SettingView: View {
         let dateNumber = injector.interactor.setting.GetBaseDateNumber()
         self._dateNumber = .init(initialValue: dateNumber)
         self._dateNumberEdit = .init(initialValue: dateNumber)
+        self._locale = .init(initialValue: injector.interactor.setting.GetLocale())
+        let nextDate = injector.interactor.CalculateNextDate(budget.startAt, days: dateNumber)
+        self._calculatedNextDate = .init(initialValue: nextDate)
     }
     
     var body: some View {
@@ -37,6 +42,7 @@ struct SettingView: View {
             ScrollView(.vertical, showsIndicators: false) {
                 VStack(spacing: 30) {
                     appearanceBlock()
+                    localeBlock()
                     dashboardStyleSample()
                     cardShapeStyleSample()
                     baseNumberBlock()
@@ -52,33 +58,46 @@ struct SettingView: View {
         .alert("setting.update_date.check", isPresented: $showDateNumberAlert) {
             dateNumberAlertButton()
         } message: {
-            Text("setting.update_date.next")+Text(" ")+Text(calculateNextDate().String("yyyy.MM.dd"))
+            Text("setting.update_date.next")+Text(" ")+Text(calculatedNextDate.String("yyyy.MM.dd"))
                 .kerning(1)
         }
         .alert(dangerAlertTitle, isPresented: $showDangerAlert) {
             Button("global.confirm", role: .destructive, action: dangerAction)
         }
         .alert("setting.update_date.udpated", isPresented: $forceUpdateFailed) {}
+        .onChanged(of: locale) { container.interactor.setting.SetLocale($0) }
+        .onChanged(of: dateNumberEdit) { calculatedNextDate = container.interactor.CalculateNextDate(budget.startAt, days: $0) }
+    }
+    
+    @ViewBuilder
+    private func localeBlock() -> some View {
+        settingSection("setting.locale.label") {
+            Menu {
+                Picker(selection: $locale) {
+                    Text("setting.locale.system").tag(Locale.current)
+                    Text("setting.locale.tw").tag(Locale.TW)
+                    Text("setting.locale.us").tag(Locale.US)
+                } label: {}
+            } label: {
+                Text(getLocaleKey())
+                    .font(.system(size: 20))
+                    .frame(width: System.device.screen.size.width/2)
+                    .foregroundColor(color)
+                    .padding(5)
+                    .animation(.none, value: locale)
+                    .padding()
+            }
+        }
     }
     
     @ViewBuilder
     private func baseNumberBlock() -> some View {
-        VStack(alignment: .leading, spacing: 5) {
-            if dateNumberEdit != 0 {
-                Text("setting.update_date.label")
-                    .foregroundColor(.primary25)
-                    .font(.caption)
-                    .padding(.leading)
-                RoundedRectangle(cornerRadius: Setting.globalCornerRadius)
-                    .foregroundColor(.section)
-                    .frame(height: isDateNumberChanged() ? 200: 160)
-                    .overlay {
-                        VStack(spacing: 0) {
-                            baseNumberContentEdit()
-                            Spacer()
-                        }
-                    }
+        settingSection("setting.update_date.label") {
+            VStack(spacing: 0) {
+                baseNumberContentEdit()
+                Spacer()
             }
+            .frame(height: isDateNumberChanged() ? 200: 160)
         }
     }
     
@@ -131,7 +150,7 @@ struct SettingView: View {
                     }
                     HStack(spacing: 10) {
                         Text("setting.update_date.next")
-                        Text(calculateNextDate().String("yyyy.MM.dd"))
+                        Text(calculatedNextDate.String("yyyy.MM.dd"))
                             .kerning(1)
 
                     }
@@ -176,182 +195,57 @@ struct SettingView: View {
     
     @ViewBuilder
     private func dashboardStyleSample() -> some View {
-        VStack(alignment: .leading, spacing: 5) {
-            Text("setting.dashboard_style.label")
-                .foregroundColor(.primary25)
-                .font(.caption)
-                .padding(.leading)
-            RoundedRectangle(cornerRadius: Setting.globalCornerRadius)
-                .foregroundColor(.section)
-                .frame(height: 120)
-                .overlay {
-                    Dashboard(budget: budget, current: current, isPreview: true, previewColor: color)
-                        .padding(.horizontal)
-                }
+        settingSection("setting.dashboard_style.label") {
+            Dashboard(budget: budget, current: current, isPreview: true, previewColor: color)
+                .padding()
         }
     }
     
     @ViewBuilder
     private func appearanceBlock() -> some View {
-        VStack(spacing: 5) {
-            Section {
-                RoundedRectangle(cornerRadius: Setting.globalCornerRadius)
-                    .frame(height: 250)
-                    .foregroundColor(.section)
-                    .overlay {
-                        HStack(spacing: 0) {
-                            Spacer()
-                            ButtonCustom(width: 80, height: 200) {
-                                withAnimation(.quick) {
-                                    appearance = nil
-                                    container.interactor.setting.SetAppearance(nil)
-                                }
-                            } content: {
-                                screenSystem()
-                            }
-                            
-                            Spacer()
-                            ButtonCustom(width: 80, height: 200) {
-                                withAnimation(.quick) {
-                                    appearance = .light
-                                    container.interactor.setting.SetAppearance(.light)
-                                }
-                            } content: {
-                                screenLight()
-                            }
-                            Spacer()
-                            ButtonCustom(width: 80, height: 200) {
-                                withAnimation(.quick) {
-                                    appearance = .dark
-                                    container.interactor.setting.SetAppearance(.dark)
-                                }
-                            } content: {
-                                screenDark()
-                            }
-                            Spacer()
-                        }
+        settingSection("setting.appearance") {
+            HStack(spacing: 0) {
+                Spacer()
+                ButtonCustom(width: 80, height: 200) {
+                    withAnimation(.quick) {
+                        appearance = nil
+                        container.interactor.setting.SetAppearance(nil)
                     }
-            } header: {
-                HStack {
-                    Text("setting.appearance.label")
-                        .foregroundColor(.primary50)
-                        .font(.caption)
-                    Spacer()
+                } content: {
+                    appearanceButtonLabel("setting.appearance.system", nil)
                 }
-                .padding(.horizontal)
-            }
-        }
-    }
-    
-    @ViewBuilder
-    private func screenSystem() -> some View {
-        VStack {
-            ZStack {
-                appearanceImage(.light)
-                    .mask {
-                        HStack {
-                            Rectangle()
-                                .frame(width: 30)
-                            Spacer()
-                        }
+                
+                Spacer()
+                ButtonCustom(width: 80, height: 200) {
+                    withAnimation(.quick) {
+                        appearance = .light
+                        container.interactor.setting.SetAppearance(.light)
                     }
-                appearanceImage(.dark)
-                    .mask {
-                        HStack {
-                            Spacer()
-                            Rectangle()
-                                .frame(width: 30)
-                        }
+                } content: {
+                    appearanceButtonLabel("setting.appearance.light", .light)
+                }
+                Spacer()
+                ButtonCustom(width: 80, height: 200) {
+                    withAnimation(.quick) {
+                        appearance = .dark
+                        container.interactor.setting.SetAppearance(.dark)
                     }
-            }
-            .cornerRadius(10, antialiased: true)
-            .overlay(
-                RoundedRectangle(cornerRadius: 10)
-                    .stroke(color, style: StrokeStyle(lineWidth: 3))
-                    .opacity(appearance == nil ? 1 : 0)
-            )
-            Text("setting.appearance.system")
-            Block(width: 5, height: 5)
-            ZStack {
-                Image(systemName: "circle")
-                    .foregroundColor(.primary50)
-                    .font(.title3)
-                if appearance == nil {
-                    Image(systemName: "checkmark.circle.fill")
-                        .foregroundColor(color)
-                        .font(.title3)
+                } content: {
+                    appearanceButtonLabel("setting.appearance.dark", .dark)
                 }
+                Spacer()
             }
-        }
-    }
-    
-    @ViewBuilder
-    private func screenLight() -> some View {
-        VStack {
-            appearanceImage(.light)
-                .cornerRadius(10, antialiased: true)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 10)
-                        .stroke(color, style: StrokeStyle(lineWidth: 3))
-                        .opacity(appearance == .light ? 1 : 0)
-                )
-            Text("setting.appearance.light")
-            Block(width: 5, height: 5)
-            ZStack {
-                Image(systemName: "circle")
-                    .foregroundColor(.primary50)
-                    .font(.title3)
-                if appearance == .light {
-                    Image(systemName: "checkmark.circle.fill")
-                        .foregroundColor(color)
-                        .font(.title3)
-                }
-            }
-        }
-    }
-    
-    @ViewBuilder
-    private func screenDark() -> some View {
-        VStack {
-            appearanceImage(.dark)
-                .cornerRadius(10, antialiased: true)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 10)
-                        .stroke(color, style: StrokeStyle(lineWidth: 3))
-                        .opacity(appearance == .dark ? 1 : 0)
-                )
-            Text("setting.appearance.dark")
-            Block(width: 5, height: 5)
-            ZStack {
-                Image(systemName: "circle")
-                    .foregroundColor(.primary50)
-                    .font(.title3)
-                if appearance == .dark {
-                    Image(systemName: "checkmark.circle.fill")
-                        .foregroundColor(color)
-                        .font(.title3)
-                }
-            }
+            .padding(.vertical)
         }
     }
     
     @ViewBuilder
     private func dangerZoneBlock() -> some View {
-        VStack(alignment: .leading, spacing: 5) {
-            Text("setting.danger_zone.label")
-                .foregroundColor(.red)
-                .font(.caption)
-                .padding(.leading)
-            RoundedRectangle(cornerRadius: Setting.globalCornerRadius)
-                .foregroundColor(.red.opacity(0.1))
-                .frame(height: 100)
-                .overlay {
-                    VStack(spacing: 0) {
-                        Spacer()
-                        dangerForceUpdateBudgetButton()
-                        Spacer()
-                    }
-                }
+        settingSection("setting.danger_zone.label", color: .red, bg: .red.opacity(0.1)) {
+            VStack {
+                dangerForceUpdateBudgetButton()
+            }
+            .padding(.vertical)
         }
     }
     
@@ -377,6 +271,59 @@ struct SettingView: View {
     }
     
     @ViewBuilder
+    private func appearanceButtonLabel(_ title: LocalizedStringKey, _ scheme: ColorScheme?) -> some View {
+        VStack {
+            if let sc = scheme {
+                appearanceImage(sc)
+                    .cornerRadius(10, antialiased: true)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 10)
+                            .stroke(color, style: StrokeStyle(lineWidth: 3))
+                            .opacity(appearance == .light ? 1 : 0)
+                    )
+            } else {
+                ZStack {
+                    appearanceImage(.light)
+                        .mask {
+                            HStack {
+                                Rectangle()
+                                    .frame(width: 30)
+                                Spacer()
+                            }
+                        }
+                    appearanceImage(.dark)
+                        .mask {
+                            HStack {
+                                Spacer()
+                                Rectangle()
+                                    .frame(width: 30)
+                            }
+                        }
+                }
+                .cornerRadius(10, antialiased: true)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 10)
+                        .stroke(color, style: StrokeStyle(lineWidth: 3))
+                        .opacity(appearance == nil ? 1 : 0)
+                )
+            }
+            
+            Text(title)
+            Block(width: 5, height: 5)
+            ZStack {
+                Image(systemName: "circle")
+                    .foregroundColor(.primary50)
+                    .font(.title3)
+                if appearance == scheme {
+                    Image(systemName: "checkmark.circle.fill")
+                        .foregroundColor(color)
+                        .font(.title3)
+                }
+            }
+        }
+    }
+    
+    @ViewBuilder
     private func appearanceImage(_ theme: ColorScheme) -> some View {
         ZStack {
             Image(theme == .dark ? "ScreenDark" : "ScreenLight")
@@ -398,6 +345,16 @@ struct SettingView: View {
         }
     }
     
+    @ViewBuilder
+    private func settingSection(_ title: LocalizedStringKey, color: Color = .primary25, bg: Color = .section, @ViewBuilder content: @escaping () -> some View) -> some View {
+        SectionCustom(title, font: .caption, color: color, radius: Setting.globalCornerRadius, bg: bg) {
+            HStack {
+                Spacer()
+                content()
+                Spacer()
+            }
+        }
+    }
 }
 
 // MARK: - Function
@@ -424,13 +381,17 @@ extension SettingView {
         }
     }
     
-    private func calculateNextDate() -> Date {
-        let nextDay1 = budget.startAt.AddMonth(1).firstDayOfMonth
-        if nextDay1.daysOfMonth < dateNumberEdit {
-            return nextDay1.AddMonth(1).AddDay(-1)
+    private func getLocaleKey() -> LocalizedStringKey {
+        switch locale {
+            case .TW:
+                return "setting.locale.tw"
+            case .US:
+                return "setting.locale.us"
+            default:
+                return "setting.locale.system"
         }
-        return nextDay1.AddDay(dateNumberEdit-1)
     }
+    
 }
 
 #if DEBUG

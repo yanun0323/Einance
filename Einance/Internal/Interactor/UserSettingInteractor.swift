@@ -23,7 +23,7 @@ extension UserSettingInteractor {
     }
     
     func GetCardBudgetCategoryAbove() -> BudgetCategory {
-        let category = BudgetCategory(UserDefaults.cardBudgetCategoryAbove)
+        let category = BudgetCategory(repo.GetCardBudgetCategoryAbove())
         if category != .None {
             return category
         }
@@ -31,12 +31,12 @@ extension UserSettingInteractor {
     }
     
     func SetCardBudgetCategoryAbove(_ category: BudgetCategory) {
-        UserDefaults.cardBudgetCategoryAbove = category.rawValue
+        repo.SetCardBudgetCategoryAbove(category.rawValue)
         appstate.aboveBudgetCategoryPubliser.send(category)
     }
     
     func GetCardBudgetCategoryBelow() -> BudgetCategory {
-        let category = BudgetCategory(UserDefaults.cardBudgetCategoryBelow)
+        let category = BudgetCategory(repo.GetCardBudgetCategoryBelow())
         if category != .None {
             return category
         }
@@ -44,12 +44,12 @@ extension UserSettingInteractor {
     }
     
     func SetCardBudgetCategoryBelow(_ category: BudgetCategory) {
-        UserDefaults.cardBudgetCategoryBelow = category.rawValue
+        repo.SetCardBudgetCategoryBelow(category.rawValue)
         appstate.belowBudgetCategoryPubliser.send(category)
     }
     
     func GetDashboardBudgetCategoryLeft() -> BudgetCategory {
-        let category = BudgetCategory(UserDefaults.dashboardBudgetCategoryLeft)
+        let category = BudgetCategory(repo.GetDashboardBudgetCategoryLeft())
         if category != .None {
             return category
         }
@@ -57,12 +57,12 @@ extension UserSettingInteractor {
     }
     
     func SetDashboardBudgetCategoryLeft(_ category: BudgetCategory) {
-        UserDefaults.dashboardBudgetCategoryLeft = category.rawValue
+        repo.SetDashboardBudgetCategoryLeft(category.rawValue)
         appstate.leftBudgetCategoryPublisher.send(category)
     }
     
     func GetDashboardBudgetCategoryRight() -> BudgetCategory {
-        let category = BudgetCategory(UserDefaults.dashboardBudgetCategoryRight)
+        let category = BudgetCategory(repo.GetDashboardBudgetCategoryRight())
         if category != .None {
             return category
         }
@@ -70,7 +70,7 @@ extension UserSettingInteractor {
     }
     
     func SetDashboardBudgetCategoryRight(_ category: BudgetCategory) {
-        UserDefaults.dashboardBudgetCategoryRight = category.rawValue
+        repo.SetDashboardBudgetCategoryRight(category.rawValue)
         appstate.rightBudgetCategoryPublisher.send(category)
     }
     
@@ -83,17 +83,25 @@ extension UserSettingInteractor {
     }
     
     func IsExpired(_ start: Date) -> Bool {
-        return repo.IsExpired(start)
+        return Date.now >= Interactor.CalculateNextDate(start, days: repo.GetBaseDateNumber())
     }
     
     func GetMockDBName() -> String {
-        return UserDefaults.mockDBName ?? "development"
+        return repo.GetMockDBName()
     }
     
     func SetMockDBName(_ name: String) {
-        UserDefaults.mockDBName = name
+        repo.SetMockDBName(name)
     }
     
+    func GetLocale() -> Locale {
+        return repo.GetLocale()
+    }
+    
+    func SetLocale(_ l: Locale) {
+        repo.SetLocale(l)
+        appstate.localePublisher.send(l)
+    }
     
 }
 

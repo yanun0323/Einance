@@ -16,6 +16,7 @@ enum Err: Error {
     case cardNotFound
     case recordNotFound
     case emptyValue
+    case transDateFailed
 }
 
 // MARK: Public Function
@@ -37,7 +38,7 @@ extension DataInteractor {
     
     func UpdateMonthlyBudget(_ budget: Budget, force: Bool = false) -> Bool {
         DoTx("update monthly budget") {
-            let nextStartDate = repo.GetNextStartDate(budget.startAt)
+            let nextStartDate = Interactor.CalculateNextDate(budget.startAt, days: repo.GetBaseDateNumber())
             var archivedDate = nextStartDate.AddDay(-1)
             if force {
                 archivedDate = Date.now.AddDay(-1).key
@@ -254,6 +255,15 @@ extension DataInteractor {
     
     // MARK: - Record
     
+    func listTodayRecords() -> [Record] {
+        return DoTx("list today's records") {
+            guard let date = Date(from: Date.now.String("yyyyMMdd"), "yyyyMMdd") else {
+                throw Err.transDateFailed
+            }
+            return try repo.ListRecords(after: date)
+        } ?? []
+    }
+    
     /**
      Create record into card and update budget and card
      */
@@ -287,18 +297,20 @@ extension DataInteractor {
     func UpdateRecord(_ b: Budget, _ c: Card, _ r: Record, date: Date, cost: Decimal, memo: String, fixed: Bool) {
         DoTx("update record") {
             let needSort = (r.date != date) || fixed
-            
+            guard let oldCard = b.book.first(where: { $0.id == r.cardID}) else {
+                throw Err.cardNotFound
+            }
             if r.fixed {
-                c.RemoveRecordFromFixed(r)
+                oldCard.RemoveRecordFromFixed(r)
             } else {
-                c.RemoveRecordFromDict(r)
+                oldCard.RemoveRecordFromDict(r)
             }
             
-            c.cost = c.cost - r.cost + cost
-            c.balance = c.amount - c.cost
+            oldCard.cost = oldCard.cost - r.cost
+            oldCard.balance = oldCard.amount - oldCard.cost
             
-            if !c.isForever {
-                b.cost = b.cost - r.cost + cost
+            if !oldCard.isForever {
+                b.cost = b.cost - r.cost
                 b.balance = b.amount - b.cost
             }
             
@@ -317,6 +329,13 @@ extension DataInteractor {
                 c.dateDict.sort()
             }
             
+            c.cost = c.cost + cost
+            c.balance = c.amount - c.cost
+            if !c.isForever {
+                b.cost = b.cost + cost
+                b.balance = b.amount - b.cost
+            }
+            r.cardID = c.id
             try repo.UpdateRecord(r)
             try repo.UpdateCard(c)
             try repo.UpdateBudget(b)
@@ -347,14 +366,14 @@ extension DataInteractor {
     
     // MARK: - Tag
     
-    func GetTags(_ chainID: UUID, _ type: TagType, _ updatedAt: Int) -> [Tag] {
-        return DoTx("get tags") {
+    func ListTags(_ chainID: UUID, _ type: TagType, _ updatedAt: Int) -> [Tag] {
+        return DoTx("list tags") {
             return try repo.ListTags(chainID, type, updatedAt, 4 * .hour, 20)
         } ?? []
     }
     
     func CreateTag(_ chainID: UUID, _ type: TagType, _ value: String, _ updatedAt: Int) {
-        if UnavailableTag(type, value: value) {
+        if unavailableTag(type, value: value) {
             #if DEBUG
             print("[WARN] unavailable value")
             #endif
@@ -364,10 +383,10 @@ extension DataInteractor {
             if let tag = try repo.GetTag(chainID, type, value) {
                 var t = tag
                 t.count += 1
-                t.UpdatedAti = updatedAt
+                t.key = updatedAt
                 try repo.UpdateTag(t)
             } else {
-                _ = try repo.CreateTag(Tag(chainID: chainID, type: type, value: value, count: 1, updatedAti: updatedAt))
+                _ = try repo.CreateTag(Tag(chainID: chainID, type: type, value: value, count: 1, key: updatedAt))
             }
         }
     }
@@ -380,7 +399,7 @@ extension DataInteractor {
             return
         }
         DoTx("edit tag: delete old tag") {
-            if UnavailableTag(type, value: old) {
+            if unavailableTag(type, value: old) {
                 #if DEBUG
                 print("[WARN] unavailable old tag")
                 #endif
@@ -399,7 +418,7 @@ extension DataInteractor {
             } else {
                 var t = tag
                 t.count -= 1
-                t.UpdatedAti = updatedAt
+                t.key = updatedAt
                 try repo.UpdateTag(t)
             }
         }
@@ -407,7 +426,16 @@ extension DataInteractor {
         CreateTag(chainID, type, new, updatedAt)
     }
     
-    func UnavailableTag(_ type: TagType, value: String) -> Bool {
+    func DeleteExpiredTags() {
+        DoTx("delete expired tags") {
+            let interval = TimeInterval.day * -15
+            let date = Date.now.addingTimeInterval(interval)
+            try repo.DeleteTags(before: date)
+        }
+    }
+
+    
+    private func unavailableTag(_ type: TagType, value: String) -> Bool {
         let v = value.trimmingCharacters(in: [" "])
         switch type {
             case .text:
@@ -419,7 +447,6 @@ extension DataInteractor {
                 return true
         }
     }
-    
 #if DEBUG
     
     func Repo() -> Repository {

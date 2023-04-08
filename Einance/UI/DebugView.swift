@@ -16,17 +16,17 @@ struct DebugView: SwiftUI.View {
     
     @State private var TODO: [String] = [
         "教學畫面",
-        "Setting Localized",
-        "~計算機",
-        "~Card Name Color",
         "強制更新卡片(調到之前的日期，顯示應為之後的)",
-        "~強制更新卡片(同一天不能重複更新)",
-        "~修改record 標籤要跟著 picked date",
         "歷史圖表",
         "統計圖表",
-        "定時清Tag功能(每天清'一個月'沒更新的？)",
         "隨後備註功能",
-        "排查重開閃退資料遺失問題",
+        "~Setting Localized",
+        "~計算機",
+        "~Card Name Color",
+        "~強制更新卡片(同一天不能重複更新)",
+        "~修改record 標籤要跟著 picked date",
+        "~定時清Tag功能(每天清'一個月'沒更新的？)",
+        "~排查重開閃退資料遺失問題",
         "[訂閱] 串接雲端發票",
         "[訂閱] 雲端發票移動",
         "[訂閱] 卡片系統上限",
@@ -53,7 +53,7 @@ struct DebugView: SwiftUI.View {
                             Block(height: 10)
                             
                             ForEach(tags, id: \.self) { t in
-                                Text("ID: \(t.id), Value: \(t.value), Ts: \(t.UpdatedAti), Type: \(t.type.rawValue), Count: \(t.count), ChainID: \(t.chainID) ")
+                                Text("ID: \(t.id), Value: \(t.value), Ts: \(t.key), Type: \(t.type.rawValue), Count: \(t.count), ChainID: \(t.chainID) ")
                             }
                         }
                     }
@@ -155,7 +155,8 @@ extension DebugView {
             type: try row.get(Tag.type),
             value: try row.get(Tag.value),
             count: try row.get(Tag.count),
-            updatedAti: try row.get(Tag.updatedAti))
+            key: try row.get(Tag.key)
+        )
     }
 }
 

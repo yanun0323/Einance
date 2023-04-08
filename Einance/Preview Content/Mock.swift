@@ -28,7 +28,7 @@ extension Card {
             Record(id: -6, date: Date(from: "20221110", .Numeric)!, cost: 113, memo: "7-11"),
         ], color: .orange, fixed: true)
     
-    static var preview3 = Card(id: -3, index: 2, name: "空的", amount: 10000, records: [], color: .green, fixed: true)
+    static var preview3 = Card(id: -3, index: 2, name: "我的名字有夠他媽的長哈哈哈哈", amount: 10000, records: [], color: .green, fixed: true)
     static var preview4 = Card(id: -4, index: 3, name: "隨便", amount: 12000, records: [
         Record(id: -7, date: Date(from: "20221106", .Numeric)!, cost: 7000, memo: "忘記了"),
         Record(id: -8, date: Date(from: "20221120", .Numeric)!, cost: 1113, memo: "不知道"),

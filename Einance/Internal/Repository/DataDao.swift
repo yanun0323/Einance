@@ -75,7 +75,8 @@ extension DataDao where Self: DataRepository {
             Budget.archiveAt <- b.archiveAt,
             Budget.amount <- b.amount,
             Budget.cost <- b.cost,
-            Budget.balance <- b.balance
+            Budget.balance <- b.balance,
+            Budget.updatedAt <- .now
         )
         
         return try Sql.GetDriver().run(insert)
@@ -87,7 +88,8 @@ extension DataDao where Self: DataRepository {
             Budget.archiveAt <- b.archiveAt,
             Budget.amount <- b.amount,
             Budget.cost <- b.cost,
-            Budget.balance <- b.balance
+            Budget.balance <- b.balance,
+            Budget.updatedAt <- .now
         )
         try Sql.GetDriver().run(update)
     }
@@ -130,7 +132,8 @@ extension DataDao where Self: DataRepository {
             Card.display <- c.display,
             Card.fontColor <- c.fontColor,
             Card.color <- c.color,
-            Card.fixed <- c.fixed
+            Card.fixed <- c.fixed,
+            Card.updatedAt <- .now
         )
         return try Sql.GetDriver().run(insert)
     }
@@ -147,7 +150,8 @@ extension DataDao where Self: DataRepository {
             Card.display <- c.display,
             Card.fontColor <- c.fontColor,
             Card.color <- c.color,
-            Card.fixed <- c.fixed
+            Card.fixed <- c.fixed,
+            Card.updatedAt <- .now
         )
         try Sql.GetDriver().run(update)
     }
@@ -171,13 +175,25 @@ extension DataDao where Self: DataRepository {
         return nil
     }
     
+    func ListRecords(after time: Date) throws -> [Record] {
+        let query = Record.Table().filter(Tag.updatedAt >= time)
+        let result = try Sql.GetDriver().prepare(query)
+        
+        var records: [Record] = []
+        for row in result {
+            records.append(try parseRecord(row))
+        }
+        return records
+    }
+    
     func CreateRecord(_ r: Record) throws -> Int64 {
         let insert = Record.Table().insert(
             Record.cardID <- r.cardID,
             Record.date <- r.date,
             Record.cost <- r.cost,
             Record.memo <- r.memo,
-            Record.fixed <- r.fixed
+            Record.fixed <- r.fixed,
+            Record.updatedAt <- .now
         )
         return try Sql.GetDriver().run(insert)
     }
@@ -188,7 +204,8 @@ extension DataDao where Self: DataRepository {
             Record.date <- r.date,
             Record.cost <- r.cost,
             Record.memo <- r.memo,
-            Record.fixed <- r.fixed
+            Record.fixed <- r.fixed,
+            Record.updatedAt <- .now
         )
         try Sql.GetDriver().run(update)
     }
@@ -203,47 +220,6 @@ extension DataDao where Self: DataRepository {
     
     // MARK: - Tag
     
-    func ListTagValues(_ chainID: UUID, _ type: TagType, _ time: Int, _ interval: TimeInterval, _ count: Int) throws -> [String] {
-        var values: [String] = []
-        let start = time - Int(interval)
-        let end = time + Int(interval)
-        print("start: \(start.description), end: \(end.description)")
-        
-        let query = Tag.Table().select(Tag.value).filter(
-            Tag.chainID == chainID &&
-            Tag.type == type &&
-            Tag.updatedAti >= start &&
-            Tag.updatedAti <= end
-        ).order(Tag.count.desc).limit(count)
-        let result = try Sql.GetDriver().prepare(query)
-        for row in result {
-            let value = try row.get(Tag.value)
-            values.append(value)
-        }
-        print("V \(values.count)")
-        return values
-    }
-    
-    func ListTags(_ chainID: UUID, _ type: TagType, _ time: Int, _ interval: TimeInterval, _ count: Int) throws -> [Tag] {
-        var tags: [Tag] = []
-        let now = Date.now
-        let start = now.addingTimeInterval(-interval).in24H
-        let end = now.addingTimeInterval(interval).in24H
-        
-        let query = Tag.Table().filter(
-            Tag.chainID == chainID &&
-            Tag.type == type &&
-            Tag.updatedAti >= start &&
-            Tag.updatedAti <= end &&
-            Tag.count > 0
-        ).order(Tag.count.desc).limit(count)
-        let result = try Sql.GetDriver().prepare(query)
-        for row in result {
-            tags.append(try parseTag(row))
-        }
-        return tags
-    }
-    
     func IsTagExist(_ chainID: UUID, _ type: TagType, _ value: String) throws -> Bool {
         let query = Tag.Table().filter(
             Tag.chainID == chainID &&
@@ -251,6 +227,29 @@ extension DataDao where Self: DataRepository {
             Tag.value == value
         ).exists
         return try Sql.GetDriver().scalar(query)
+    }
+    
+    func ListTags(_ chainID: UUID, _ type: TagType, _ time: Int, _ interval: TimeInterval, _ count: Int) throws -> [Tag] {
+        var tags: [Tag] = []
+        let now = Date.now
+        let start = now.addingTimeInterval(-interval).in24H
+        let end = now.addingTimeInterval(interval).in24H
+        #if DEBUG
+        print("DAO list tags")
+        #endif
+        
+        let query = Tag.Table().filter(
+            Tag.chainID == chainID &&
+            Tag.type == type &&
+            Tag.key >= start &&
+            Tag.key <= end &&
+            Tag.count > 0
+        ).order(Tag.count.desc).limit(count)
+        let result = try Sql.GetDriver().prepare(query)
+        for row in result {
+            tags.append(try parseTag(row))
+        }
+        return tags
     }
     
     func GetTag(_ chainID: UUID, _ type: TagType, _ value: String) throws -> Tag? {
@@ -272,7 +271,8 @@ extension DataDao where Self: DataRepository {
             Tag.type <- t.type,
             Tag.value <- t.value,
             Tag.count <- t.count,
-            Tag.updatedAti <- t.UpdatedAti
+            Tag.key <- t.key,
+            Tag.updatedAt <- .now
         )
         return try Sql.GetDriver().run(insert)
     }
@@ -283,7 +283,8 @@ extension DataDao where Self: DataRepository {
             Tag.type <- t.type,
             Tag.value <- t.value,
             Tag.count <- t.count,
-            Tag.updatedAti <- t.UpdatedAti
+            Tag.key <- t.key,
+            Tag.updatedAt <- .now
         )
         try Sql.GetDriver().run(update)
     }
@@ -294,6 +295,11 @@ extension DataDao where Self: DataRepository {
     
     func DeleteTags(_ chainID: UUID) throws {
         try Sql.GetDriver().run(Tag.Table().filter(Tag.chainID == chainID).delete())
+    }
+    
+    func DeleteTags(before time: Date) throws {
+        let delete = Tag.Table().filter(Tag.updatedAt <= time).delete()
+        try Sql.GetDriver().run(delete)
     }
 }
 
@@ -375,6 +381,7 @@ extension DataDao {
             type: try row.get(Tag.type),
             value: try row.get(Tag.value),
             count: try row.get(Tag.count),
-            updatedAti: try row.get(Tag.updatedAti))
+            key: try row.get(Tag.key)
+        )
     }
 }

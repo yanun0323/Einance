@@ -38,6 +38,10 @@
 "setting.appearance.system" = "System";
 "setting.appearance.light" = "Light";
 "setting.appearance.dark" = "Dark";
+"setting.locale.label" = "Language";
+"setting.locale.system" = "System";
+"setting.locale.tw" = "繁體中文";
+"setting.locale.us" = "English";
 "setting.dashboard_style.label" = "Dashboard Style";
 "setting.card_style.label" = "Card Style";
 "setting.update_date.label" = "Update Date";
@@ -57,25 +61,26 @@
 "panel.card.create.font_color.label" = "Font Color";
 "panel.card.create.color.label" = "Color";
 "panel.card.create.display.label" = "Type";
-"panel.card.create.fixed.label" = "Fixed";
+"panel.card.create.fixed.label" = "Pinned";
 
 /* card context alert */
-"card.context.alert.title" = "Delete Card";
-"card.context.alert.content" = "realy want to delete this card?";
+"card.context.alert.delete.title" = "Delete Card";
+"card.context.alert.delete.content" = "realy want to delete this card?";
 "card.context.alert.archive.title" = "Archive Card";
 "card.context.alert.archive.content" = "realy want to archive this card?";
 
 /* create record */
+"panel.record.create.target_card.label" = "Card";
 "panel.record.create.cost.label" = "Cost";
 "panel.record.create.cost.placeholder" = "100";
 "panel.record.create.date.label" = "Date";
 "panel.record.create.memo.label" = "Memo";
 "panel.record.create.memo.placeholder" = "Dinner";
-"panel.record.create.fixed.label" = "Fixed";
+"panel.record.create.fixed.label" = "Pinned";
 "button.record.create" = "New Record";
 
 /* budget page view */
-"view.record.row.title.fixed" = "Fixed";
+"view.record.row.title.fixed" = "Pinned";
 
 /* welcome view description */
 "welcome.button.next" = "Next";

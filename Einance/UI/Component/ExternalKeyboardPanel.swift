@@ -132,8 +132,8 @@ extension ExternalKeyboardPanel {
     
     func handleRefreshTags() {
         guard let cID = chainID else { return }
-        textTags = container.interactor.data.GetTags(cID, .text, time.in24H)
-        numTags = container.interactor.data.GetTags(cID, .number, time.in24H)
+        textTags = container.interactor.data.ListTags(cID, .text, time.in24H)
+        numTags = container.interactor.data.ListTags(cID, .number, time.in24H)
     }
 }
 

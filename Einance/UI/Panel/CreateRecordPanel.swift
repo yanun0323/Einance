@@ -14,7 +14,7 @@ struct CreateRecordPanel: View {
     @State private var creating: Bool = false
     
     @ObservedObject var budget: Budget
-    @ObservedObject var card: Card
+    @State var card: Card
     
     init(budget: Budget, card: Card, today: Date = .now) {
         self._budget = .init(wrappedValue: budget)
@@ -76,11 +76,15 @@ struct CreateRecordPanel: View {
         VStack {
             titleBlock()
                 .padding()
-            VStack(spacing: 15) {
+            VStack(spacing: 10) {
                 recordCostBlock()
                 recordMemoBlock()
                 recordDateBlock()
-                recordFixedBlock()
+                
+                HStack {
+                    targetCardBlock()
+                    recordFixedBlock()
+                }
             }
             .padding(.horizontal)
             
@@ -97,6 +101,34 @@ struct CreateRecordPanel: View {
                 .font(Setting.panelTitleFont)
             Spacer()
             ActionPanelCloseButton()
+        }
+    }
+    
+    @ViewBuilder
+    private func targetCardBlock() -> some View {
+        HStack {
+            Text("panel.record.create.target_card.label")
+                .font(Setting.cardPanelLabelFont)
+            Spacer()
+            Menu {
+                Picker("", selection: $card) {
+                    ForEach(budget.book) { c in
+                        Text(c.name).tag(c)
+                    }
+                }
+            } label: {
+                Text(card.name)
+                    .font(Setting.cardPanelInputFont)
+                    .frame(width: 120 ,alignment: .center)
+                    .animation(.none, value: card)
+                    .foregroundColor(card.fontColor)
+                    .padding(.vertical, 5)
+                    .backgroundColor(card.color)
+                    .cornerRadius(5)
+                    .lineLimit(1)
+            }
+            
+            Spacer()
         }
     }
     
@@ -155,8 +187,8 @@ struct CreateRecordPanel: View {
         HStack {
             Text("panel.record.create.fixed.label")
                 .font(Setting.cardPanelLabelFont)
-            Spacer()
             ToggleCustom(isOn: $fixedInput, color: $card.color, size: 24)
+                .frame(width: 50)
         }
     }
     
