@@ -16,10 +16,10 @@ struct DebugView: SwiftUI.View {
     
     @State private var TODO: [String] = [
         "教學畫面",
-        "強制更新卡片(調到之前的日期，顯示應為之後的)",
         "歷史圖表",
         "統計圖表",
         "隨後備註功能",
+        "~強制更新卡片(調到之前的日期，顯示應為之後的)",
         "~Setting Localized",
         "~計算機",
         "~Card Name Color",

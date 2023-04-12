@@ -66,4 +66,7 @@ protocol UserSettingRepository {
     
     func GetLocale() -> Locale
     func SetLocale(_ :Locale)
+    
+    func GetPremium() -> Bool
+    func SetPremium(_ value: Bool)
 }

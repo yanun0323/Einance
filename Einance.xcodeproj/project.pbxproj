@@ -22,6 +22,7 @@
 		A890D0F52942E03100D7267B /* SystemInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A890D0F42942E03100D7267B /* SystemInteractor.swift */; };
 		A8A403A629E10F17007A1DD0 /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8A403A529E10F17007A1DD0 /* Utility.swift */; };
 		A8A403AA29E116A5007A1DD0 /* General.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8A403A929E116A5007A1DD0 /* General.swift */; };
+		A8A403AC29E4FA3E007A1DD0 /* StatisticPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8A403AB29E4FA3E007A1DD0 /* StatisticPage.swift */; };
 		A8A75AE9291CCCBC00EF9D8A /* EinanceApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8A75AE8291CCCBC00EF9D8A /* EinanceApp.swift */; };
 		A8A75AEB291CCCBC00EF9D8A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8A75AEA291CCCBC00EF9D8A /* ContentView.swift */; };
 		A8A75AED291CCCBD00EF9D8A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A8A75AEC291CCCBD00EF9D8A /* Assets.xcassets */; };
@@ -80,6 +81,7 @@
 		A890D0F42942E03100D7267B /* SystemInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemInteractor.swift; sourceTree = "<group>"; };
 		A8A403A529E10F17007A1DD0 /* Utility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utility.swift; sourceTree = "<group>"; };
 		A8A403A929E116A5007A1DD0 /* General.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = General.swift; sourceTree = "<group>"; };
+		A8A403AB29E4FA3E007A1DD0 /* StatisticPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticPage.swift; sourceTree = "<group>"; };
 		A8A75AE5291CCCBC00EF9D8A /* Einance.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Einance.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A8A75AE8291CCCBC00EF9D8A /* EinanceApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EinanceApp.swift; sourceTree = "<group>"; };
 		A8A75AEA291CCCBC00EF9D8A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -298,6 +300,7 @@
 			isa = PBXGroup;
 			children = (
 				A8B09032291D73F3008D9B33 /* BudgetPage.swift */,
+				A8A403AB29E4FA3E007A1DD0 /* StatisticPage.swift */,
 				A8FF946F2922BCFB00C628BD /* Dashboard.swift */,
 				A8B09028291D6A01008D9B33 /* CardRect.swift */,
 				F62C884C2928C2960059F914 /* HomeHeader.swift */,
@@ -419,6 +422,7 @@
 				A8A403A629E10F17007A1DD0 /* Utility.swift in Sources */,
 				A81F0D0929D4DD6800B81476 /* Tag.swift in Sources */,
 				A8F1CE2529D6B22C008DD113 /* CalculatorKeyboard.swift in Sources */,
+				A8A403AC29E4FA3E007A1DD0 /* StatisticPage.swift in Sources */,
 				A8F43BFC2951600400C89EDE /* CreateCardPanel.swift in Sources */,
 				A8C0A101291D88B800AD5E97 /* DataDao.swift in Sources */,
 				A8A75B03291CCE4300EF9D8A /* DependencyInjector.swift in Sources */,

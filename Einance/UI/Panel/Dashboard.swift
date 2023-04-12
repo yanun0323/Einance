@@ -55,6 +55,7 @@ struct Dashboard: View {
             if isPreview { return }
             rightCategory = $0
         }
+        .backgroundColor(.transparent)
     }
     
     @ViewBuilder

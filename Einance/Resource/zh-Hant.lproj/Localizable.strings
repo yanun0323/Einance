@@ -53,6 +53,11 @@
 "setting.danger_zone.force_update_budget" = "強制更新卡片";
 "setting.danger_zone.force_update_budget.check" = "確定要強制更新卡片到下個月?";
 
+/* statistic view label*/
+"statistic.date_start.label" = "開始日";
+"statistic.date_end.label" = "到期日";
+
+
 /* create card */
 "panel.card.create.name.label" = "名稱";
 "panel.card.create.name.label.placeholder" = "新卡片";

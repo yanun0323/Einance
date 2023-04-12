@@ -184,7 +184,7 @@ struct SettingView: View {
             Text("setting.card_style.label")
                 .foregroundColor(.primary25)
                 .font(.caption)
-                .padding(.leading)
+                .padding(.leading, 5)
             CardRect(budget: budget, card: current, isPreview: true, previewColor: color)
                 .frame(
                     width: widthWithPadding(),
@@ -203,7 +203,7 @@ struct SettingView: View {
     
     @ViewBuilder
     private func appearanceBlock() -> some View {
-        settingSection("setting.appearance") {
+        settingSection("setting.appearance.label") {
             HStack(spacing: 0) {
                 Spacer()
                 ButtonCustom(width: 80, height: 200) {

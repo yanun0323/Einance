@@ -53,6 +53,10 @@
 "setting.danger_zone.force_update_budget" = "Force Update Card";
 "setting.danger_zone.force_update_budget.check" = "Are you sure to force update card?";
 
+/* statistic view label*/
+"statistic.date_start.label" = "Start Date";
+"statistic.date_end.label" = "Due Date";
+
 /* create card */
 "panel.card.create.name.label" = "Name";
 "panel.card.create.name.label.placeholder" = "New Card";

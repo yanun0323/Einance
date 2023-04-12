@@ -14,7 +14,6 @@ extension Budget {
     static let updatedAt = Expression<Date>("updated_at")
     
     static func migrate(_ conn: Connection) throws {
-        try conn.run(Table().addColumn(updatedAt, defaultValue: .now))
         try conn.run(Table().create { t in
             t.column(id, primaryKey: .autoincrement)
             t.column(startAt, unique: true)
@@ -47,7 +46,6 @@ extension Card {
     static let updatedAt = Expression<Date>("updated_at")
     
     static func migrate(_ conn: Connection) throws {
-        try conn.run(Table().addColumn(updatedAt, defaultValue: .now))
         try conn.run(Table().create(ifNotExists: true) { t in
             t.column(id, primaryKey: .autoincrement)
             t.column(chainID)

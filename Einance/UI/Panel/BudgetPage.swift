@@ -32,6 +32,7 @@ struct BudgetPage: View {
     private func dashboardView() -> some View {
         Dashboard(budget: budget, current: current)
             .padding(.horizontal)
+            .padding(.vertical, 5)
             .onTapGesture {
                 container.interactor.system.PushRouterView(.Statistic(budget))
             }
@@ -79,6 +80,7 @@ struct BudgetPage: View {
             HStack {
                 Text("view.record.row.title.fixed")
                 Block(height: 1, color: .section)
+                    .padding(.horizontal)
                 Text("\(current.pinnedCost.description) $")
             }
             .foregroundColor(.gray)
@@ -86,6 +88,7 @@ struct BudgetPage: View {
             .navigationBarHidden(true)
             .listRowSeparator(.hidden)
             .listRowBackground(Color.clear)
+            .padding(.vertical, 10)
             
             ForEach(current.pinnedArray) { record in
                 RecordRow(budget: budget, card: current, record: record)
@@ -102,10 +105,12 @@ struct BudgetPage: View {
             HStack {
                 Text(date.String("MM/dd EEEE", locale))
                 Block(height: 1, color: .section)
+                    .padding(.horizontal)
                 Text("\(current.dateDict[date]!.cost.description) $")
             }
             .foregroundColor(.gray)
             .font(.caption)
+            .padding(.vertical, 10)
             ForEach(current.dateDict[date]!.records, id: \.id) { record in
                 RecordRow(budget: budget, card: current, record: record)
             }

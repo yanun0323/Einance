@@ -92,9 +92,15 @@ extension UserSettingDao where Self: UserSettingRepository {
         UserDefaults.locale = l.Int()
     }
     
-    // MARK: - Private Function
+    func GetPremium() -> Bool {
+        return UserDefaults.premiumUser ?? false
+    }
+    
+    func SetPremium(_ value: Bool) {
+        UserDefaults.premiumUser =  value
+    }
+    
 }
-
 extension Locale {
     public init(data: Int?) {
         switch data {
@@ -147,6 +153,9 @@ extension UserDefaults {
     
     @UserDefault(key: "Locale")
     static var locale: Int?
+    
+    @UserDefault(key: "PremiumUser")
+    static var premiumUser: Bool?
     
     /**
      User stored appearance
