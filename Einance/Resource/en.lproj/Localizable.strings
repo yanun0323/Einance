@@ -16,6 +16,7 @@
 "view.header.history" = "History";
 "view.header.book.order" = "Cards Order";
 "view.header.statistic" = "Statistic";
+"view.header.analysis" = "Analysis";
 "view.header.create.card" = "Create Card";
 "view.header.create.record" = "Create Record";
 "view.header.edit.card" = "Edit Card";
@@ -54,8 +55,10 @@
 "setting.danger_zone.force_update_budget.check" = "Are you sure to force update card?";
 
 /* statistic view label*/
+"statistic.overview.lable" = "Overview";
 "statistic.date_start.label" = "Start Date";
 "statistic.date_end.label" = "Due Date";
+"statistic.card_analysis.label" = "Card Analysis";
 
 /* create card */
 "panel.card.create.name.label" = "Name";

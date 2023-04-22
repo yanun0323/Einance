@@ -62,6 +62,9 @@ final class Card: ObservableObject {
 // MARK: Identifiable
 extension Card: Identifiable {}
 
+// MARK: Categoriable
+extension Card: Categoriable {}
+
 // MARK: Hashable
 extension Card: Hashable {
     static func == (lhs: Card, rhs: Card) -> Bool {

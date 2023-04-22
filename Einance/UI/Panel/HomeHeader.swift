@@ -10,7 +10,7 @@ struct HomeHeader: View {
     var body: some View {
         HStack {
             settingButton()
-            historyButton()
+            analysisButton()
             Spacer()
             #if DEBUG
             debugButton()
@@ -33,11 +33,11 @@ struct HomeHeader: View {
     }
     
     @ViewBuilder
-    private func historyButton() -> some View {
+    private func analysisButton() -> some View {
         ButtonCustom(width: buttonSize, height: buttonSize) {
-            container.interactor.system.PushRouterView(.History)
+            container.interactor.system.PushRouterView(.Analysis)
         } content: {
-            Image(systemName: "doc.text.magnifyingglass")
+            Image(systemName: "chart.xyaxis.line")
                 .font(.title2)
         }
     }

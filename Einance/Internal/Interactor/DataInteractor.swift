@@ -37,7 +37,7 @@ extension DataInteractor {
     }
     
     func UpdateMonthlyBudget(_ budget: Budget, force: Bool = false) -> Bool {
-        DoTx("update monthly budget") {
+        return DoTx("update monthly budget") {
             let nextStartDate = Interactor.CalculateNextDate(budget.startAt, days: repo.GetBaseDateNumber())
             var archivedDate = nextStartDate.AddDay(-1)
             if force {
@@ -62,7 +62,7 @@ extension DataInteractor {
             
             PublishCurrentBudget()
             return true
-        }!
+        } ?? false
     }
     
     // MARK: - Current Budget
@@ -99,7 +99,7 @@ extension DataInteractor {
     func ListBudgets() -> [Budget] {
         return DoTx("list budgets") {
             return try repo.ListBudgets()
-        }!
+        } ?? []
     }
     
     
@@ -133,6 +133,24 @@ extension DataInteractor {
     
     // MARK: - Card
     
+    func ListCards(by chainID: UUID) -> [Card] {
+        return DoTx("list cards by chainID") {
+            return try repo.ListCards(chainID)
+        } ?? []
+    }
+    
+    func ListChainableCards() -> [Card] {
+        return DoTx("list chainable cards") {
+            return try repo.ListChainableCards()
+        } ?? []
+    }
+    
+    func ListChainableCards(by budget: Budget) -> [Card] {
+        return DoTx("list chainable cards with budget ID") {
+            return try repo.ListChainableCards(budget)
+        } ?? []
+    }
+    
     func GetCard(_ id: Int64) -> Card? {
         return DoTx("get card") {
             return try repo.GetCard(id)
@@ -142,7 +160,7 @@ extension DataInteractor {
     func GetArchivedCards() -> [Card] {
         return DoTx("get archived card") {
             return try repo.ListCards(-1)
-        }!
+        } ?? []
     }
     
     /**
@@ -255,12 +273,18 @@ extension DataInteractor {
     
     // MARK: - Record
     
-    func listTodayRecords() -> [Record] {
+    private func listTodayRecords() -> [Record] {
         return DoTx("list today's records") {
             guard let date = Date(from: Date.now.String("yyyyMMdd"), "yyyyMMdd") else {
                 throw Err.transDateFailed
             }
             return try repo.ListRecords(after: date)
+        } ?? []
+    }
+    
+    func ListRecords(by cardID: Int64) -> [Record] {
+        return DoTx("list records by cardID") {
+            return try repo.ListRecords(cardID)
         } ?? []
     }
     
@@ -368,7 +392,7 @@ extension DataInteractor {
     
     func ListTags(_ chainID: UUID, _ type: TagType, _ updatedAt: Int) -> [Tag] {
         return DoTx("list tags") {
-            return try repo.ListTags(chainID, type, updatedAt, 4 * .hour, 20)
+            return try repo.ListTags(chainID, type, updatedAt, Int(4 * .hour), 20)
         } ?? []
     }
     

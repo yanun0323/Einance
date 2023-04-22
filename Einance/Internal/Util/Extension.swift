@@ -14,24 +14,65 @@ extension View {
         }
     }
     
+    func barSheet<Content>(isPresented: Binding<Bool>, includeHalf half: Bool = false, onDismiss dismiss: (() -> Void)? = nil,  content view: @escaping () -> Content) -> some View where Content: View {
+        self
+            .sheet(isPresented: isPresented, onDismiss: dismiss) {
+                view()
+                    .padding(.top)
+                    .presentationDetents(half ? [.large, .medium] : [.large])
+                    .presentationDragIndicator(.visible)
+            }
+    }
+    
     func modifyPanelBackground() -> some View {
         self
             .monospacedDigit()
-            .backgroundColor(.backgroundButton, ignoresSafeAreaEdges: .bottom)
-            .clipShape(RoundedRectangle(cornerRadius: Setting.panelCornerRadius))
-            .shadow(radius: 5)
+//            .backgroundColor(.backgroundButton, ignoresSafeAreaEdges: .bottom)
+//            .clipShape(RoundedRectangle(cornerRadius: Setting.panelCornerRadius))
+//            .shadow(radius: 5)
+            .padding()
     }
     
     func modifyRouterBackground() -> some View {
         self
-            .padding(.horizontal)
-            .backgroundColor(.background, ignoresSafeAreaEdges: .bottom)
+            .monospacedDigit()
+            .padding()
+            .backgroundColor(.clear, ignoresSafeAreaEdges: .bottom)
     }
     
     func backgroundColor(_ color: Color, ignoresSafeAreaEdges edges: Edge.Set = []) -> some View {
         self.background(color, ignoresSafeAreaEdges: edges)
     }
 }
+
+#if DEBUG
+struct ExtensionView: View {
+    @State var showSheet: Bool = true
+    @State var trigger: Bool = false
+    var body: some View {
+        Button {
+            showSheet = true
+        } label: {
+            Text("SHOW: \(trigger ? "A" : "B")")
+        }
+        .barSheet(isPresented: $showSheet) {
+            trigger.toggle()
+        } content: {
+            Button {
+                showSheet = false
+            } label: {
+                Text("CLOSE")
+            }
+        }
+    }
+}
+
+struct Extension_Previews: PreviewProvider {
+    static var previews: some View {
+        ExtensionView()
+    }
+}
+#endif
 
 extension Animation {
     static var shoot: Animation = .easeInOut(duration: 0.1)

@@ -15,10 +15,9 @@ struct CreateCardPanel: View {
     @ObservedObject var budget: Budget
     
     var body: some View {
-        VStack(spacing: 0) {
+        ZStack {
             createCardBlock()
-                .padding([.horizontal, .top])
-            Spacer()
+                .ignoresSafeArea(.keyboard)
             externalKeyboardPanel()
         }
         .onAppeared { focus = .input }
@@ -26,28 +25,28 @@ struct CreateCardPanel: View {
     
     @ViewBuilder
     private func externalKeyboardPanel() -> some View {
-        ExternalKeyboardPanel(time: .constant(.zero), text: $nameInput, number: $amountInput) {
-            focus = focus != .input ? .input : .number
+        VStack {
+            Spacer()
+            ExternalKeyboardPanel(text: $nameInput, number: $amountInput, focus: _focus) {
+                focus = focus != .input ? .input : .number
+            }
         }
     }
     
     @ViewBuilder
     private func createCardBlock() -> some View {
-        VStack {
+        VStack(spacing: 20) {
             titleBlock()
-                .padding()
-            VStack(spacing: 15) {
-                cardNameBlock()
-                cardAmountBlock()
-                HStack {
-                    cardDisplayBlock()
-                    Spacer()
-                    cardFixedBlock()
-                }
-                cardColorBlock()
+            cardNameBlock()
+            cardAmountBlock()
+            HStack {
+                cardDisplayBlock()
+                Spacer()
+                cardFixedBlock()
             }
-            .padding(.horizontal)
+            cardColorBlock()
             confirmButton()
+            Spacer()
         }
         .modifyPanelBackground()
     }
@@ -55,10 +54,10 @@ struct CreateCardPanel: View {
     @ViewBuilder
     private func titleBlock() -> some View {
         HStack {
+            Spacer()
             Text("view.header.create.card")
                 .font(Setting.panelTitleFont)
             Spacer()
-            ActionPanelCloseButton()
         }
     }
     

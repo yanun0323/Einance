@@ -7,6 +7,8 @@ struct ContentView: View {
     @State private var actionRouter: AppState.ActionRouter = .Empty
     @State private var isRouterViewEmpty: Bool = true
     @State private var isActionViewEmpty: Bool = true
+    @State private var showRouterSheet: Bool = false
+    @State private var showActionSheet: Bool = false
     @State private var isKeyboardActive = false
     @State private var isPickerActive = false
     @State private var isUpdating = false
@@ -28,6 +30,16 @@ struct ContentView: View {
                     WelcomeView()
                 } else {
                     budgetExistView()
+                        .barSheet(isPresented: $showActionSheet) {
+                            container.interactor.system.ClearActionView()
+                        } content: {
+                            actionView()
+                        }
+                        .barSheet(isPresented: $showRouterSheet) {
+                            container.interactor.system.ClearRouterView()
+                        } content: {
+                            routerView()
+                        }
                 }
             }
         }
@@ -49,6 +61,8 @@ struct ContentView: View {
         }
         .onReceived(container.appstate.monthlyCheckPublisher) { _ = container.interactor.data.UpdateMonthlyBudget(budget) }
         .onChanged(of: budget.book.count) { refreshCurrentCard() }
+        .onChanged(of: isActionViewEmpty) { showActionSheet = !$0 }
+        .onChanged(of: isRouterViewEmpty) { showRouterSheet = !$0 }
         .onAppeared { handleOnAppear() }
         .animation(.quick, value: isActionViewEmpty)
     }
@@ -66,8 +80,8 @@ struct ContentView: View {
                 StatisticView(budget: budget)
             case let .Debug(budget):
                 DebugView(budget: budget)
-            case .History:
-                HistoryView()
+            case .Analysis:
+                AnalysisView()
         }
     }
     
@@ -92,14 +106,15 @@ struct ContentView: View {
         ZStack {
             HomeView(budget: budget, current: current, selected: $current)
                 .disabled(!isActionViewEmpty)
-            ZStack {
-                routerView()
-                if !isActionViewEmpty {
-                    coverViewLayer()
-                        .ignoresSafeArea(.all)
-                    actionViewLayer()
-                }
-            }
+//            ZStack {
+//                routerView()
+
+//                if !isActionViewEmpty {
+//                    coverViewLayer()
+//                        .ignoresSafeArea(.all)
+//                    actionViewLayer()
+//                }
+//            }
         }
     }
     

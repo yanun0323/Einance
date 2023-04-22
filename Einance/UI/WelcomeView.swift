@@ -141,22 +141,14 @@ struct WelcomeView: View {
             
             VStack {
                 ButtonCustom(width: 200, height: 50, color: color, radius: 10, shadow: 3) {
-                    withAnimation(.quick) {
-//                        if creating { return }
-//                        creating = true
-                    }
+                    handleComplete(true)
                 } content: {
                     Text("welcome.button.tutorial.confirm")
                         .foregroundColor(.white)
                 }
                 
                 ButtonCustom(width: 200, height: 50, color: .gray, radius: 10, shadow: 3) {
-                    withAnimation(.quick) {
-                        if creating { return }
-                        creating = true
-                        container.interactor.setting.SetBaseDateNumber(baseDateNumber)
-                        container.interactor.data.CreateFirstBudget()
-                    }
+                    handleComplete(false)
                 } content: {
                     Text("welcome.button.tutorial.denine")
                         .foregroundColor(.white)
@@ -167,10 +159,27 @@ struct WelcomeView: View {
     }
 }
 
+extension WelcomeView {
+    
+    private func handleComplete(_ isTutorial: Bool) {
+        withAnimation(.quick) {
+            if creating { return }
+            container.interactor.setting.SetAllTutorial(isTutorial)
+            creating = true
+            container.interactor.setting.SetBaseDateNumber(baseDateNumber)
+            container.interactor.data.CreateFirstBudget()
+        }
+    }
+    
+}
+
 #if DEBUG
 struct WelcomeView_Previews: PreviewProvider {
     static var previews: some View {
         WelcomeView()
+            .inject(DIContainer.preview)
+            .preferredColorScheme(.dark)
+            .environment(\.locale, .US)
     }
 }
 #endif

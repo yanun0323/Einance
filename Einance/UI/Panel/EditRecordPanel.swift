@@ -32,24 +32,21 @@ struct EditRecordPanel: View {
     }
     
     var body: some View {
-        VStack(spacing: 0) {
+        ZStack {
             editRecordBlock()
-                .padding([.horizontal, .top])
-            
-            Spacer()
-            
+                .ignoresSafeArea(.keyboard)
             externalKeyboardPanel()
         }
         .sheet(isPresented: $showDatePicker) {
+            focus = .number
+        } content: {
             DatePickerCustom(datePicked: $dateInput, start: dateStart, end: dateEnd, style: .graphical) {
                 container.interactor.system.PushPickerState(isOn: false)
-                focus = .number
             }
         }
         .onReceived(container.appstate.keyboardPublisher) {
             if !$0 { return }
             container.interactor.system.PushPickerState(isOn: false)
-            
         }
         .onReceived(container.appstate.pickerPublisher) {
             if $0 { return }
@@ -60,29 +57,28 @@ struct EditRecordPanel: View {
     
     @ViewBuilder
     private func externalKeyboardPanel() -> some View {
-        ExternalKeyboardPanel(chainID: card.chainID, time: $dateInput, text: $memoInput, number: $costInput, focus: _focus) {
-            focus = focus != .number ? .number : .input
+        VStack {
+            Spacer()
+            ExternalKeyboardPanel(card: $card, time: $dateInput, text: $memoInput, number: $costInput, focus: _focus) {
+                focus = focus != .number ? .number : .input
+            }
         }
     }
     
     @ViewBuilder
     private func editRecordBlock() -> some View {
-        VStack {
+        VStack(spacing: 20) {
             titleBlock()
-                .padding()
-            VStack(spacing: 10) {
-                recordCostBlock()
-                recordMemoBlock()
-                recordDateBlock()
-                HStack {
-                    targetCardBlock()
-                    recordFixedBlock()
-                }
+            recordCostBlock()
+            recordMemoBlock()
+            recordDateBlock()
+            HStack {
+                targetCardBlock()
+                recordFixedBlock()
             }
-            .padding(.horizontal)
-            
             confirmButton()
                 .disabled(invalid)
+            Spacer()
         }
         .modifyPanelBackground()
     }
@@ -90,10 +86,10 @@ struct EditRecordPanel: View {
     @ViewBuilder
     private func titleBlock() -> some View {
         HStack {
+            Spacer()
             Text("view.header.edit.record")
                 .font(Setting.panelTitleFont)
             Spacer()
-            ActionPanelCloseButton()
         }
     }
     
@@ -158,18 +154,20 @@ struct EditRecordPanel: View {
             Text("panel.record.create.date.label")
                 .font(Setting.cardPanelLabelFont)
             Spacer()
-            Button {
-                container.interactor.system.DismissKeyboard()
-                container.interactor.system.PushPickerState(isOn: true)
-                withAnimation(.quick) {
-                    showDatePicker = true
-                }
-            } label: {
-                Text(dateInput.String("yyyy.MM.dd hh:mm"))
-                    .monospacedDigit()
-                    .kerning(1)
-                    .foregroundColor(card.color)
-            }
+            DatePicker("", selection: $dateInput)
+                .datePickerStyle(.compact)
+//            Button {
+//                container.interactor.system.DismissKeyboard()
+//                container.interactor.system.PushPickerState(isOn: true)
+//                withAnimation(.quick) {
+//                    showDatePicker = true
+//                }
+//            } label: {
+//                Text(dateInput.String("yyyy.MM.dd hh:mm"))
+//                    .monospacedDigit()
+//                    .kerning(1)
+//                    .foregroundColor(card.color)
+//            }
         }
     }
     

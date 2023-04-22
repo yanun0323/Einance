@@ -4,8 +4,8 @@ import UIComponent
 struct BudgetPage: View {
     @EnvironmentObject private var container: DIContainer
     @Environment(\.locale) private var locale: Locale
-    @State private var aboveBudgetCategory: BudgetCategory = .Cost
-    @State private var belowBudgetCategory: BudgetCategory = .Amount
+    @State private var aboveBudgetCategory: FinanceCategory = .cost
+    @State private var belowBudgetCategory: FinanceCategory = .amount
     
     @ObservedObject var budget: Budget
     @ObservedObject var current: Card
@@ -31,8 +31,7 @@ struct BudgetPage: View {
     @ViewBuilder
     private func dashboardView() -> some View {
         Dashboard(budget: budget, current: current)
-            .padding(.horizontal)
-            .padding(.vertical, 5)
+            .padding()
             .onTapGesture {
                 container.interactor.system.PushRouterView(.Statistic(budget))
             }
@@ -88,7 +87,7 @@ struct BudgetPage: View {
             .navigationBarHidden(true)
             .listRowSeparator(.hidden)
             .listRowBackground(Color.clear)
-            .padding(.vertical, 10)
+            .padding(.top, 10)
             
             ForEach(current.pinnedArray) { record in
                 RecordRow(budget: budget, card: current, record: record)
@@ -110,7 +109,7 @@ struct BudgetPage: View {
             }
             .foregroundColor(.gray)
             .font(.caption)
-            .padding(.vertical, 10)
+            .padding(.top, 10)
             ForEach(current.dateDict[date]!.records, id: \.id) { record in
                 RecordRow(budget: budget, card: current, record: record)
             }

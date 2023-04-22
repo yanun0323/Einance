@@ -16,6 +16,7 @@
 "view.header.history" = "歷史";
 "view.header.book.order" = "調整卡片順序";
 "view.header.statistic" = "統計";
+"view.header.analysis" = "分析";
 "view.header.create.card" = "新增預算卡片";
 "view.header.create.record" = "新增花費";
 "view.header.edit.card" = "編輯預算卡片";
@@ -54,8 +55,11 @@
 "setting.danger_zone.force_update_budget.check" = "確定要強制更新卡片到下個月?";
 
 /* statistic view label*/
+"statistic.overview.lable" = "總覽";
 "statistic.date_start.label" = "開始日";
 "statistic.date_end.label" = "到期日";
+"statistic.card_analysis.label" = "卡片分析";
+
 
 
 /* create card */

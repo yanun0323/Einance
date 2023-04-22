@@ -3,12 +3,13 @@ import UIComponent
 import Charts
 
 struct StatisticView: View {
+    @EnvironmentObject private var container: DIContainer
     @ObservedObject var budget: Budget
     
     var body: some View {
         VStack{
             ViewHeader(title: "view.header.statistic")
-            StatisticPage(budget: budget)
+            StatisticPage(injecter: container, budget: budget)
         }
         .modifyRouterBackground()
         .transition(.scale(scale: 0.95, anchor: .top).combined(with: .opacity))

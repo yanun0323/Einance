@@ -7,42 +7,60 @@ enum InputType {
 
 struct ExternalKeyboardPanel: View {
     @EnvironmentObject private var container: DIContainer
-    @State var chainID: UUID? = nil
+    @Binding var card: Card
     @Binding var time: Date
     @Binding var text: String
     @Binding var number: String
     @FocusState var focus: FocusField?
-    @State var action: () -> Void
-    
-    #if DEBUG
-    var show: Bool = false
-    #endif
+    @State var action: () -> Void = {}
     
     @State var textTags: [Tag] = []
     @State var numTags: [Tag] = []
     
+    let switchButtonSize: CGFloat = 60
+    
+    init(card: Binding<Card>, time: Binding<Date>, text: Binding<String>, number: Binding<String>, focus: FocusState<FocusField?>, action: @escaping () -> Void) {
+        self._card = card
+        self._time = time
+        self._text = text
+        self._number = number
+        self._focus = focus
+        self.action = action
+    }
+    
+    init(text: Binding<String>, number: Binding<String>, focus: FocusState<FocusField?>, action: @escaping () -> Void) {
+        self._card = .constant(.empty)
+        self._time = .constant(.zero)
+        self._text = text
+        self._number = number
+        self._focus = focus
+        self.action = action
+    }
+    
+    
     var body: some View {
-        VStack(spacing: 0) {
-            swithInputView()
-                .padding(.horizontal, 10)
-                .padding(.bottom, showRow() ? 0 : 10)
-            if !chainID.isNil {
-                scrollRow()
-                    .padding(.vertical, 10)
-                    .backgroundColor(.transparent)
+        ZStack {
+            if !card.isZero {
+                scrollRow(tags: getTags())
+                    .padding(.trailing, switchButtonSize + 30)
+            }
+            if focus == .input || focus == .number {
+                swithInputView()
+                    .padding(.trailing)
             }
         }
+        .padding(.vertical, 10)
+        .backgroundColor(.transparent)
         .onAppear { handleRefreshTags() }
         .onChange(of: time) { _ in handleRefreshTags() }
-        .animation(.none, value: focus)
     }
     
     @ViewBuilder
     private func swithInputView() -> some View {
         HStack {
             Spacer()
-            ButtonCustom(width: 60, height: 60, color: .backgroundButton, radius: 30, shadow: 2, action: action) {
-                Image(systemName: "arrow.right.to.line.compact")
+            ButtonCustom(width: switchButtonSize, height: switchButtonSize, color: .backgroundButton, radius: switchButtonSize/2, action: action) {
+                Image(systemName: "arrow.left.arrow.right")
                     .foregroundColor(.primary75)
                     .font(.title)
                     .fontWeight(.light)
@@ -51,42 +69,12 @@ struct ExternalKeyboardPanel: View {
     }
     
     @ViewBuilder
-    private func scrollRow() -> some View {
-        #if DEBUG
-        if show {
-            textScrollRow()
-        }
-        #endif
-        switch focus {
-            case .input:
-                textScrollRow()
-            case .number:
-                numScrollRow()
-            default:
-                EmptyView()
-        }
-    }
-    
-    @ViewBuilder
-    private func textScrollRow() -> some View {
-        if textTags.count != 0 {
+    private func scrollRow(tags elem: [Tag]) -> some View {
+        if let t = getType(), elem.count != 0 {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 0) {
-                    ForEach(textTags, id: \.self) { t in
-                        scrollButton(.text, t.value)
-                    }
-                }
-            }
-        }
-    }
-    
-    @ViewBuilder
-    private func numScrollRow() -> some View {
-        if numTags.count != 0 {
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 0) {
-                    ForEach(numTags, id: \.self) { t in
-                        scrollButton(.number, t.value)
+                    ForEach(elem, id: \.self) { e in
+                        scrollButton(t, e.value)
                     }
                 }
             }
@@ -118,29 +106,39 @@ struct ExternalKeyboardPanel: View {
 }
 
 extension ExternalKeyboardPanel {
-    func showRow() -> Bool {
-        if chainID.isNil { return false }
+    private func getTags() -> [Tag] {
         switch focus {
-            case .input:
-                return textTags.count != 0
-            case .number:
-                return numTags.count != 0
-            default:
-                return false
-        }
+        case .input:
+            return textTags
+        case .number:
+            return numTags
+        default:
+            return []
+    }
     }
     
-    func handleRefreshTags() {
-        guard let cID = chainID else { return }
-        textTags = container.interactor.data.ListTags(cID, .text, time.in24H)
-        numTags = container.interactor.data.ListTags(cID, .number, time.in24H)
+    private func handleRefreshTags() {
+        if card.isZero { return }
+        textTags = container.interactor.data.ListTags(card.chainID, .text, time.in24H)
+        numTags = container.interactor.data.ListTags(card.chainID, .number, time.in24H)
+    }
+    
+    private func getType() -> InputType? {
+        switch focus {
+            case .input:
+                return .text
+            case .number:
+                return .number
+            default:
+                return nil
+        }
     }
 }
 
 #if DEBUG
 struct ExternalKeyboardPanel_Previews: PreviewProvider {
     static var previews: some View {
-        ExternalKeyboardPanel(chainID: .init(), time: .constant(.now), text: .constant(""), number: .constant(""), action: {}, show: true)
+        ExternalKeyboardPanel(card: .constant(.preview), time: .constant(.now), text: .constant(""), number: .constant(""), focus: .init(), action: {})
             .preferredColorScheme(.dark)
             .inject(DIContainer.preview)
     }

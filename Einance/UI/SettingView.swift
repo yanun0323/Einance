@@ -3,8 +3,8 @@ import UIComponent
 
 struct SettingView: View {
     @EnvironmentObject private var container: DIContainer
-    @State private var aboveBudgetCategory: BudgetCategory = .Cost
-    @State private var belowBudgetCategory: BudgetCategory = .Amount
+    @State private var aboveBudgetCategory: FinanceCategory = .cost
+    @State private var belowBudgetCategory: FinanceCategory = .amount
     @State private var appearance: ColorScheme? = nil
     @State private var locale: Locale
     @State private var color: Color
@@ -37,7 +37,7 @@ struct SettingView: View {
     }
     
     var body: some View {
-        VStack(spacing: 0) {
+        VStack(spacing: 30) {
             ViewHeader(title: "view.header.setting")
             ScrollView(.vertical, showsIndicators: false) {
                 VStack(spacing: 30) {
@@ -55,14 +55,16 @@ struct SettingView: View {
         .modifyRouterBackground()
         .animation(.medium, value: dateNumberEdit)
         .transition(.scale(scale: 0.95, anchor: .topLeading).combined(with: .opacity))
-        .alert("setting.update_date.check", isPresented: $showDateNumberAlert) {
+        .confirmationDialog("setting.update_date.check", isPresented: $showDateNumberAlert) {
             dateNumberAlertButton()
         } message: {
-            Text("setting.update_date.next")+Text(" ")+Text(calculatedNextDate.String("yyyy.MM.dd"))
+            Text("setting.update_date.check")
                 .kerning(1)
         }
-        .alert(dangerAlertTitle, isPresented: $showDangerAlert) {
+        .confirmationDialog(dangerAlertTitle, isPresented: $showDangerAlert) {
             Button("global.confirm", role: .destructive, action: dangerAction)
+        } message: {
+            Text(dangerAlertTitle)
         }
         .alert("setting.update_date.udpated", isPresented: $forceUpdateFailed) {}
         .onChanged(of: locale) { container.interactor.setting.SetLocale($0) }

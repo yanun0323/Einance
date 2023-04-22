@@ -5,8 +5,8 @@ struct CardRect: View {
     @EnvironmentObject private var container: DIContainer
     @State private var showDeleteAlert = false
     @State private var showArchiveAlert = false
-    @State private var aboveCategory: BudgetCategory = .Cost
-    @State private var belowCategory: BudgetCategory = .Amount
+    @State private var aboveCategory: FinanceCategory = .cost
+    @State private var belowCategory: FinanceCategory = .amount
     
     @ObservedObject var budget: Budget
     @ObservedObject var card: Card
@@ -41,15 +41,15 @@ struct CardRect: View {
                     contextButtons()
                 }
             }
-            .alert("card.context.alert.delete.title", isPresented: $showDeleteAlert, actions: {
+            .confirmationDialog("card.context.alert.delete.title", isPresented: $showDeleteAlert, actions: {
                 alertDeleteButton()
             }, message: {
-                Text("card.context.alert.delete.content")
+                Text("card.context.alert.delete.title")
             })
-            .alert("card.context.alert.archive.title", isPresented: $showArchiveAlert, actions: {
+            .confirmationDialog("card.context.alert.archive.title", isPresented: $showArchiveAlert, actions: {
                 alertArchiveButton()
             }, message: {
-                Text("card.context.alert.archive.content")
+                Text("card.context.alert.archive.title")
             })
             .onAppear {
                 aboveCategory = container.interactor.setting.GetCardBudgetCategoryAbove()
@@ -98,7 +98,7 @@ struct CardRect: View {
     }
     
     @ViewBuilder
-    private func categoryValue(_ p: GeometryProxy, _ category: BudgetCategory, opacity: CGFloat) -> some View {
+    private func categoryValue(_ p: GeometryProxy, _ category: FinanceCategory, opacity: CGFloat) -> some View {
         Text(getCardMoney(category).description)
             .font(.system(size: size(p)*0.13, weight: .semibold, design: .rounded))
             .foregroundColor(card.fontColor)
@@ -106,17 +106,17 @@ struct CardRect: View {
     }
     
     @ViewBuilder
-    private func previewCategoryLabel(_ p: GeometryProxy, _ category: Binding<BudgetCategory>) -> some View {
+    private func previewCategoryLabel(_ p: GeometryProxy, _ category: Binding<FinanceCategory>) -> some View {
         Menu {
             Picker("", selection: category) {
-                ForEach(BudgetCategory.allCases) { c in
-                    if c != .None {
-                        Text(c.string).tag(c)
+                ForEach(FinanceCategory.allCases) { c in
+                    if c != .none {
+                        Text(c.label()).tag(c)
                     }
                 }
             }
         } label: {
-            Text(category.wrappedValue.string)
+            Text(category.wrappedValue.label())
                 .font(.system(size: size(p)*0.075, weight: .light))
                 .foregroundColor(previewColor)
                 .frame(width: 150, height: size(p)*0.1)
@@ -194,13 +194,13 @@ extension CardRect {
         return card.fontColor
     }
     
-    func getCardMoney(_ category: BudgetCategory) -> Decimal {
+    func getCardMoney(_ category: FinanceCategory) -> Decimal {
         switch category {
-        case .Balance:
+        case .balance:
             return card.balance
-        case .Amount:
+        case .amount:
             return card.amount
-        case .Cost:
+        case .cost:
             return card.cost
         default:
             return -1

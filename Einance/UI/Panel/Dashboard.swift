@@ -3,8 +3,8 @@ import UIComponent
 
 struct Dashboard: View {
     @EnvironmentObject private var container: DIContainer
-    @State private var leftCategory: BudgetCategory = .Amount
-    @State private var rightCategory: BudgetCategory = .Cost
+    @State private var leftCategory: FinanceCategory = .amount
+    @State private var rightCategory: FinanceCategory = .cost
     
     @ObservedObject var budget: Budget
     @ObservedObject var current: Card
@@ -19,9 +19,9 @@ struct Dashboard: View {
                     Spacer()
                     previewCategoryLabel($rightCategory)
                 } else {
-                    categoryLabel(leftCategory)
+                    categoryValue(leftCategory)
                     Spacer()
-                    categoryLabel(rightCategory)
+                    categoryValue(rightCategory)
                 }
             }
             
@@ -31,12 +31,6 @@ struct Dashboard: View {
                 barBlock()
                     .opacity(isPreview ? 0.5 : 1)
             }
-            HStack {
-                categoryValue(leftCategory)
-                Spacer()
-                categoryValue(rightCategory)
-            }
-            .opacity(isPreview ? 0.1 : 1)
         }
         .font(.system(size: 20, weight: .regular, design: .rounded))
         .kerning(isPreview ? 0 : 5)
@@ -62,24 +56,24 @@ struct Dashboard: View {
     private func barBlock() -> some View {
         GeometryReader { bounds in
             HStack(spacing: 0) {
-                if leftCategory == .Cost {
-                    costBar(bounds)
+                if leftCategory == .cost {
+                    bar(of: .cost, bounds)
                     Spacer()
-                } else if rightCategory == .Cost {
+                } else if rightCategory == .cost {
                     Spacer()
-                    costBar(bounds)
-                } else if leftCategory == .Balance {
-                    balanceBar(bounds)
+                    bar(of: .cost, bounds)
+                } else if leftCategory == .balance {
+                    bar(of: .balance, bounds)
                     Spacer()
                 } else {
                     Spacer()
-                    balanceBar(bounds)
+                    bar(of: .balance, bounds)
                 }
             }
         }
         .frame(height: 15)
-        .backgroundColor(.section.opacity(0.5))
-        .cornerRadius(5, antialiased: true)
+        .backgroundColor(.section.opacity(0.2))
+        .cornerRadius(7.5, antialiased: true)
     }
     
     @ViewBuilder
@@ -94,23 +88,23 @@ struct Dashboard: View {
 // MARK: - View Function
 extension Dashboard {
     @ViewBuilder
-    private func categoryLabel(_ c: BudgetCategory) -> some View {
+    private func categoryLabel(_ c: FinanceCategory) -> some View {
         categoryText(c)
             .opacity(isHighlight(c) ? 1 : 0.5)
     }
     
     @ViewBuilder
-    private func previewCategoryLabel(_ category: Binding<BudgetCategory>) -> some View {
+    private func previewCategoryLabel(_ category: Binding<FinanceCategory>) -> some View {
         Menu {
             Picker("", selection: category) {
-                ForEach(BudgetCategory.allCases) { value in
-                    if value != .None {
-                        Text(value.string).tag(value)
+                ForEach(FinanceCategory.allCases) { value in
+                    if value != .none {
+                        Text(value.label()).tag(value)
                     }
                 }
             }
         } label: {
-            Text(category.wrappedValue.string)
+            Text(category.wrappedValue.label())
                 .font(.system(size: 20, weight: .light))
                 .foregroundColor(previewColor)
                 .frame(width: 100, height: 20)
@@ -121,26 +115,25 @@ extension Dashboard {
     }
 
     @ViewBuilder
-    private func categoryText(_ category: BudgetCategory) -> some View {
+    private func categoryText(_ category: FinanceCategory) -> some View {
         switch category {
-            case .Amount:
+            case .amount:
                 Text("label.amount")
-            case .Balance:
+            case .balance:
                 Text("label.balance")
-            case .Cost:
+            case .cost:
                 Text("label.cost")
             default:
                 Text("label.cost")
         }
     }
     
-    @ViewBuilder
-    private func balanceBar(_ bounds: GeometryProxy) -> some View {
+    @ViewBuilder func bar(of type: FinanceCategory, _ bounds: GeometryProxy) -> some View {
         HStack(spacing: 0) {
             ForEach(budget.book) { card in
                 if !card.isForever {
                     Rectangle()
-                        .frame(width: abs(card.balance/budget.amount).ToCGFloat()*bounds.size.width)
+                        .frame(width: (type.value(card)/budget.amount).ToCGFloat()*bounds.size.width)
                         .foregroundColor(card.color)
                         .opacity(isCurrent(card.id) ? 1 : 0.25)
                 }
@@ -149,28 +142,14 @@ extension Dashboard {
     }
     
     @ViewBuilder
-    private func costBar(_ bounds: GeometryProxy) -> some View {
-        HStack(spacing: 0) {
-            ForEach(budget.book) { card in
-                if !card.isForever {
-                    Rectangle()
-                        .frame(width: (card.cost/budget.amount).ToCGFloat()*bounds.size.width)
-                        .foregroundColor(card.color)
-                        .opacity(isCurrent(card.id) ? 1 : 0.25)
-                }
-            }
-        }
-    }
-    
-    @ViewBuilder
-    private func categoryValue(_ category: BudgetCategory) -> some View {
+    private func categoryValue(_ category: FinanceCategory) -> some View {
         Group {
             switch category {
-                case .Amount:
+                case .amount:
                     Text(budget.amount.description)
-                case .Balance:
+                case .balance:
                     Text(budget.balance.description)
-                case .Cost:
+                case .cost:
                     Text(budget.cost.description)
                 default:
                     Text(budget.cost.description)
@@ -181,10 +160,10 @@ extension Dashboard {
 }
 
 extension Dashboard {
-    func isHighlight(_ ctg: BudgetCategory) -> Bool {
+    func isHighlight(_ ctg: FinanceCategory) -> Bool {
         if leftCategory == rightCategory { return true }
-        if ctg == .Cost { return true }
-        return ctg == .Balance && leftCategory != .Cost && rightCategory != .Cost
+        if ctg == .cost { return true }
+        return ctg == .balance && leftCategory != .cost && rightCategory != .cost
     }
     
     func isCurrent(_ id: Int64) -> Bool {

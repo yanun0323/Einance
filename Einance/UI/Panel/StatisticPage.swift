@@ -13,16 +13,20 @@ struct StatisticPage: View {
     private var amountSums: [Decimal]
     private var costSums: [Decimal]
     private var balanceSums: [Decimal]
+    private var showableData: Int
     
     
     @ObservedObject var budget: Budget
+    @State var chainedCards: [Card]
     
-    init(budget: Budget) {
+    init(injecter: DIContainer, budget: Budget) {
         self._budget = .init(wrappedValue: budget)
         self.width = System.device.screen.width/(buttonCount+1)
         self.amountSums = []
         self.costSums = []
         self.balanceSums = []
+        self.showableData = 0
+        self.chainedCards = injecter.interactor.data.ListChainableCards(by: budget)
         
         var amount: Decimal = 0
         var cost: Decimal = 0
@@ -33,6 +37,7 @@ struct StatisticPage: View {
                 amount += card.amount
                 cost += card.cost
                 balance += card.balance
+                showableData += 1
             }
             amountSums.append(amount)
             costSums.append(cost)
@@ -41,150 +46,144 @@ struct StatisticPage: View {
     }
     
     var body: some View {
-        VStack {
-            infoBlock()
-                .padding()
-            pieChartView()
-            Spacer()
-        }
-        .backgroundColor(.background)
-        .onAppear {
-            UIPageControl.appearance().currentPageIndicatorTintColor = UIColor.label
-            UIPageControl.appearance().pageIndicatorTintColor = .lightGray
-            UIPageControl.appearance().tintColor = .lightGray
-        }
-    }
-    
-    @ViewBuilder
-    private func viewCategoryRowButtons() -> some View {
-        ZStack(alignment: .leading) {
-            RoundedRectangle(cornerRadius: height*0.5)
-                .foregroundColor(.background)
-                .frame(width: width, height: height)
-                .offset(x: CGFloat(selectedType)*width)
-                .shadow(color: .black.opacity(0.2), radius: 3)
-            HStack(spacing: 0) {
-                rowButton(0, "chart.pie.fill")
-                rowButton(1, "chart.bar.xaxis")
+        NavigationStack {
+            ScrollView(.vertical, showsIndicators: false) {
+                LazyVStack(spacing: 30) {
+                    overviewBlock()
+                    pieBlock(for: .amount)
+                    pieBlock(for: .cost)
+                    cardBlock()
+                    Block(height: 1)
+                }
+                Spacer()
             }
         }
-        .padding(3)
-        .background {
-            RoundedRectangle(cornerRadius: height*0.6)
-                .foregroundColor(.section)
-        }
     }
     
     @ViewBuilder
-    private func infoBlock() -> some View {
-        HStack(spacing: 30) {
-            VStack(alignment: .leading)  {
-                Text("statistic.date_start.label")
-                Text("statistic.date_end.label")
-                    .padding(.bottom, 5)
-                Text("label.amount")
-                Text("label.cost")
-                Text("label.balance")
+    private func overviewBlock() -> some View {
+        let dataSpan = budget.archiveAt.isNil ? "\(budget.startAt.String("yyyy.MM.dd")) ~ " : "\(budget.startAt.String("yyyy.MM.dd")) ~ \(budget.archiveAt!.String("yyyy.MM.dd"))"
+        statisticSection("statistic.overview.lable", dataSpan) {
+            VStack(spacing: 25) {
+                financeInfo(.amount)
+                financeInfo(.cost)
+                financeInfo(.balance)
             }
-            .font(.system(.title3, weight: .medium))
-            VStack(alignment: .trailing) {
-                Text(budget.startAt.String("yyyy.MM.dd"))
-                Text(budget.startAt.String("yyyy.MM.dd"))
-                    .padding(.bottom, 5)
-                Text(budget.amount.description)
-                Text(budget.cost.description)
-                Text(budget.balance.description)
-            }
-            .font(.system(.title3))
-            .monospacedDigit()
+            .padding()
         }
     }
     
     @ViewBuilder
-    private func rowButton(_ index: Int, _ image: String) -> some View {
-        ButtonCustom(width: width, height: height) {
-            withAnimation(.quick) {
-                selectedType = index
-            }
-        } content: {
-            Image(systemName: image)
-                .font(.title3)
-                .foregroundColor(selectedType == index ? .primary.opacity(0.9) : .section)
+    private func financeInfo(_ t: FinanceCategory) -> some View {
+        VStack(spacing: 0) {
+            Text(t.label())
+                .font(.system(.headline, weight: .regular))
+                .foregroundColor(.primary25)
+            Text("$ \(t.value(budget).description)  ")
+                .font(.system(.title, weight: .medium))
+                .monospacedDigit()
         }
     }
     
     @ViewBuilder
-    private func pieChartView() -> some View {
-        TabView {
-            pie(for: .amount)
-            pie(for: .cost)
-            pie(for: .balance)
+    private func pieBlock(for t: FinanceCategory) -> some View {
+        statisticSection(t.label(), "$\(t.value(budget).description)") {
+            piePanel(for: t)
         }
-        .tabViewStyle(.page(indexDisplayMode: .always))
     }
     
     @ViewBuilder
-    private func pie(for t: DataType) -> some View {
+    private func piePanel(for t: FinanceCategory, radiusRatio: CGFloat = 0.08, lineWidthRatio: CGFloat = 0.04) -> some View {
         if let data = t.data(a: amountSums, c: costSums, b: balanceSums),
            let sum = data.last {
-            let lineWidth: CGFloat = System.device.screen.width/7
-            let radius: CGFloat = System.device.screen.width/3
-            ZStack(alignment: .center) {
-                VStack {
-                    Text(t.label())
-                        .font(.system(.title2, weight: .heavy))
-                        .padding(.bottom, 5)
-                    if let index = selectedIndex {
-                        let c = budget.book[index]
-                        Text(c.name)
+            let lineWidth: CGFloat = System.device.screen.width * lineWidthRatio
+            let radius: CGFloat = System.device.screen.width * radiusRatio
+            
+            HStack {
+                Spacer()
+                ZStack {
+                    ForEach(budget.book.indices, id: \.self) { i in
+                        let c = budget.book[i]
+                        let value = t.value(c)
+                        if value != 0 && !c.isForever {
+                            pieSlice(for: i, before: data[i], sum: sum, value: value, radius: radius, line: lineWidth, showText: false)
+                        }
+                    }
+                }
+                Spacer()
+                let blockSize: CGFloat = System.device.screen.width * 0.02
+                VStack(alignment: .leading, spacing: 0) {
+                    ForEach(budget.book.indices, id: \.self) { i in
+                        let c = budget.book[i]
+                        let p = t.value(c)
+                        if p != 0 && !c.isForever {
+                            HStack {
+                                Block(width: blockSize, height: blockSize, color: c.color)
+                                Text(c.name)
+                                    .foregroundColor(.primary25)
+                                    .frame(width: (System.device.screen.width - radius) * 0.23, alignment: .leading)
+                                Text("\(Int(((p/sum)*100).ToDouble()))%")
+                                    .frame(width: (System.device.screen.width - radius) * 0.16, alignment: .leading)
+                            }
+                            .font(.system(.body, weight: .bold))
                             .lineLimit(1)
-                        Text(t.value(c).description)
-                    } else {
-                        Text("-")
-                        Text("-")
+                            .monospacedDigit()
+                            .padding(.vertical, 5)
+                            .padding(.leading)
+                            .backgroundColor(selectedIndex == i ? .primary25.opacity(0.8) : .transparent)
+                            .cornerRadius(5)
+                            .onTapGesture {
+                                withAnimation(.quick) {
+                                    if selectedIndex != i {
+                                        selectedIndex = i
+                                    } else {
+                                        selectedIndex = nil
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
-                .frame(width: radius)
-                
-                ForEach(budget.book.indices, id: \.self) { i in
-                    let c = budget.book[i]
-                    let value = t.value(c)
-                    if value != 0 && !c.isForever {
-                        pieSlice(for: i, before: data[i], sum: sum, value: value, radius: radius, line: lineWidth)
-                    }
-                }
+                Spacer()
             }
-            .frame(width: System.device.screen.width, height: System.device.screen.width)
         }
     }
     
     @ViewBuilder
-    private func pieSlice(for index: Int, before: Decimal, sum: Decimal, value: Decimal, radius: CGFloat, line: CGFloat) -> some View {
+    private func pieSlice(for index: Int, before: Decimal, sum: Decimal, value: Decimal, radius: CGFloat, line: CGFloat, showText: Bool = false) -> some View {
         let f = (before - value) / sum
         let t = before / sum
-        let width = selectedIndex == index ? line + 15 : line
-        Circle()
-            .trim(from: f.ToCGFloat(), to: t.ToCGFloat() - 0.003)
-            .stroke(budget.book[index].color, lineWidth: width)
-            .frame(width: radius*2, height: radius*2)
-            .rotationEffect(.degrees(-90))
-            .padding(line)
-            .onTapGesture {
-                withAnimation(.quick) {
-                    if selectedIndex != index {
-                        selectedIndex = index
-                    } else {
-                        selectedIndex = nil
-                    }
-                }
-            }
+        let width = selectedIndex == index ? line * 1.5 : line
+        let gap: CGFloat = 0.003
+        let only = (value/sum) == 1
         
-        let p = (value/sum)*100
-        Text("\(Int(p.ToDouble()))%")
-            .font(.system(p <= 5 ? .caption : .title3, weight: p <= 0.05 ? .regular : .heavy))
-            .foregroundColor(.white)
-            .offset(textOffset2(before: before, sum: sum, value: value, radius: radius))
-            .zIndex(1)
+        pieCircle(from: f.ToCGFloat(), to: t.ToCGFloat() - gap, color: budget.book[index].color, width: width, radius: radius, padding: line, only: only)
+        
+        if showText {
+            let p = (value/sum)*100
+            Text("\(Int(p.ToDouble()))%")
+                .font(.system(p <= 5 ? .caption : .title3, weight: p <= 0.05 ? .regular : .heavy))
+                .foregroundColor(.white)
+                .offset(textOffset2(before: before, sum: sum, value: value, radius: radius))
+                .zIndex(1)
+        }
+    }
+    
+    @ViewBuilder
+    private func pieCircle(from f: CGFloat, to t: CGFloat, color: Color, width: CGFloat, radius: CGFloat, padding line: CGFloat, only: Bool) -> some View {
+        if only {
+            Circle()
+                .stroke(color, lineWidth: width)
+                .frame(width: radius*2, height: radius*2)
+                .padding(line)
+        } else {
+            Circle()
+                .trim(from: f, to: t)
+                .stroke(color, lineWidth: width)
+                .frame(width: radius*2, height: radius*2)
+                .rotationEffect(.degrees(-90))
+                .padding(line)
+        }
     }
     
     @ViewBuilder
@@ -226,6 +225,58 @@ struct StatisticPage: View {
         .chartYAxis(.visible)
     }
     
+    @ViewBuilder
+    private func cardBlock() -> some View {
+        statisticSection("statistic.card_analysis.label") {
+            VStack {
+                ForEach(chainedCards) { c in
+                    NavigationLink {
+                        CardAnalysisPage(card: c)
+                    } label: {
+                        cardRowLabel(card: c)
+                    }
+                }
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private func cardRowLabel(card c: Card) -> some View {
+        HStack {
+            Spacer()
+            Text(c.name)
+                .font(.system(.title3))
+                .foregroundColor(.primary50)
+            Spacer()
+        }
+        .padding(.vertical, 5)
+        .cornerRadius(7)
+    }
+    
+    @ViewBuilder
+    private func statisticSection(_ key: LocalizedStringKey, _ subkey: String = "", @ViewBuilder content: () -> some View) -> some View {
+        VStack {
+            VStack(spacing: 5) {
+                HStack(alignment: .bottom) {
+                    Text(key)
+                        .font(.system(.title3, weight: .medium))
+                    Text(subkey)
+                        .font(.system(.caption))
+                        .foregroundColor(.primary25)
+                        .kerning(1)
+                    Spacer()
+                }
+            }
+            HStack {
+                Spacer()
+                content()
+                Spacer()
+            }
+        }
+        .monospacedDigit()
+    }
+    
+    
 }
 
 extension StatisticPage {
@@ -245,46 +296,9 @@ extension StatisticPage {
 #if DEBUG
 struct StatisticPage_Previews: PreviewProvider {
     static var previews: some View {
-        StatisticPage(budget: .preview)
+        StatisticPage(injecter: DIContainer.preview, budget: .preview)
             .inject(DIContainer.preview)
             .preferredColorScheme(.dark)
     }
 }
 #endif
-
-private enum DataType {
-    case amount, cost, balance
-    
-    func data(a: [Decimal], c: [Decimal], b: [Decimal]) -> [Decimal]? {
-        switch self {
-            case .amount:
-                return a
-            case .cost:
-                return c
-            case .balance:
-                return b
-        }
-    }
-    
-    func value(_ from: Card) -> Decimal {
-        switch self {
-            case .amount:
-                return from.amount
-            case .cost:
-                return from.cost
-            case .balance:
-                return from.balance
-        }
-    }
-    
-    func label() -> LocalizedStringKey {
-        switch self {
-            case .amount:
-                return "label.amount"
-            case .cost:
-                return "label.cost"
-            case .balance:
-                return "label.balance"
-        }
-    }
-}

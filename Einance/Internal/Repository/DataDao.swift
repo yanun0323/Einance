@@ -120,6 +120,47 @@ extension DataDao where Self: DataRepository {
         return cards
     }
     
+    func ListCards(_ chainID: UUID) throws -> [Card] {
+        let query = Card.Table().filter(Card.chainID == chainID)
+        let result = try Sql.GetDriver().prepare(query)
+        var cards: [Card] = []
+        for row in result {
+            cards.append(try queryCard(try parseCard(row)))
+        }
+        return cards
+    }
+    
+    func ListChainableCards() throws -> [Card] {
+        let query = Card.Table().select(Card.chainID).group(Card.chainID, having: Card.chainID.count > 1)
+        let result = try Sql.GetDriver().prepare(query)
+        var ids: [UUID] = []
+        for row in result {
+            ids.append(try row.get(Card.chainID))
+        }
+
+        var cards: [Card] = []
+        for id in ids {
+            let query = Card.Table().filter(Card.chainID == id).limit(1)
+            let result = try Sql.GetDriver().prepare(query)
+            for row in result {
+                cards.append(try parseCard(row))
+            }
+        }
+        cards.sort(by: { $0.id > $1.id })
+        return cards
+    }
+    
+    func ListChainableCards(_ budget: Budget) throws -> [Card] {
+        let query = Card.Table().select(Card.chainID).group(Card.chainID, having: Card.chainID.count > 1)
+        let result = try Sql.GetDriver().prepare(query)
+        var ids: Set<UUID> = []
+        for row in result {
+            ids.insert(try row.get(Card.chainID))
+        }
+        
+        return budget.book.filter({ ids.contains($0.chainID) })
+    }
+    
     func CreateCard(_ c: Card) throws -> Int64 {
         let insert = Card.Table().insert(
             Card.chainID <- c.chainID,
@@ -176,7 +217,18 @@ extension DataDao where Self: DataRepository {
     }
     
     func ListRecords(after time: Date) throws -> [Record] {
-        let query = Record.Table().filter(Tag.updatedAt >= time)
+        let query = Record.Table().filter(Record.updatedAt >= time).order(Record.id.desc)
+        let result = try Sql.GetDriver().prepare(query)
+        
+        var records: [Record] = []
+        for row in result {
+            records.append(try parseRecord(row))
+        }
+        return records
+    }
+    
+    func ListRecords(_ cardID: Int64) throws -> [Record] {
+        let query = Record.Table().filter(Record.cardID == cardID).order(Record.id.desc)
         let result = try Sql.GetDriver().prepare(query)
         
         var records: [Record] = []
@@ -229,13 +281,14 @@ extension DataDao where Self: DataRepository {
         return try Sql.GetDriver().scalar(query)
     }
     
-    func ListTags(_ chainID: UUID, _ type: TagType, _ time: Int, _ interval: TimeInterval, _ count: Int) throws -> [Tag] {
+    func ListTags(_ chainID: UUID, _ type: TagType, _ time: Int, _ seconds: Int, _ count: Int) throws -> [Tag] {
         var tags: [Tag] = []
-        let now = Date.now
-        let start = now.addingTimeInterval(-interval).in24H
-        let end = now.addingTimeInterval(interval).in24H
+        let now24H = Date.now.in24H
+        let start = now24H - seconds
+        let end = now24H + seconds
+        
         #if DEBUG
-        print("DAO list tags")
+        print("DAO list tags PARAM: type: \(type), start: \(start), end: \(end)")
         #endif
         
         let query = Tag.Table().filter(
@@ -249,6 +302,10 @@ extension DataDao where Self: DataRepository {
         for row in result {
             tags.append(try parseTag(row))
         }
+        
+        #if DEBUG
+        print("DAO list tags RESULT: \(tags)")
+        #endif
         return tags
     }
     

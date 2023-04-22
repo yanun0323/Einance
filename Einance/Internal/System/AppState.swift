@@ -12,10 +12,10 @@ struct AppState {
     var appearancePublisher: PassthroughSubject<ColorScheme?, Never> = .init()
     var localePublisher: PassthroughSubject<Locale, Never> = .init()
     
-    var aboveBudgetCategoryPubliser: PassthroughSubject<BudgetCategory, Never> = .init()
-    var belowBudgetCategoryPubliser: PassthroughSubject<BudgetCategory, Never> = .init()
-    var leftBudgetCategoryPublisher: PassthroughSubject<BudgetCategory, Never> = .init()
-    var rightBudgetCategoryPublisher: PassthroughSubject<BudgetCategory, Never> = .init()
+    var aboveBudgetCategoryPubliser: PassthroughSubject<FinanceCategory, Never> = .init()
+    var belowBudgetCategoryPubliser: PassthroughSubject<FinanceCategory, Never> = .init()
+    var leftBudgetCategoryPublisher: PassthroughSubject<FinanceCategory, Never> = .init()
+    var rightBudgetCategoryPublisher: PassthroughSubject<FinanceCategory, Never> = .init()
         
     var keyboardPublisher: AnyPublisher<Bool, Never> {
         Publishers.Merge(
@@ -37,7 +37,7 @@ extension AppState {
         case Setting(DIContainer, Budget, Card)
         case BookOrder(Budget)
         case Statistic(Budget)
-        case History
+        case Analysis
         case Debug(Budget)
         
         var isEmpty: Bool {

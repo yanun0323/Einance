@@ -16,9 +16,13 @@ struct DebugView: SwiftUI.View {
     
     @State private var TODO: [String] = [
         "教學畫面",
-        "歷史圖表",
-        "統計圖表",
         "隨後備註功能",
+        "[訂閱] 串接雲端發票",
+        "[訂閱] 雲端發票移動",
+        "[訂閱] 卡片系統上限",
+        "[訂閱] 圖片功能",
+        "~歷史圖表",
+        "~統計圖表",
         "~強制更新卡片(調到之前的日期，顯示應為之後的)",
         "~Setting Localized",
         "~計算機",
@@ -27,10 +31,6 @@ struct DebugView: SwiftUI.View {
         "~修改record 標籤要跟著 picked date",
         "~定時清Tag功能(每天清'一個月'沒更新的？)",
         "~排查重開閃退資料遺失問題",
-        "[訂閱] 串接雲端發票",
-        "[訂閱] 雲端發票移動",
-        "[訂閱] 卡片系統上限",
-        "[訂閱] 圖片功能",
     ]
     
     var body: some SwiftUI.View {
@@ -78,13 +78,15 @@ struct DebugView: SwiftUI.View {
                     }
                 }
                 
-                anyButton("Delete All Budget") {
-                    System.Catch("DELETE ALL") {
-                        let db = Sql.GetDriver()
-                        _ = try db.run(Tag.Table().delete())
-                        _ = try db.run(Record.Table().delete())
-                        _ = try db.run(Card.Table().delete())
-                        _ = try db.run(Budget.Table().delete())
+                if UserDefaults.mockDBName != "development" {
+                    anyButton("Delete All Budget") {
+                        System.Catch("DELETE ALL") {
+                            let db = Sql.GetDriver()
+                            _ = try db.run(Tag.Table().delete())
+                            _ = try db.run(Record.Table().delete())
+                            _ = try db.run(Card.Table().delete())
+                            _ = try db.run(Budget.Table().delete())
+                        }
                     }
                 }
                 

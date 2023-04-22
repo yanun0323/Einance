@@ -22,54 +22,54 @@ extension UserSettingInteractor {
         return repo.SetAppearance(schemeToAppearance(scheme))
     }
     
-    func GetCardBudgetCategoryAbove() -> BudgetCategory {
-        let category = BudgetCategory(repo.GetCardBudgetCategoryAbove())
-        if category != .None {
+    func GetCardBudgetCategoryAbove() -> FinanceCategory {
+        let category = FinanceCategory(repo.GetCardBudgetCategoryAbove())
+        if category != .none {
             return category
         }
-        return .Cost
+        return .cost
     }
     
-    func SetCardBudgetCategoryAbove(_ category: BudgetCategory) {
+    func SetCardBudgetCategoryAbove(_ category: FinanceCategory) {
         repo.SetCardBudgetCategoryAbove(category.rawValue)
         appstate.aboveBudgetCategoryPubliser.send(category)
     }
     
-    func GetCardBudgetCategoryBelow() -> BudgetCategory {
-        let category = BudgetCategory(repo.GetCardBudgetCategoryBelow())
-        if category != .None {
+    func GetCardBudgetCategoryBelow() -> FinanceCategory {
+        let category = FinanceCategory(repo.GetCardBudgetCategoryBelow())
+        if category != .none {
             return category
         }
-        return .Amount
+        return .amount
     }
     
-    func SetCardBudgetCategoryBelow(_ category: BudgetCategory) {
+    func SetCardBudgetCategoryBelow(_ category: FinanceCategory) {
         repo.SetCardBudgetCategoryBelow(category.rawValue)
         appstate.belowBudgetCategoryPubliser.send(category)
     }
     
-    func GetDashboardBudgetCategoryLeft() -> BudgetCategory {
-        let category = BudgetCategory(repo.GetDashboardBudgetCategoryLeft())
-        if category != .None {
+    func GetDashboardBudgetCategoryLeft() -> FinanceCategory {
+        let category = FinanceCategory(repo.GetDashboardBudgetCategoryLeft())
+        if category != .none {
             return category
         }
-        return .Amount
+        return .amount
     }
     
-    func SetDashboardBudgetCategoryLeft(_ category: BudgetCategory) {
+    func SetDashboardBudgetCategoryLeft(_ category: FinanceCategory) {
         repo.SetDashboardBudgetCategoryLeft(category.rawValue)
         appstate.leftBudgetCategoryPublisher.send(category)
     }
     
-    func GetDashboardBudgetCategoryRight() -> BudgetCategory {
-        let category = BudgetCategory(repo.GetDashboardBudgetCategoryRight())
-        if category != .None {
+    func GetDashboardBudgetCategoryRight() -> FinanceCategory {
+        let category = FinanceCategory(repo.GetDashboardBudgetCategoryRight())
+        if category != .none {
             return category
         }
-        return .Cost
+        return .cost
     }
     
-    func SetDashboardBudgetCategoryRight(_ category: BudgetCategory) {
+    func SetDashboardBudgetCategoryRight(_ category: FinanceCategory) {
         repo.SetDashboardBudgetCategoryRight(category.rawValue)
         appstate.rightBudgetCategoryPublisher.send(category)
     }
@@ -101,6 +101,10 @@ extension UserSettingInteractor {
     func SetLocale(_ l: Locale) {
         repo.SetLocale(l)
         appstate.localePublisher.send(l)
+    }
+    
+    func SetAllTutorial(_ value: Bool) {
+        repo.SetAllTutorial(value)
     }
     
 }

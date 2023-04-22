@@ -37,6 +37,9 @@ final class Budget: ObservableObject {
 // MARK: Identifiable
 extension Budget: Identifiable {}
 
+// MARK: Categoriable
+extension Budget: Categoriable {}
+
 // MARK: Static Property
 extension Budget {
     static let empty = Budget(id: -1, startAt: .zero, book: [.empty])
