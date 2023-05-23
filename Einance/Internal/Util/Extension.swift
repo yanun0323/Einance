@@ -27,21 +27,32 @@ extension View {
     func modifyPanelBackground() -> some View {
         self
             .monospacedDigit()
-//            .backgroundColor(.backgroundButton, ignoresSafeAreaEdges: .bottom)
-//            .clipShape(RoundedRectangle(cornerRadius: Setting.panelCornerRadius))
-//            .shadow(radius: 5)
             .padding()
     }
     
     func modifyRouterBackground() -> some View {
         self
             .monospacedDigit()
-            .padding()
             .backgroundColor(.clear, ignoresSafeAreaEdges: .bottom)
     }
     
     func backgroundColor(_ color: Color, ignoresSafeAreaEdges edges: Edge.Set = []) -> some View {
         self.background(color, ignoresSafeAreaEdges: edges)
+    }
+    
+    func clippedShadow(_ shadow: Color = .black.opacity(0.2), blur: CGFloat = 5, radius: CGFloat = 20, height: CGFloat, y: CGFloat = 10) -> some View {
+        ZStack {
+            shadow
+                .frame(height: height)
+                .cornerRadius(radius*0.8)
+                .offset(y: y)
+                .blur(radius: blur)
+            RoundedRectangle(cornerRadius: radius)
+                .frame(height: height)
+                .blendMode(.destinationOut)
+            self
+        }
+        .compositingGroup()
     }
 }
 
@@ -149,6 +160,16 @@ extension System {
         let d = Self.device.screen
         return CGRect(x: d.minX, y: d.minY, width: d.width - 2*padding, height: d.width - 2*padding)
     }
+    
+    static func screen(type: T = .height, ratio: CGFloat) -> (CGFloat) {
+        return type == .width ? device.screen.width * ratio : device.screen.height * ratio
+    }
+}
+
+extension System {
+    enum T {
+        case width, height
+    }
 }
 
 extension TimeInterval {
@@ -174,5 +195,20 @@ extension String {
     
     var localized: String {
         return String(localized: LocalizedStringResource(stringLiteral: self))
+    }
+}
+
+extension View {
+    public func foregroundLinearGradient(_ colors: [Color], start: UnitPoint = .topLeading, end: UnitPoint = .trailing) -> some View {
+        return self.overlay {
+            LinearGradient(colors: colors, startPoint: start, endPoint: end)
+                .mask { self }
+        }
+    }
+    
+    public func backgroundLinearGradient(_ colors: [Color], start: UnitPoint = .topLeading, end: UnitPoint = .trailing) -> some View {
+        return self.background(
+            LinearGradient(colors: colors, startPoint: start, endPoint: end)
+        )
     }
 }

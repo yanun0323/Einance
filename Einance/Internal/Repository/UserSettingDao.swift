@@ -68,12 +68,12 @@ extension UserSettingDao where Self: UserSettingRepository {
         UserDefaults.dashboardBudgetCategoryLeft = value
     }
     
-    func GetLastTimerCheckedDate() -> Date? {
-        return UserDefaults.lastTimerCheckedDate
+    func GetLastUpdateDateKey() -> String? {
+        return UserDefaults.lastUpdateDateKey
     }
     
-    func SetLastTimerCheckedDate(_ date: Date) {
-        UserDefaults.lastTimerCheckedDate = date
+    func SetLastUpdateDateKey(_ value: String) {
+        UserDefaults.lastUpdateDateKey = value
     }
     
     func GetMockDBName() -> String {
@@ -210,8 +210,8 @@ extension UserDefaults {
     @UserDefault(key: "CardBudgetCategoryBelow")
     static var cardBudgetCategoryBelow: Int?
     
-    @UserDefault(key: "LastTimerCheckedDate")
-    static var lastTimerCheckedDate: Date?
+    @UserDefault(key: "LastUpdateDateKey")
+    static var lastUpdateDateKey: String?
     
     @UserDefault(key: "MockDBName")
     static var mockDBName: String?

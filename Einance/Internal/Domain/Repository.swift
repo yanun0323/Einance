@@ -62,8 +62,8 @@ protocol UserSettingRepository {
     func GetDashboardBudgetCategoryLeft() -> Int?
     func SetDashboardBudgetCategoryLeft(_:Int?)
     
-    func GetLastTimerCheckedDate() -> Date?
-    func SetLastTimerCheckedDate(_ date: Date)
+    func GetLastUpdateDateKey() -> String?
+    func SetLastUpdateDateKey(_:String)
     
     func GetMockDBName() -> String
     func SetMockDBName(_:String)
@@ -72,20 +72,20 @@ protocol UserSettingRepository {
     func SetLocale(_ :Locale)
     
     func GetPremium() -> Bool
-    func SetPremium(_ value: Bool)
+    func SetPremium(_:Bool)
     
     func GetTutorialHomePage() -> Bool
-    func SetTutorialHomePage(_ value: Bool)
+    func SetTutorialHomePage(_:Bool)
     func GetTutorialCreateCard() -> Bool
-    func SetTutorialCreateCard(_ value: Bool)
+    func SetTutorialCreateCard(_:Bool)
     func GetTutorialEditCard() -> Bool
-    func SetTutorialEditCard(_ value: Bool)
+    func SetTutorialEditCard(_:Bool)
     func GetTutorialCreateRecord() -> Bool
-    func SetTutorialCreateRecord(_ value: Bool)
+    func SetTutorialCreateRecord(_:Bool)
     func GetTutorialEditRecord() -> Bool
-    func SetTutorialEditRecord(_ value: Bool)
+    func SetTutorialEditRecord(_:Bool)
     func GetTutorialSetting() -> Bool
-    func SetTutorialSetting(_ value: Bool)
+    func SetTutorialSetting(_:Bool)
     
-    func SetAllTutorial(_ value: Bool)
+    func SetAllTutorial(_:Bool)
 }

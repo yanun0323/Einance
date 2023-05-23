@@ -6,9 +6,12 @@ struct CardAnalysisPage: View {
     @Environment(\.locale) private var locale: Locale
     typealias Dict = OrderedDictionary<Date, Card.RecordSet>
     @EnvironmentObject private var container: DIContainer
+    @GestureState private var scaleOffset: CGSize = .zero
+    @State private var scrollScale: CGFloat = 1.0
     @State private var dayDict: Dict = [:]
     @State private var monthDict: Dict = [:]
     @State private var dict: Dict = [:]
+    @State private var debugInfo = ""
     
     @State private var selectedData: Data? = nil
     var card: Card
@@ -36,6 +39,7 @@ struct CardAnalysisPage: View {
             typeSelector()
             chart()
                 .animation(.none, value: chartType)
+            Text(debugInfo)
 //            dataList()
             Spacer()
         }
@@ -121,7 +125,7 @@ struct CardAnalysisPage: View {
     @ViewBuilder
     private func chart() -> some View {
         let fixed = inner/2
-        let dotSize: CGFloat = 8
+        let dotSize: CGFloat = gap/6
         let ratio = ratio()
         ScrollViewReader { proxy in
             ScrollView(.horizontal, showsIndicators: false) {
@@ -145,8 +149,11 @@ struct CardAnalysisPage: View {
                                 Text(date.String(chartType == .day ? "MM/dd" : "yy.MM"))
                                     .font(.caption2)
                                     .foregroundColor(.primary25)
-                                    .kerning(1)
+                                    .kerning(0)
                                     .offset(y: fixed + 10)
+                                    .monospacedDigit()
+                                    .minimumScaleFactor(0.5)
+                                    .lineLimit(1)
                                 Block(width: 1, height: inner, color: .section)
                             }
                             .frame(width: gap, height: inner)
@@ -158,12 +165,24 @@ struct CardAnalysisPage: View {
                         }
                     }
                 }
+                .scaleEffect(x: scrollScale)
             }
             .onAppeared { handleScroll(proxy) }
             .onChanged(of: dict.count) { handleScroll(proxy) }
             .onChanged(of: selected) { handleScroll(proxy, set: $0) }
         }
         .frame(width: scrollOuter, height: outer, alignment: .trailing)
+        .gesture(
+            MagnificationGesture(minimumScaleDelta: 5)
+                .onChanged { val in
+                    let result = gap + (gap * val - gap) * 0.5
+                    debugInfo = "\(val)\n\(result)"
+                    
+                    if result < defaultGap && result > 10 {
+                        gap = result
+                    }
+                }
+        )
         .background {
             chartSheet()
         }
@@ -357,6 +376,7 @@ struct CardAnalysisPage_Previews: PreviewProvider {
     static var previews: some View {
         CardAnalysisPage(card: .preview, preview: true)
             .inject(DIContainer.preview)
+            .environment(\.locale, .US)
     }
 }
 #endif

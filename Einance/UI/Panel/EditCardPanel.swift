@@ -33,19 +33,26 @@ struct EditCardPanel: View {
         ZStack {
             editCardBlock()
                 .ignoresSafeArea(.keyboard)
-            externalKeyboardPanel()
+            externalKeyboardClosePanel()
         }
         .onAppeared { focus = .input }
     }
     
     @ViewBuilder
-    private func externalKeyboardPanel() -> some View {
+    private func externalKeyboardClosePanel() -> some View {
         VStack {
             Spacer()
-            ExternalKeyboardPanel(text: $nameInput, number: $amountInput, focus: _focus) {
-                focus = focus != .input ? .input : .number
+            HStack {
+                Spacer()
+                ExternalKeyboardSwitcher {
+                    focus = focus != .input ? .input : .number
+                }
+                .padding(.trailing)
             }
+            .opacity(focus == .input || focus == .number ? 1 : 0)
+            .animation(.none, value: focus)
         }
+        .padding(.vertical, 10)
     }
     
     @ViewBuilder
@@ -69,6 +76,11 @@ struct EditCardPanel: View {
             Spacer()
             Text("view.header.edit.card")
                 .font(Setting.panelTitleFont)
+                .foregroundColor(fontColorInput)
+                .padding(.vertical, 5)
+                .padding(.horizontal)
+                .background(colorInput)
+                .cornerRadius(7)
             Spacer()
         }
     }

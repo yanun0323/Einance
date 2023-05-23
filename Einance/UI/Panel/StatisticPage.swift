@@ -26,7 +26,8 @@ struct StatisticPage: View {
         self.costSums = []
         self.balanceSums = []
         self.showableData = 0
-        self.chainedCards = injecter.interactor.data.ListChainableCards(by: budget)
+//        self.chainedCards = injecter.interactor.data.ListChainableCards(by: budget)
+        self.chainedCards = injecter.interactor.data.ListChainableCards()
         
         var amount: Decimal = 0
         var cost: Decimal = 0
@@ -241,15 +242,18 @@ struct StatisticPage: View {
     }
     
     @ViewBuilder
-    private func cardRowLabel(card c: Card) -> some View {
+    private func cardRowLabel(card c: Card, _ blockSize: CGFloat = 10) -> some View {
         HStack {
             Spacer()
             Text(c.name)
-                .font(.system(.title3))
-                .foregroundColor(.primary50)
+                .foregroundColor(.primary25)
             Spacer()
+            Image(systemName: "chevron.right")
+                .foregroundColor(c.color)
         }
+        .font(.title3)
         .padding(.vertical, 5)
+        .padding(.horizontal)
         .cornerRadius(7)
     }
     
@@ -298,7 +302,8 @@ struct StatisticPage_Previews: PreviewProvider {
     static var previews: some View {
         StatisticPage(injecter: DIContainer.preview, budget: .preview)
             .inject(DIContainer.preview)
-            .preferredColorScheme(.dark)
+            .preferredColorScheme(.light)
+            .environment(\.locale, .US)
     }
 }
 #endif

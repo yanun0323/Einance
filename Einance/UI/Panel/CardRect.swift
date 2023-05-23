@@ -10,6 +10,7 @@ struct CardRect: View {
     
     @ObservedObject var budget: Budget
     @ObservedObject var card: Card
+    var Active: Bool = true
     var isPreview: Bool = false
     var previewColor: Color = .primary
     var isOrder: Bool = false
@@ -37,7 +38,7 @@ struct CardRect: View {
             .backgroundColor(cardBackgroundColor())
             .cornerRadius(15)
             .contextMenu {
-                if !isPreview && !isOrder {
+                if Active && !isPreview && !isOrder {
                     contextButtons()
                 }
             }

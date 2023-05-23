@@ -5,68 +5,71 @@ enum InputType {
     case text, number
 }
 
+struct ExternalKeyboardSwitcher: View {
+    @EnvironmentObject private var container: DIContainer
+    let switchButtonSize: CGFloat = 60
+    var action: () -> Void
+    
+    var body: some View {
+        ButtonCustom(width: switchButtonSize, height: switchButtonSize, color: .backgroundButton, radius: switchButtonSize/2, action: action) {
+            Image(systemName: "arrow.left.arrow.right")
+                .foregroundColor(.primary75)
+                .font(.title)
+                .fontWeight(.light)
+        }
+    }
+}
+
 struct ExternalKeyboardPanel: View {
     @EnvironmentObject private var container: DIContainer
     @Binding var card: Card
     @Binding var time: Date
     @Binding var text: String
     @Binding var number: String
-    @FocusState var focus: FocusField?
-    @State var action: () -> Void = {}
+    var focus: FocusState<FocusField?>.Binding
+    var action: () -> Void
     
     @State var textTags: [Tag] = []
     @State var numTags: [Tag] = []
     
-    let switchButtonSize: CGFloat = 60
-    
-    init(card: Binding<Card>, time: Binding<Date>, text: Binding<String>, number: Binding<String>, focus: FocusState<FocusField?>, action: @escaping () -> Void) {
+    init(card: Binding<Card>, time: Binding<Date>, text: Binding<String>, number: Binding<String>, focus: FocusState<FocusField?>.Binding, action: @escaping () -> Void) {
         self._card = card
         self._time = time
         self._text = text
         self._number = number
-        self._focus = focus
-        self.action = action
-    }
-    
-    init(text: Binding<String>, number: Binding<String>, focus: FocusState<FocusField?>, action: @escaping () -> Void) {
-        self._card = .constant(.empty)
-        self._time = .constant(.zero)
-        self._text = text
-        self._number = number
-        self._focus = focus
+        self.focus = focus
         self.action = action
     }
     
     
     var body: some View {
-        ZStack {
-            if !card.isZero {
-                scrollRow(tags: getTags())
-                    .padding(.trailing, switchButtonSize + 30)
-            }
-            if focus == .input || focus == .number {
-                swithInputView()
-                    .padding(.trailing)
-            }
+        HStack(spacing: 0) {
+            Spacer()
+            scrollRow(tags: getTags())
+                .padding(.trailing)
+            
+            ExternalKeyboardSwitcher(action: action)
+                .padding(.trailing)
         }
         .padding(.vertical, 10)
         .backgroundColor(.transparent)
-        .onAppear { handleRefreshTags() }
-        .onChange(of: time) { _ in handleRefreshTags() }
+        .onAppeared { handleRefreshTags() }
+        .onChanged(of: time) { handleRefreshTags() }
+        .onChanged(of: card) { handleRefreshTags() }
     }
     
-    @ViewBuilder
-    private func swithInputView() -> some View {
-        HStack {
-            Spacer()
-            ButtonCustom(width: switchButtonSize, height: switchButtonSize, color: .backgroundButton, radius: switchButtonSize/2, action: action) {
-                Image(systemName: "arrow.left.arrow.right")
-                    .foregroundColor(.primary75)
-                    .font(.title)
-                    .fontWeight(.light)
-            }
-        }
-    }
+//    @ViewBuilder
+//    private func swithInputView() -> some View {
+//        HStack {
+//            Spacer()
+//            ButtonCustom(width: switchButtonSize, height: switchButtonSize, color: .backgroundButton, radius: switchButtonSize/2, action: action) {
+//                Image(systemName: "arrow.left.arrow.right")
+//                    .foregroundColor(.primary75)
+//                    .font(.title)
+//                    .fontWeight(.light)
+//            }
+//        }
+//    }
     
     @ViewBuilder
     private func scrollRow(tags elem: [Tag]) -> some View {
@@ -107,24 +110,27 @@ struct ExternalKeyboardPanel: View {
 
 extension ExternalKeyboardPanel {
     private func getTags() -> [Tag] {
-        switch focus {
+        switch focus.wrappedValue {
         case .input:
             return textTags
         case .number:
             return numTags
         default:
             return []
-    }
+        }
     }
     
     private func handleRefreshTags() {
         if card.isZero { return }
+        #if DEBUG
+        print("update time: \(time)")
+        #endif
         textTags = container.interactor.data.ListTags(card.chainID, .text, time.in24H)
         numTags = container.interactor.data.ListTags(card.chainID, .number, time.in24H)
     }
     
     private func getType() -> InputType? {
-        switch focus {
+        switch focus.wrappedValue {
             case .input:
                 return .text
             case .number:
@@ -137,10 +143,14 @@ extension ExternalKeyboardPanel {
 
 #if DEBUG
 struct ExternalKeyboardPanel_Previews: PreviewProvider {
+    @FocusState static var focus: FocusField?
     static var previews: some View {
-        ExternalKeyboardPanel(card: .constant(.preview), time: .constant(.now), text: .constant(""), number: .constant(""), focus: .init(), action: {})
+        ExternalKeyboardPanel(card: .constant(.preview), time: .constant(.now), text: .constant(""), number: .constant(""), focus: $focus, action: {})
             .preferredColorScheme(.dark)
             .inject(DIContainer.preview)
+            .onAppeared {
+                focus = .input
+            }
     }
 }
 #endif

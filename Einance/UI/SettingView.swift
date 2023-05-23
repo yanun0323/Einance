@@ -46,7 +46,7 @@ struct SettingView: View {
                     dashboardStyleSample()
                     cardShapeStyleSample()
                     baseNumberBlock()
-                    dangerZoneBlock()
+//                    dangerZoneBlock()
                     Spacer()
                 }
             }

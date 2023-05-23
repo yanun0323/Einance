@@ -10,8 +10,11 @@ struct AnalysisView: View {
     var body: some View {
         VStack(spacing: 10) {
             ViewHeader(title: "view.header.analysis")
-            chartBlock()
-            statisticBlock()
+            NavigationStack {
+                chartBlock()
+                    .padding(.bottom, 10)
+                statisticBlock()
+            }
             Spacer()
         }
         .modifyRouterBackground()
@@ -71,7 +74,9 @@ struct AnalysisView: View {
                 .padding(.horizontal)
             }
             .frame(height: height)
+            .padding(.bottom, 50)
         }
+        .clippedShadow(height: 150)
     }
     
     @ViewBuilder
@@ -117,7 +122,7 @@ struct AnalysisView_Previews: PreviewProvider {
         AnalysisView()
             .inject(DIContainer.preview)
             .environment(\.locale, .US)
-            .preferredColorScheme(.dark)
+            .preferredColorScheme(.light)
     }
 }
 #endif

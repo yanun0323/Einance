@@ -13,19 +13,17 @@ struct AddRecordButtonLayer: View {
             Button {
                 container.interactor.system.PushActionView(.CreateRecord(budget, card))
             } label: {
-                RoundedRectangle(cornerRadius: Setting.deviceCornerRadius)
-                    .frame(height: 90)
-                    .foregroundColor(.backgroundButton)
-                    .shadow(radius: 5)
-                    .overlay {
-                        Label("button.record.create", systemImage: "plus.square.dashed")
-                            .font(.system(size: 28, weight: .light))
-                            .kerning(2)
-                            .foregroundColor(card.color)
-                            .padding(size*0.15)
-                            .padding(.bottom)
-                    }
+                HStack {
+                    Label("button.record.create", systemImage: "plus.square.dashed")
+                        .font(.system(size: 28, weight: .light))
+                        .kerning(2)
+                        .foregroundColor(card.color)
+                        .padding(size*0.15)
+                        .padding(.bottom)
+                }
+                .clippedShadow(height: 90, y: -10)
             }
+            .frame(height: 90)
         }
         .ignoresSafeArea(.all)
     }
@@ -45,7 +43,7 @@ struct AddRecordButton_Previews: PreviewProvider {
             Color.background
             AddRecordButtonLayer(budget: .preview, card: .preview)
                 .inject(DIContainer.preview)
-                .preferredColorScheme(.dark)
+                .preferredColorScheme(.light)
         }
     }
 }

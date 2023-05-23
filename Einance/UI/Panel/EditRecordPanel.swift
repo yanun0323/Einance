@@ -59,9 +59,11 @@ struct EditRecordPanel: View {
     private func externalKeyboardPanel() -> some View {
         VStack {
             Spacer()
-            ExternalKeyboardPanel(card: $card, time: $dateInput, text: $memoInput, number: $costInput, focus: _focus) {
+            ExternalKeyboardPanel(card: $card, time: $dateInput, text: $memoInput, number: $costInput, focus: $focus) {
                 focus = focus != .number ? .number : .input
             }
+            .opacity(focus == .input || focus == .number ? 1 : 0)
+            .animation(.none, value: focus)
         }
     }
     

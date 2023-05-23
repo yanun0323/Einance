@@ -22,9 +22,9 @@ struct BudgetPage: View {
         .transition(.opacity)
         .animation(.quick, value: current)
         .onAppear {
-            UIPageControl.appearance().currentPageIndicatorTintColor = UIColor.label
-            UIPageControl.appearance().pageIndicatorTintColor = .lightGray
-            UIPageControl.appearance().tintColor = .lightGray
+//            UIPageControl.appearance().currentPageIndicatorTintColor = UIColor.label
+//            UIPageControl.appearance().pageIndicatorTintColor = .lightGray
+//            UIPageControl.appearance().tintColor = .lightGray
         }
     }
     

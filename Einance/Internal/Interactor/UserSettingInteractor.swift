@@ -30,6 +30,14 @@ extension UserSettingInteractor {
         return .cost
     }
     
+    func SetLastUpdateDateKey(_ date: Date) {
+        repo.SetLastUpdateDateKey(date.String("yyyy.MM"))
+    }
+    
+    func GetLastUpdateDateKey() -> String? {
+        return repo.GetLastUpdateDateKey()
+    }
+    
     func SetCardBudgetCategoryAbove(_ category: FinanceCategory) {
         repo.SetCardBudgetCategoryAbove(category.rawValue)
         appstate.aboveBudgetCategoryPubliser.send(category)

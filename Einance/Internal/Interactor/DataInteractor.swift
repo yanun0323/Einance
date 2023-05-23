@@ -392,7 +392,8 @@ extension DataInteractor {
     
     func ListTags(_ chainID: UUID, _ type: TagType, _ updatedAt: Int) -> [Tag] {
         return DoTx("list tags") {
-            return try repo.ListTags(chainID, type, updatedAt, Int(4 * .hour), 20)
+            let hour = type == .number ? 5.0  : 4.5
+            return try repo.ListTags(chainID, type, updatedAt, Int(hour * .hour), 20)
         } ?? []
     }
     
@@ -407,7 +408,7 @@ extension DataInteractor {
             if let tag = try repo.GetTag(chainID, type, value) {
                 var t = tag
                 t.count += 1
-                t.key = updatedAt
+                t.key = (t.key + updatedAt) / 2
                 try repo.UpdateTag(t)
             } else {
                 _ = try repo.CreateTag(Tag(chainID: chainID, type: type, value: value, count: 1, key: updatedAt))
@@ -422,6 +423,7 @@ extension DataInteractor {
             #endif
             return
         }
+        
         DoTx("edit tag: delete old tag") {
             if unavailableTag(type, value: old) {
                 #if DEBUG
@@ -442,7 +444,6 @@ extension DataInteractor {
             } else {
                 var t = tag
                 t.count -= 1
-                t.key = updatedAt
                 try repo.UpdateTag(t)
             }
         }

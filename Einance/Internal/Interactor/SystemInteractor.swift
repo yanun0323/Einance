@@ -12,6 +12,12 @@ struct SystemInteractor {
 }
 
 extension SystemInteractor {
+    func PushContentViewRouter(_ showV2: Bool) {
+        System.Async {
+            appstate.contentViewV2Publisher.send(showV2)
+        }
+    }
+    
     func PushRouterView(_ router: AppState.ViewRouter) {
         System.Async {
             appstate.routerViewPublisher.send(router)

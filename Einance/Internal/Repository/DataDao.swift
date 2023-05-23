@@ -283,9 +283,8 @@ extension DataDao where Self: DataRepository {
     
     func ListTags(_ chainID: UUID, _ type: TagType, _ time: Int, _ seconds: Int, _ count: Int) throws -> [Tag] {
         var tags: [Tag] = []
-        let now24H = Date.now.in24H
-        let start = now24H - seconds
-        let end = now24H + seconds
+        var start = time - seconds
+        var end = time + seconds
         
         #if DEBUG
         print("DAO list tags PARAM: type: \(type), start: \(start), end: \(end)")
@@ -300,6 +299,30 @@ extension DataDao where Self: DataRepository {
         ).order(Tag.count.desc).limit(count)
         let result = try Sql.GetDriver().prepare(query)
         for row in result {
+            tags.append(try parseTag(row))
+        }
+        
+        let secondOfDay = SecondOfDay()
+        
+        if start < 0 {
+            start += secondOfDay
+            end += secondOfDay
+        } else if end > secondOfDay {
+            start -= secondOfDay
+            end -= secondOfDay
+        } else {
+            return tags
+        }
+        
+        let query2 = Tag.Table().filter(
+            Tag.chainID == chainID &&
+            Tag.type == type &&
+            Tag.key >= start &&
+            Tag.key <= end &&
+            Tag.count > 0
+        ).order(Tag.count.desc).limit(count)
+        let result2 = try Sql.GetDriver().prepare(query2)
+        for row in result2 {
             tags.append(try parseTag(row))
         }
         
@@ -362,6 +385,8 @@ extension DataDao where Self: DataRepository {
 
 // MARK: - Private Function
 extension DataDao {
+    
+    private func SecondOfDay() -> Int { return 86400 }
     
     private func countBudget() throws -> Int {
         return try Sql.GetDriver().scalar(Budget.Table().count)

@@ -13,6 +13,7 @@ struct HomeHeader: View {
             analysisButton()
             Spacer()
             #if DEBUG
+            switchContentButton()
             debugButton()
             Spacer()
             #endif
@@ -20,6 +21,16 @@ struct HomeHeader: View {
             createCardButton()
         }
         .foregroundColor(.gray)
+    }
+    
+    @ViewBuilder
+    private func switchContentButton() -> some View {
+        ButtonCustom(width: 50, height: 50) {
+            container.interactor.system.PushContentViewRouter(true)
+        } content: {
+            Image(systemName: "arrow.triangle.2.circlepath")
+                .font(.title3)
+        }
     }
     
     @ViewBuilder

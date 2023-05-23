@@ -18,37 +18,47 @@ struct CreateCardPanel: View {
         ZStack {
             createCardBlock()
                 .ignoresSafeArea(.keyboard)
-            externalKeyboardPanel()
+            externalKeyboardClosePanel()
         }
         .onAppeared { focus = .input }
     }
     
     @ViewBuilder
-    private func externalKeyboardPanel() -> some View {
+    private func externalKeyboardClosePanel() -> some View {
         VStack {
             Spacer()
-            ExternalKeyboardPanel(text: $nameInput, number: $amountInput, focus: _focus) {
-                focus = focus != .input ? .input : .number
+            HStack {
+                Spacer()
+                ExternalKeyboardSwitcher {
+                    focus = focus != .input ? .input : .number
+                }
+                .padding(.trailing)
             }
+            .opacity(focus == .input || focus == .number ? 1 : 0)
+            .animation(.none, value: focus)
         }
+        .padding(.vertical, 10)
     }
     
     @ViewBuilder
     private func createCardBlock() -> some View {
-        VStack(spacing: 20) {
-            titleBlock()
-            cardNameBlock()
-            cardAmountBlock()
-            HStack {
-                cardDisplayBlock()
+        VStack {
+            VStack(spacing: 20) {
+                titleBlock()
+                cardNameBlock()
+                cardAmountBlock()
+                HStack {
+                    cardDisplayBlock()
+                    Spacer()
+                    cardFixedBlock()
+                }
+                cardColorBlock()
+                confirmButton()
                 Spacer()
-                cardFixedBlock()
             }
-            cardColorBlock()
-            confirmButton()
-            Spacer()
+            .modifyPanelBackground()
+            
         }
-        .modifyPanelBackground()
     }
     
     @ViewBuilder
@@ -57,6 +67,11 @@ struct CreateCardPanel: View {
             Spacer()
             Text("view.header.create.card")
                 .font(Setting.panelTitleFont)
+                .foregroundColor(fontColorInput)
+                .padding(.vertical, 5)
+                .padding(.horizontal)
+                .background(colorInput)
+                .cornerRadius(7)
             Spacer()
         }
     }
