@@ -178,7 +178,7 @@ extension Card {
 
 // MARK: Static Property
 extension Card {
-    static func blank() -> Card { Card(id: -1, budgetID: -1, index: -1, name: "", amount: 0) }
+    static func blank() -> Card { Card(id: -1, budgetID: -1, index: -1, name: "", amount: 0, bColor: .gray, gColor: .section) }
     var isBlank: Bool { self.id == -1 }
 }
 

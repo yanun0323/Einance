@@ -271,7 +271,6 @@
 /* Begin PBXFileReference section */
 		A802AE0D2A1F0E46009D5D19 /* CardColorPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardColorPicker.swift; sourceTree = "<group>"; };
 		A80F9A702A3DBA0700946210 /* Einance dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Einance dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		A80F9A712A3DBA0700946210 /* Einance copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Einance copy-Info.plist"; path = "/Users/yanunyang/Desktop/Project/Xcode/Einance/Einance copy-Info.plist"; sourceTree = "<absolute>"; };
 		A80F9AA12A3DBA3500946210 /* Watch dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Watch dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A80F9AA32A3DBAE100946210 /* BudgetRing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgetRing.swift; sourceTree = "<group>"; };
 		A80F9AA82A3F80BA00946210 /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
@@ -537,7 +536,6 @@
 				A8671F982A39FB560007B047 /* EinanceWatch */,
 				A8A75AE6291CCCBC00EF9D8A /* Products */,
 				A8671FC32A3A37000007B047 /* Frameworks */,
-				A80F9A712A3DBA0700946210 /* Einance copy-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};

@@ -23,18 +23,18 @@ extension Card {
             Record(id: -4, date: Date(from: "20221113", .Numeric)!, cost: 150, memo: "摩斯漢堡"),
             Record(id: -5, date: Date(from: "20221113", .Numeric)!, cost: 220, memo: "晚餐"),
             Record(id: -6, date: Date(from: "20221113", .Numeric)!, cost: 80, memo: "宵夜"),
-        ], fColor: Color(hex: "#cccccc"), bColor: .cyan, pinned: true)
+    ], fColor: Color(hex: "#cccccc"), bColor: .cyan, gColor: .green, pinned: true)
     
     static var preview2 = Card(id: -2, index: 1, name: "債務", amount: 0, display: .forever, records: [
             Record(id: -5, date: Date(from: "20221106", .Numeric)!, cost: 70, memo: "五十嵐", pinned: true),
             Record(id: -6, date: Date(from: "20221110", .Numeric)!, cost: 113, memo: "7-11"),
     ], bColor: .orange, gColor: .red, pinned: true)
     
-    static var preview3 = Card(id: -3, index: 2, name: "我的名字有夠他媽的長哈哈哈哈", amount: 10000, records: [], bColor: .green, pinned: true)
+    static var preview3 = Card(id: -3, index: 2, name: "我的名字有夠他媽的長哈哈哈哈", amount: 10000, records: [], bColor: .green, gColor: .cyan, pinned: true)
     static var preview4 = Card(id: -4, index: 3, name: "隨便打打", amount: 12000, records: [
         Record(id: -7, date: Date(from: "20221106", .Numeric)!, cost: 7000, memo: "忘記了"),
         Record(id: -8, date: Date(from: "20221120", .Numeric)!, cost: 1113, memo: "不知道"),
-    ], bColor: .red, pinned: true)
+    ], bColor: .red, gColor: .green, pinned: true)
 }
 
 extension Record {

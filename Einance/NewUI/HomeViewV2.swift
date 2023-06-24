@@ -5,7 +5,8 @@ struct HomeViewV2: View {
     @Environment(\.injected) private var container: DIContainer
     @State private var title: String? = nil
     @State private var debug: String = "-"
-    @State private var accentColors: [Color] = [.cyan, Color(hex: "#2cc")]
+    @State private var bColor: Color = .cyan
+    @State private var gColor: Color = Color(hex: "#2cc")
     @State private var showDeleteAlert = false
     @State private var showArchiveAlert = false
 
@@ -33,15 +34,18 @@ struct HomeViewV2: View {
                 .ignoresSafeArea(.all, edges: .bottom)
                 .frame(size: System.screen)
 
-                adder()
-                    .padding(.bottom, 30)
-                    .frame(size: System.screen)
-                    .ignoresSafeArea(.all)
+                if !selected.isBlank {
+                    adder()
+                        .padding(.bottom, 30)
+                        .frame(size: System.screen)
+                        .ignoresSafeArea(.all)
+                }
             }
 
         }
         .background(Color.background)
-        .animation(.default, value: accentColors)
+        .animation(.default, value: bColor)
+        .animation(.default, value: gColor)
         .confirmationDialog(
             "card.context.alert.delete.title", isPresented: $showDeleteAlert,
             actions: {
@@ -75,7 +79,7 @@ struct HomeViewV2: View {
                     .font(.system(size: 45, weight: .light))
                     .foregroundColor(.white)
             }
-            .backgroundLinearGradient(accentColors)
+            .backgroundLinearGradient([bColor, gColor])
             .mask {
                 Circle()
             }
@@ -90,7 +94,7 @@ struct HomeViewV2: View {
             HStack(spacing: 0) {
                 Text("statistic.overview.lable")
                     .font(.system(size: 30, weight: .medium))
-                    .foregroundLinearGradient(accentColors)
+                    .foregroundLinearGradient([bColor, gColor])
 
                 Spacer()
 
@@ -125,7 +129,7 @@ struct HomeViewV2: View {
         ZStack {
             let radius: CGFloat = 30
             VStack(spacing: 0) {
-                LinearGradient(colors: accentColors, startPoint: .topLeading, endPoint: .trailing)
+                LinearGradient(colors: [bColor, gColor], startPoint: .topLeading, endPoint: .trailing)
                     .frame(height: System.screen(.height, 0.65) + radius)
                     .overlay {
                         VStack(spacing: 0) {
@@ -138,7 +142,7 @@ struct HomeViewV2: View {
                     .cornerRadius(radius)
             }
             .ignoresSafeArea()
-
+            
             VStack(spacing: 0) {
                 Spacer()
                 RoundedRectangle(cornerRadius: radius)
@@ -172,6 +176,18 @@ struct HomeViewV2: View {
                         .padding(.trailing, pTrailing)
                         .tag(card)
                     }
+                    VStack {
+                        Spacer()
+                        Button(width: 50, height: 50, color: .green, radius: 50) {
+                            
+                        } content: {
+                            Image(systemName: "plus")
+                                .font(.system(size: 30))
+                                .foregroundColor(.white)
+                        }
+                        Spacer()
+                    }
+                    .tag(Card.blank())
                 }
                 .tabViewStyle(.page(indexDisplayMode: .always))
 
@@ -311,7 +327,7 @@ struct HomeViewV2: View {
             HStack {
                 Text(LocalizedStringKey(title))
                     .font(.system(size: 28, weight: .medium))
-                    .foregroundLinearGradient(accentColors)
+                    .foregroundLinearGradient([bColor, gColor])
                     .monospacedDigit()
                 Spacer()
                 Text("\(sum.description) $")
@@ -350,7 +366,8 @@ struct HomeViewV2: View {
 
 extension HomeViewV2 {
     fileprivate func handleOnAppeared() {
-        accentColors = selected.bgColor
+        bColor = selected.bgColor[0]
+        gColor = selected.bgColor[1]
     }
 }
 
