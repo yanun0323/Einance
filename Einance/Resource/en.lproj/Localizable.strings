@@ -65,10 +65,10 @@
 "panel.card.create.name.label.placeholder" = "New Card";
 "panel.card.create.amount.label" = "Budget";
 "panel.card.create.amount.label.placeholder" = "10000";
-"panel.card.create.font_color.label" = "Font Color";
-"panel.card.create.color.label" = "Color";
+"panel.card.create.f_color.label" = "Text Color";
+"panel.card.create.b_color.label" = "BG Color";
 "panel.card.create.display.label" = "Type";
-"panel.card.create.fixed.label" = "Pinned";
+"panel.card.create.pinned.label" = "Pinned";
 
 /* card context alert */
 "card.context.alert.delete.title" = "Delete Card";
@@ -83,11 +83,11 @@
 "panel.record.create.date.label" = "Date";
 "panel.record.create.memo.label" = "Memo";
 "panel.record.create.memo.placeholder" = "Dinner";
-"panel.record.create.fixed.label" = "Pinned";
+"panel.record.create.pinned.label" = "Pinned";
 "button.record.create" = "New Record";
 
 /* budget page view */
-"view.record.row.title.fixed" = "Pinned";
+"view.record.row.title.pinned" = "Pinned";
 
 /* welcome view description */
 "welcome.button.next" = "Next";

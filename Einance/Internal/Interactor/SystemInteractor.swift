@@ -1,5 +1,5 @@
 import SwiftUI
-import UIComponent
+import Ditto
 
 struct SystemInteractor {
     private var appstate: AppState
@@ -13,49 +13,51 @@ struct SystemInteractor {
 
 extension SystemInteractor {
     func PushContentViewRouter(_ showV2: Bool) {
-        System.Async {
+        System.async {
             appstate.contentViewV2Publisher.send(showV2)
         }
     }
     
-    func PushRouterView(_ router: AppState.ViewRouter) {
-        System.Async {
+    func PushRouterView(_ router: ViewRouter?) {
+        System.async {
             appstate.routerViewPublisher.send(router)
         }
     }
     
     func ClearRouterView() {
-        System.Async {
-            appstate.routerViewPublisher.send(.Empty)
+        System.async {
+            appstate.routerViewPublisher.send(nil)
         }
     }
     
-    func PushActionView(_ router: AppState.ActionRouter) {
-        System.Async {
+    func PushActionView(_ router: ActionRouter?) {
+        System.async {
             appstate.actionViewPublisher.send(router)
         }
     }
     
     func ClearActionView() {
-        System.Async {
-            appstate.actionViewPublisher.send(.Empty)
+        System.async {
+            appstate.actionViewPublisher.send(nil)
         }
     }
     
+    #if os(iOS)
     func DismissKeyboard() {
         withAnimation(.quick) {
-            UIApplication.shared.DismissKeyboard()
+            UIApplication.shared.dismissKeyboard()
         }
     }
+    #endif
     
     func PushPickerState(isOn: Bool) {
-        System.Async {
+        System.async {
             appstate.pickerPublisher.send(isOn)
         }
     }
     
     func TriggerMonthlyCheck() {
-        System.Async {
+        System.async {
             appstate.monthlyCheckPublisher.send(true)
         }
     }

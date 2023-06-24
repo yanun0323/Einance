@@ -1,10 +1,10 @@
 import SwiftUI
-import UIComponent
+import Ditto
 
 struct ContentView: View {
-    @EnvironmentObject private var container: DIContainer
-    @State private var viewRouter: AppState.ViewRouter = .Empty
-    @State private var actionRouter: AppState.ActionRouter = .Empty
+    @Environment(\.injected) private var container: DIContainer
+    @State private var viewRouter: ViewRouter? = nil
+    @State private var actionRouter: ActionRouter? = nil
     @State private var isRouterViewEmpty: Bool = true
     @State private var isActionViewEmpty: Bool = true
     @State private var showRouterSheet: Bool = false
@@ -13,8 +13,8 @@ struct ContentView: View {
     @State private var isPickerActive = false
     @State private var isUpdating = false
     
-    @StateObject private var budget: Budget = .empty
-    @State private var current: Card = .empty
+    @StateObject private var budget: Budget = .blank()
+    @State private var current: Card = .blank()
     @State private var expiredTimer: Timer?
     @State private var bookCount: Int = 0
     @State private var isInit: Bool = true
@@ -26,7 +26,7 @@ struct ContentView: View {
             if isInit {
                 LoadingSymbol()
             } else {
-                if budget.isZero {
+                if budget.isBlank {
                     WelcomeView()
                 } else {
                     budgetExistView()
@@ -53,11 +53,9 @@ struct ContentView: View {
         .onReceived(container.appstate.keyboardPublisher) { isKeyboardActive = $0 }
         .onReceived(container.appstate.routerViewPublisher) {
             viewRouter = $0
-            isRouterViewEmpty = $0.isEmpty
         }
         .onReceived(container.appstate.actionViewPublisher) {
             actionRouter = $0
-            isActionViewEmpty = $0.isEmpty
         }
         .onReceived(container.appstate.monthlyCheckPublisher) { _ = container.interactor.data.UpdateMonthlyBudget(budget) }
         .onChanged(of: budget.book.count) { refreshCurrentCard() }
@@ -70,7 +68,7 @@ struct ContentView: View {
     @ViewBuilder
     private func routerView() -> some View {
         switch viewRouter {
-            case .Empty:
+            case nil:
                 EmptyView()
             case let .Setting(di, budget, card):
                 SettingView(injector: di, budget: budget, current: card)
@@ -88,7 +86,7 @@ struct ContentView: View {
     @ViewBuilder
     private func actionView() -> some View {
         switch actionRouter {
-            case .Empty:
+            case nil:
                 EmptyView()
             case let .CreateCard(budget):
                 CreateCardPanel(budget: budget)
@@ -149,14 +147,14 @@ extension ContentView {
     func refreshCurrentCard() {
         defer { bookCount = budget.book.count }
         if !budget.HasCard() {
-            current = .empty
+            current = .blank()
             return
         }
         current = bookCount < budget.book.count ? budget.book.last! : budget.book.first!
     }
     
     func handleOnAppear() {
-        container.interactor.data.PublishCurrentBudget()
+        container.interactor.data.PublishCurrentBudgetFromDB()
         cleanTagTimer = .scheduledTimer(withTimeInterval: .day, repeats: true) { _ in
             container.interactor.data.DeleteExpiredTags()
         }

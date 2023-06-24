@@ -67,10 +67,10 @@
 "panel.card.create.name.label.placeholder" = "新卡片";
 "panel.card.create.amount.label" = "預算";
 "panel.card.create.amount.label.placeholder" = "10000";
-"panel.card.create.font_color.label" = "字體顏色";
-"panel.card.create.color.label" = "顏色";
+"panel.card.create.f_color.label" = "字體顏色";
+"panel.card.create.b_color.label" = "背景顏色";
 "panel.card.create.display.label" = "週期";
-"panel.card.create.fixed.label" = "固定";
+"panel.card.create.pinned.label" = "固定";
 
 /* card context alert */
 "card.context.alert.delete.title" = "刪除預算卡片";
@@ -85,11 +85,11 @@
 "panel.record.create.date.label" = "日期";
 "panel.record.create.memo.label" = "備註";
 "panel.record.create.memo.placeholder" = "晚餐";
-"panel.record.create.fixed.label" = "固定";
+"panel.record.create.pinned.label" = "固定";
 "button.record.create" = "新增花費";
 
 /* budget page view */
-"view.record.row.title.fixed" = "固定花費";
+"view.record.row.title.pinned" = "固定花費";
 
 /* welcome view description */
 "welcome.button.next" = "下一步";

@@ -6,26 +6,29 @@
 //
 
 import SwiftUI
-import UIComponent
+import Ditto
 
 @main
 struct EinanceApp: App {
     @State private var appearance: ColorScheme? = nil
     @State private var locale: Locale = .current
-    @State private var showV2Content: Bool = true
+    
+    @State var fColor: Color = .white
+    @State var bColor: Color = .cyan
+    @State var gColor: Color = .green
 #if DEBUG
     private let container: DIContainer = .init(isMock: true)
 #else
     private let container: DIContainer = .init(isMock: false)
 #endif
+    
     var body: some Scene {
         WindowGroup {
             contentViewRouter()
                 .inject(container)
                 .preferredColorScheme(appearance)
                 .environment(\.locale, self.locale)
-                .backgroundColor(.background, ignoresSafeAreaEdges: .all)
-                .onReceived(container.appstate.contentViewV2Publisher) { showV2Content = $0 }
+                .background(Color.background, ignoresSafeAreaEdges: .all)
                 .onReceived(container.appstate.appearancePublisher) { appearance = $0 }
                 .onReceived(container.appstate.localePublisher) { locale = $0 }
                 .onAppeared { appearance = container.interactor.setting.GetAppearance() }
@@ -35,10 +38,6 @@ struct EinanceApp: App {
     
     @ViewBuilder
     private func contentViewRouter() -> some View {
-        if showV2Content {
-            ContentViewV2()
-        } else {
-            ContentView()
-        }
+        ContentViewV2()
     }
 }

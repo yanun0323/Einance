@@ -1,8 +1,8 @@
 import SwiftUI
-import UIComponent
+import Ditto
 
 struct CardRectConcept: View {
-    @Binding var fontColor: Color
+    @Binding var fColor: Color
     @Binding var color: Color
     
     var body: some View {
@@ -16,7 +16,7 @@ struct CardRectConcept: View {
         }
         .font(.system(size: title))
         .frame(width: size, height: size*0.66)
-        .foregroundColor(fontColor)
+        .foregroundColor(fColor)
         .background(color)
         .cornerRadius(Setting.globalCornerRadius)
     }
@@ -25,17 +25,17 @@ struct CardRectConcept: View {
 extension CardRectConcept {
     
     private var title: CGFloat {
-        return System.device.screen.width * 0.1
+        return System.screen.width * 0.1
     }
     
     private var size: CGFloat {
-        return System.device.screen.width - title*2
+        return System.screen.width - title*2
     }
     
 }
 
 struct CardRectConcept_Previews: PreviewProvider {
     static var previews: some View {
-        CardRectConcept(fontColor: .constant(.white), color: .constant(.cyan))
+        CardRectConcept(fColor: .constant(.white), color: .constant(.cyan))
     }
 }

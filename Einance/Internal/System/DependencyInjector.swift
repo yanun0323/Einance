@@ -1,28 +1,53 @@
 import SwiftUI
-
-class DIContainer: ObservableObject {
-    var appstate: AppState
-    var interactor: Interactor
+import Ditto
+import WatchConnectivity
+extension DIContainer {
+    var appstate: AppState { AppState.get() }
+    var interactor: Interactor { Interactor.get(isMock: self.isMock) }
     
-    init(isMock: Bool = false) {
-        let appstate = AppState()
-        self.appstate = appstate
-        self.interactor = Interactor(isMock: isMock, appstate: appstate)
-        
+    func setup() {
+        _ = appstate
+        _ = interactor
     }
 }
 
 struct Interactor {
-    var data: DataInteractor
+    private static var `default`: Interactor? = nil
+    
+    var common: CommonInteractor
     var system: SystemInteractor
     var setting: UserSettingInteractor
+    var data: DataInteractor
+    var watch: WatchInteractor
     
-    init(isMock: Bool, appstate: AppState) {
+    init(appstate: AppState, isMock: Bool) {
         let repo: Repository = Dao()
-        _ = Sql.Init(isMock: isMock)
+        var dbName: String? = UserDefaults.mockDBName
         
-        self.data = DataInteractor(appstate: appstate, repo: repo)
+        #if DEBUG
+        if dbName == nil {
+            dbName = "development"
+        }
+        #endif
+        repo.setup(dbName, isMock: isMock, migrate: true)
+        repo.trace { sql in
+            print("[TRACE] \(sql)")
+        }
+        
+        self.common = CommonInteractor()
         self.system = SystemInteractor(appstate: appstate, repo: repo)
-        self.setting = UserSettingInteractor(appstate: appstate, repo: repo)
+        self.setting = UserSettingInteractor(appstate: appstate, repo: repo, common: common)
+        self.data = DataInteractor(appstate: appstate, repo: repo, common: common, setting: setting)
+        self.watch = WatchInteractor(appstate: appstate, repo: repo, setting: setting)
+        watch.setupSubscribe()
+    }
+}
+
+extension Interactor {
+    static func get(isMock: Bool) -> Self {
+        if Self.default.isNil {
+            Self.default = Interactor(appstate: AppState.get(), isMock: isMock)
+        }
+        return Self.default!
     }
 }

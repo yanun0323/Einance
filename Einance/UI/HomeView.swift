@@ -1,8 +1,8 @@
 import SwiftUI
-import UIComponent
+import Ditto
 
 struct HomeView: View {
-    @EnvironmentObject private var container: DIContainer
+    @Environment(\.injected) private var container: DIContainer
     
     @ObservedObject var budget: Budget
     @ObservedObject var current: Card
@@ -41,7 +41,7 @@ struct HomeView_Previews: PreviewProvider {
         HomeView(budget: .preview, current: .preview, selected: .constant(.preview))
             .inject(DIContainer.preview)
             .previewDeviceSet()
-            .environment(\.locale, .US)
+            .environment(\.locale, .us)
     }
 }
 #endif

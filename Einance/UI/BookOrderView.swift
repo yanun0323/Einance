@@ -1,9 +1,9 @@
 import SwiftUI
-import UIComponent
+import Ditto
 import UniformTypeIdentifiers
 
 struct BookOrderView: View {
-    @EnvironmentObject private var container: DIContainer
+    @Environment(\.injected) private var container: DIContainer
     
     @GestureState private var dragOffset: CGSize = .zero
     @State private var draggingOffset: CGSize = .zero
@@ -15,18 +15,17 @@ struct BookOrderView: View {
     @ObservedObject var budget: Budget
     
     @State private var info = "\n"
-    private let defaultCardOffset: CGFloat = System.device.screen.width * 0.25
+    private let defaultCardOffset: CGFloat = System.screen.width * 0.25
     
     // MARK: TODO: Check Refresh
     var body: some View {
         VStack(spacing: 30) {
-            ViewHeader(title: "view.header.book.order")
             GeometryReader { proxy in
                 listBlock(getCardOffset(proxy))
                     .padding()
             }
         }
-        .modifyRouterBackground()
+        .navigationTitle("view.header.book.order")
         .transition(.scale(scale: 0.95, anchor: .topTrailing).combined(with: .opacity))
     }
     
@@ -108,9 +107,10 @@ extension BookOrderView {
 #if DEBUG
 struct BookOrderView_Previews: PreviewProvider {
     static var previews: some View {
-        BookOrderView(budget: Budget.preview)
+        BookOrderView(budget: .preview)
             .inject(DIContainer.preview)
-            .environment(\.locale, .US)
+            .environment(\.locale, .us)
+            .preferredColorScheme(.dark)
     }
 }
 #endif

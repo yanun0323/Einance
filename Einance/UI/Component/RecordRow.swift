@@ -1,23 +1,23 @@
 import SwiftUI
-import UIComponent
+import Ditto
 
 struct RecordRow: View {
-    @EnvironmentObject private var container: DIContainer
+    @Environment(\.injected) private var container: DIContainer
     @ObservedObject var budget: Budget
     @ObservedObject var card: Card
     @ObservedObject var record: Record
     
     var body: some View {
         HStack {
-            if record.fixed {
+            if record.pinned {
                 Image(systemName: "pin")
                     .font(.callout)
                     .fontWeight(.semibold)
                     .rotationEffect(Angle(degrees: 45))
-                    .foregroundColor(card.color)
+                    .foregroundColor(card.bColor)
                     .padding(.trailing, 10)
             } else {
-                Block(width: 4, color: card.color)
+                Block(width: 4, color: card.bColor)
                     .padding(.trailing, 10)
             }
             Text(record.memo)
@@ -60,15 +60,15 @@ struct RecordRow: View {
     
     @ViewBuilder
     private func leadingSwapeAction() -> some View {
-        if card.fixed {
+        if card.pinned {
             Button(role: .cancel) {
                 withAnimation(.quick) {
-                    let fixed = !record.fixed
-                    container.interactor.data.UpdateRecord(budget, card, record, date: record.date, cost: record.cost, memo: record.memo, fixed: fixed)
+                    let pinned = !record.pinned
+                    container.interactor.data.UpdateRecord(budget, card, record, date: record.date, cost: record.cost, memo: record.memo, pinned: pinned)
                 }
             } label: {
                 Label("Fixed", systemImage: "pin")
-                    .foregroundColor(card.color)
+                    .foregroundColor(card.bColor)
             }
         }
     }

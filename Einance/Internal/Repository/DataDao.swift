@@ -1,28 +1,51 @@
 import SwiftUI
-import UIComponent
 import SQLite
+import Ditto
 
-class DataDaoCache {}
+
+class P: Identifiable {
+    
+}
 
 protocol DataDao {}
 
 extension DataDao where Self: DataRepository {
+    
+    // MARK: - Setup
+    
+    func setup(_ dbName: String?, isMock: Bool, migrate: Bool = true) {
+        let db = SQL.setup(dbName: dbName, isMock: isMock)
+        var migration: [Migrator.Type] = []
+        if migrate {
+            migration = [
+                Tag.self,
+                Record.self,
+                Card.self,
+                Budget.self,
+            ]
+        }
+        db.migrate(migration)
+    }
+    
+    func trace( _ trace: ((String) -> Void)?) {
+        SQL.getDriver().trace(trace)
+    }
+    
     // MARK: - Common
     
     func Tx<T>(_ action: () throws -> T?) throws -> T? where T: Any {
         var result: T?
-        try Sql.GetDriver().transaction {
+        try SQL.getDriver().transaction {
             result = try action()
         }
         return result
     }
     
-    
     // MARK: - Budgets
     
     func IsDateBudgetArchived(_ archivedAt: Date) throws -> Bool {
-        let query = Budget.Table().filter(Budget.archiveAt == archivedAt).exists
-        return try Sql.GetDriver().scalar(query)
+        let query = Budget.table.filter(Budget.archiveAt == archivedAt).exists
+        return try SQL.getDriver().scalar(query)
     }
 
     
@@ -32,19 +55,19 @@ extension DataDao where Self: DataRepository {
     
     func ListBudgets() throws -> [Budget] {
         var budgets: [Budget] = []
-        let result = try Sql.GetDriver().prepare(Budget.Table().order(Budget.id.desc))
+        let result = try SQL.getDriver().prepare(Budget.table.order(Budget.id.desc))
         for row in result {
-            let b = try queryBudget(try parseBudget(row))
+            let b = try queryBudget(try Budget.parse(row))
             budgets.append(b)
         }
         return budgets
     }
     
-    func ListBudgetsWithoutChildren(_:Int64) throws -> [Budget] {
+    func ListBudgetsWithoutChildren() throws -> [Budget] {
         var budgets: [Budget] = []
-        let result = try Sql.GetDriver().prepare(Budget.Table().order(Budget.id.desc))
+        let result = try SQL.getDriver().prepare(Budget.table.order(Budget.id.desc))
         for row in result {
-            budgets.append(try parseBudget(row))
+            budgets.append(try Budget.parse(row))
         }
         return budgets
     }
@@ -52,87 +75,106 @@ extension DataDao where Self: DataRepository {
     // MARK: - Budget
     
     func GetBudget(_ id: Int64) throws -> Budget? {
-        let query = Budget.Table().filter(Budget.id == id)
-        let result = try Sql.GetDriver().prepare(query)
+        let query = Budget.table.filter(Budget.id == id)
+        let result = try SQL.getDriver().prepare(query)
         for row in result {
-            return try queryBudget(try parseBudget(row))
+            return try queryBudget(try Budget.parse(row))
         }
         return nil
     }
     
     func GetLastBudget() throws -> Budget? {
-        let query = Budget.Table().limit(1).order(Budget.id.desc)
-        let result = try Sql.GetDriver().prepare(query)
+        let query = Budget.table.limit(1).order(Budget.id.desc)
+        let result = try SQL.getDriver().prepare(query)
         for row in result {
-            return try queryBudget(try parseBudget(row))
+            return try queryBudget(try Budget.parse(row))
+        }
+        return nil
+    }
+    
+    func GetLastBudgetID() throws -> Int64? {
+        let query = Budget.table.limit(1).order(Budget.id.desc).select(Budget.id)
+        let result = try SQL.getDriver().prepare(query)
+        for row in result {
+            return try row.get(Budget.id)
         }
         return nil
     }
     
     func CreateBudget(_ b: Budget) throws -> Int64 {
-        let insert = Budget.Table().insert(
+        let insert = Budget.table.insert(
             Budget.startAt <- b.startAt,
             Budget.archiveAt <- b.archiveAt,
             Budget.amount <- b.amount,
             Budget.cost <- b.cost,
             Budget.balance <- b.balance,
-            Budget.updatedAt <- .now
+            Budget.updatedAt <- b.updatedAt
         )
         
-        return try Sql.GetDriver().run(insert)
+        return try SQL.getDriver().run(insert)
     }
     
     func UpdateBudget(_ b: Budget) throws {
-        let update = Budget.Table().filter(Budget.id == b.id).update(
+        let update = Budget.table.filter(Budget.id == b.id).update(
             Budget.startAt <- b.startAt,
             Budget.archiveAt <- b.archiveAt,
             Budget.amount <- b.amount,
             Budget.cost <- b.cost,
             Budget.balance <- b.balance,
-            Budget.updatedAt <- .now
+            Budget.updatedAt <- b.updatedAt
         )
-        try Sql.GetDriver().run(update)
+        try SQL.getDriver().run(update)
     }
     
     func DeleteBudget(_ id: Int64) throws {
-        try Sql.GetDriver().run(Budget.Table().filter(Budget.id == id).delete())
+        try SQL.getDriver().run(Budget.table.filter(Budget.id == id).delete())
     }
     
     
     // MARK: - Card
     
     func GetCard(_ id: Int64) throws -> Card? {
-        let query = Card.Table().filter(Card.id == id)
-        let result = try Sql.GetDriver().prepare(query)
+        let query = Card.table.filter(Card.id == id)
+        let result = try SQL.getDriver().prepare(query)
         for row in result {
-            return try queryCard(try parseCard(row))
+            return try queryCard(try Card.parse(row))
         }
         return nil
     }
     
-    func ListCards(_ budgetID:Int64) throws -> [Card] {
-        let query = Card.Table().filter(Card.budgetID == budgetID)
-        let result = try Sql.GetDriver().prepare(query)
+    func ListCards(_ budgetID: Int64) throws -> [Card] {
+        let query = Card.table.filter(Card.budgetID == budgetID)
+        let result = try SQL.getDriver().prepare(query)
         var cards: [Card] = []
         for row in result {
-            cards.append(try queryCard(try parseCard(row)))
+            cards.append(try queryCard(try Card.parse(row)))
         }
         return cards
     }
     
     func ListCards(_ chainID: UUID) throws -> [Card] {
-        let query = Card.Table().filter(Card.chainID == chainID)
-        let result = try Sql.GetDriver().prepare(query)
+        let query = Card.table.filter(Card.chainID == chainID)
+        let result = try SQL.getDriver().prepare(query)
         var cards: [Card] = []
         for row in result {
-            cards.append(try queryCard(try parseCard(row)))
+            cards.append(try queryCard(try Card.parse(row)))
+        }
+        return cards
+    }
+    
+    func ListCardsWithoutChildren(_ budgetID: Int64) throws -> [Card] {
+        let query = Card.table.filter(Card.budgetID == budgetID)
+        let result = try SQL.getDriver().prepare(query)
+        var cards: [Card] = []
+        for row in result {
+            cards.append(try Card.parse(row))
         }
         return cards
     }
     
     func ListChainableCards() throws -> [Card] {
-        let query = Card.Table().select(Card.chainID).group(Card.chainID, having: Card.chainID.count > 1)
-        let result = try Sql.GetDriver().prepare(query)
+        let query = Card.table.select(Card.chainID).group(Card.chainID, having: Card.chainID.count > 1)
+        let result = try SQL.getDriver().prepare(query)
         var ids: [UUID] = []
         for row in result {
             ids.append(try row.get(Card.chainID))
@@ -140,10 +182,10 @@ extension DataDao where Self: DataRepository {
 
         var cards: [Card] = []
         for id in ids {
-            let query = Card.Table().filter(Card.chainID == id).limit(1)
-            let result = try Sql.GetDriver().prepare(query)
+            let query = Card.table.filter(Card.chainID == id).limit(1)
+            let result = try SQL.getDriver().prepare(query)
             for row in result {
-                cards.append(try parseCard(row))
+                cards.append(try Card.parse(row))
             }
         }
         cards.sort(by: { $0.id > $1.id })
@@ -151,8 +193,8 @@ extension DataDao where Self: DataRepository {
     }
     
     func ListChainableCards(_ budget: Budget) throws -> [Card] {
-        let query = Card.Table().select(Card.chainID).group(Card.chainID, having: Card.chainID.count > 1)
-        let result = try Sql.GetDriver().prepare(query)
+        let query = Card.table.select(Card.chainID).group(Card.chainID, having: Card.chainID.count > 1)
+        let result = try SQL.getDriver().prepare(query)
         var ids: Set<UUID> = []
         for row in result {
             ids.insert(try row.get(Card.chainID))
@@ -162,7 +204,7 @@ extension DataDao where Self: DataRepository {
     }
     
     func CreateCard(_ c: Card) throws -> Int64 {
-        let insert = Card.Table().insert(
+        let insert = Card.table.insert(
             Card.chainID <- c.chainID,
             Card.budgetID <- c.budgetID,
             Card.index <- c.index,
@@ -171,16 +213,17 @@ extension DataDao where Self: DataRepository {
             Card.cost <- c.cost,
             Card.balance <- c.balance,
             Card.display <- c.display,
-            Card.fontColor <- c.fontColor,
-            Card.color <- c.color,
-            Card.fixed <- c.fixed,
-            Card.updatedAt <- .now
+            Card.fColor <- c.fColor,
+            Card.bColor <- c.bColor,
+            Card.gColor <- c.gColor,
+            Card.pinned <- c.pinned,
+            Card.updatedAt <- Date.now.unix
         )
-        return try Sql.GetDriver().run(insert)
+        return try SQL.getDriver().run(insert)
     }
     
     func UpdateCard(_ c: Card) throws {
-        let update = Card.Table().filter(Card.id == c.id).update(
+        let update = Card.table.filter(Card.id == c.id).update(
             Card.chainID <- c.chainID,
             Card.budgetID <- c.budgetID,
             Card.index <- c.index,
@@ -189,96 +232,76 @@ extension DataDao where Self: DataRepository {
             Card.cost <- c.cost,
             Card.balance <- c.balance,
             Card.display <- c.display,
-            Card.fontColor <- c.fontColor,
-            Card.color <- c.color,
-            Card.fixed <- c.fixed,
-            Card.updatedAt <- .now
+            Card.fColor <- c.fColor,
+            Card.bColor <- c.bColor,
+            Card.gColor <- c.gColor,
+            Card.pinned <- c.pinned,
+            Card.updatedAt <- Date.now.unix
         )
-        try Sql.GetDriver().run(update)
+        try SQL.getDriver().run(update)
     }
     
     func DeleteCard(_ id: Int64) throws {
-        try Sql.GetDriver().run(Card.Table().filter(Card.id == id).delete())
+        try SQL.getDriver().run(Card.table.filter(Card.id == id).delete())
     }
     
     func DeleteCards(_ budgetID: Int64) throws {
-        try Sql.GetDriver().run(Card.Table().filter(Card.budgetID == budgetID).delete())
+        try SQL.getDriver().run(Card.table.filter(Card.budgetID == budgetID).delete())
     }
     
     // MARK: - Record
     
     func GetRecord(_ id: Int64) throws -> Record? {
-        let query = Record.Table().filter(Record.id == id)
-        let result = try Sql.GetDriver().prepare(query)
+        let result = try SQL.getDriver().query(Record.self) { $0.where(Record.id == id) }
         for row in result {
-            return try parseRecord(row)
+            return try Record.parse(row)
         }
         return nil
     }
     
     func ListRecords(after time: Date) throws -> [Record] {
-        let query = Record.Table().filter(Record.updatedAt >= time).order(Record.id.desc)
-        let result = try Sql.GetDriver().prepare(query)
-        
+        let result = try SQL.getDriver().query(Record.self) { $0.where(Record.updatedAt >= time.unix).order(Record.id.desc) }
         var records: [Record] = []
         for row in result {
-            records.append(try parseRecord(row))
+            records.append(try Record.parse(row))
         }
         return records
     }
     
     func ListRecords(_ cardID: Int64) throws -> [Record] {
-        let query = Record.Table().filter(Record.cardID == cardID).order(Record.id.desc)
-        let result = try Sql.GetDriver().prepare(query)
-        
+        let result = try SQL.getDriver().query(Record.self) { $0.where(Record.cardID == cardID).order(Record.id.desc) }
         var records: [Record] = []
         for row in result {
-            records.append(try parseRecord(row))
+            records.append(try Record.parse(row))
         }
         return records
     }
     
     func CreateRecord(_ r: Record) throws -> Int64 {
-        let insert = Record.Table().insert(
-            Record.cardID <- r.cardID,
-            Record.date <- r.date,
-            Record.cost <- r.cost,
-            Record.memo <- r.memo,
-            Record.fixed <- r.fixed,
-            Record.updatedAt <- .now
-        )
-        return try Sql.GetDriver().run(insert)
+        return try SQL.getDriver().insert(r)
     }
     
     func UpdateRecord(_ r: Record) throws {
-        let update = Record.Table().filter(Record.id == r.id).update(
-            Record.cardID <- r.cardID,
-            Record.date <- r.date,
-            Record.cost <- r.cost,
-            Record.memo <- r.memo,
-            Record.fixed <- r.fixed,
-            Record.updatedAt <- .now
-        )
-        try Sql.GetDriver().run(update)
+        _ = try SQL.getDriver().update(r, where: Record.id == r.id)
     }
     
     func DeleteRecord(_ id: Int64) throws {
-        try Sql.GetDriver().run(Record.Table().filter(Record.id == id).delete())
+        try SQL.getDriver().run(Record.table.filter(Record.id == id).delete())
     }
     
     func DeleteRecords(_ cardID: Int64) throws {
-        try Sql.GetDriver().run(Record.Table().filter(Record.cardID == cardID).delete())
+        try SQL.getDriver().run(Record.table.filter(Record.cardID == cardID).delete())
     }
     
     // MARK: - Tag
     
     func IsTagExist(_ chainID: UUID, _ type: TagType, _ value: String) throws -> Bool {
-        let query = Tag.Table().filter(
+        let query = Tag.table.filter(
             Tag.chainID == chainID &&
             Tag.type == type &&
             Tag.value == value
         ).exists
-        return try Sql.GetDriver().scalar(query)
+        return try SQL.getDriver().scalar(query)
     }
     
     func ListTags(_ chainID: UUID, _ type: TagType, _ time: Int, _ seconds: Int, _ count: Int) throws -> [Tag] {
@@ -290,16 +313,16 @@ extension DataDao where Self: DataRepository {
         print("DAO list tags PARAM: type: \(type), start: \(start), end: \(end)")
         #endif
         
-        let query = Tag.Table().filter(
+        let query = Tag.table.filter(
             Tag.chainID == chainID &&
             Tag.type == type &&
             Tag.key >= start &&
             Tag.key <= end &&
             Tag.count > 0
         ).order(Tag.count.desc).limit(count)
-        let result = try Sql.GetDriver().prepare(query)
+        let result = try SQL.getDriver().prepare(query)
         for row in result {
-            tags.append(try parseTag(row))
+            tags.append(try Tag.parse(row))
         }
         
         let secondOfDay = SecondOfDay()
@@ -314,16 +337,16 @@ extension DataDao where Self: DataRepository {
             return tags
         }
         
-        let query2 = Tag.Table().filter(
+        let query2 = Tag.table.filter(
             Tag.chainID == chainID &&
             Tag.type == type &&
             Tag.key >= start &&
             Tag.key <= end &&
             Tag.count > 0
         ).order(Tag.count.desc).limit(count)
-        let result2 = try Sql.GetDriver().prepare(query2)
+        let result2 = try SQL.getDriver().prepare(query2)
         for row in result2 {
-            tags.append(try parseTag(row))
+            tags.append(try Tag.parse(row))
         }
         
         #if DEBUG
@@ -333,70 +356,70 @@ extension DataDao where Self: DataRepository {
     }
     
     func GetTag(_ chainID: UUID, _ type: TagType, _ value: String) throws -> Tag? {
-        let query = Tag.Table().filter(
+        let query = Tag.table.filter(
             Tag.chainID == chainID &&
             Tag.type == type &&
             Tag.value == value
         )
-        let result = try Sql.GetDriver().prepare(query)
+        let result = try SQL.getDriver().prepare(query)
         for row in result {
-            return try parseTag(row)
+            return try Tag.parse(row)
         }
         return nil
     }
     
     func CreateTag(_ t: Tag) throws -> Int64 {
-        let insert = Tag.Table().insert(
+        let insert = Tag.table.insert(
             Tag.chainID <- t.chainID,
             Tag.type <- t.type,
             Tag.value <- t.value,
             Tag.count <- t.count,
             Tag.key <- t.key,
-            Tag.updatedAt <- .now
+            Tag.updatedAt <- Date.now.unix
         )
-        return try Sql.GetDriver().run(insert)
+        return try SQL.getDriver().run(insert)
     }
     
     func UpdateTag(_ t: Tag) throws {
-        let update = Tag.Table().filter(Tag.id == t.id).update(
+        let update = Tag.table.filter(Tag.id == t.id).update(
             Tag.chainID <- t.chainID,
             Tag.type <- t.type,
             Tag.value <- t.value,
             Tag.count <- t.count,
             Tag.key <- t.key,
-            Tag.updatedAt <- .now
+            Tag.updatedAt <- Date.now.unix
         )
-        try Sql.GetDriver().run(update)
+        try SQL.getDriver().run(update)
     }
     
     func DeleteTag(_ id: Int64) throws {
-        try Sql.GetDriver().run(Tag.Table().filter(Tag.id == id).delete())
+        try SQL.getDriver().run(Tag.table.filter(Tag.id == id).delete())
     }
     
     func DeleteTags(_ chainID: UUID) throws {
-        try Sql.GetDriver().run(Tag.Table().filter(Tag.chainID == chainID).delete())
+        try SQL.getDriver().run(Tag.table.filter(Tag.chainID == chainID).delete())
     }
     
     func DeleteTags(before time: Date) throws {
-        let delete = Tag.Table().filter(Tag.updatedAt <= time).delete()
-        try Sql.GetDriver().run(delete)
+        let delete = Tag.table.filter(Tag.updatedAt <= time.unix).delete()
+        try SQL.getDriver().run(delete)
     }
 }
 
 // MARK: - Private Function
-extension DataDao {
+fileprivate extension DataDao {
     
     private func SecondOfDay() -> Int { return 86400 }
     
     private func countBudget() throws -> Int {
-        return try Sql.GetDriver().scalar(Budget.Table().count)
+        return try SQL.getDriver().scalar(Budget.table.count)
     }
     
     private func queryBudget(_ b: Budget) throws -> Budget {
-        let query = Card.Table().filter(Card.budgetID == b.id).order(Card.index.asc)
-        let result = try Sql.GetDriver().prepare(query)
+        let query = Card.table.filter(Card.budgetID == b.id).order(Card.index.asc)
+        let result = try SQL.getDriver().prepare(query)
         for row in result {
-            let c = try queryCard(try parseCard(row))
+            let c = try queryCard(try Card.parse(row))
             b.book.append(c)
             if c.isForever { continue }
             b.amount += c.amount
@@ -407,11 +430,11 @@ extension DataDao {
     }
     
     private func queryCard(_ c: Card) throws -> Card {
-        let query = Record.Table().filter(Record.cardID == c.id).order(Record.date.desc)
-        let result = try Sql.GetDriver().prepare(query)
+        let query = Record.table.filter(Record.cardID == c.id).order(Record.date.desc)
+        let result = try SQL.getDriver().prepare(query)
         for row in result {
-            let r = try parseRecord(row)
-            if r.fixed {
+            let r = try Record.parse(row)
+            if r.pinned {
                 c.AddRecordToFixed(r)
             } else {
                 c.AddRecordToDict(r)
@@ -420,50 +443,5 @@ extension DataDao {
         }
         c.balance = c.amount - c.cost
         return c
-    }
-    
-    private func parseBudget(_ row: Row) throws -> Budget {
-        return Budget(
-            id: try row.get(Budget.id),
-            startAt: try row.get(Budget.startAt),
-            archiveAt: try row.get(Budget.archiveAt)
-        )
-    }
-    
-    private func parseCard(_ row: Row) throws -> Card {
-        return Card(
-            id: try row.get(Card.id),
-            chainID: try row.get(Card.chainID),
-            budgetID: try row.get(Card.budgetID),
-            index: try row.get(Card.index),
-            name: try row.get(Card.name),
-            amount: try row.get(Card.amount),
-            display: try row.get(Card.display),
-            fontColor: try row.get(Card.fontColor),
-            color: try row.get(Card.color),
-            fixed: try row.get(Card.fixed)
-        )
-    }
-    
-    private func parseRecord(_ row: Row) throws -> Record {
-        return Record(
-            id: try row.get(Record.id),
-            cardID: try row.get(Record.cardID),
-            date: try row.get(Record.date),
-            cost: try row.get(Record.cost),
-            memo: try row.get(Record.memo),
-            fixed: try row.get(Record.fixed)
-        )
-    }
-    
-    private func parseTag(_ row: Row) throws -> Tag {
-        return Tag(
-            id: try row.get(Tag.id),
-            chainID: try row.get(Tag.chainID),
-            type: try row.get(Tag.type),
-            value: try row.get(Tag.value),
-            count: try row.get(Tag.count),
-            key: try row.get(Tag.key)
-        )
     }
 }

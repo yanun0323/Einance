@@ -1,8 +1,8 @@
 import SwiftUI
-import UIComponent
+import Ditto
 
 struct ViewHeader: View {
-    @EnvironmentObject private var container: DIContainer
+    @Environment(\.injected) private var container: DIContainer
     let title: LocalizedStringKey
     var length: CGFloat = 45
     

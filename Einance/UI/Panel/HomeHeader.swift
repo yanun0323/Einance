@@ -1,8 +1,8 @@
 import SwiftUI
-import UIComponent
+import Ditto
 
 struct HomeHeader: View {
-    @EnvironmentObject private var container: DIContainer
+    @Environment(\.injected) private var container: DIContainer
     @ObservedObject var budget: Budget
     @ObservedObject var current: Card
     
@@ -25,7 +25,7 @@ struct HomeHeader: View {
     
     @ViewBuilder
     private func switchContentButton() -> some View {
-        ButtonCustom(width: 50, height: 50) {
+        Button(width: 50, height: 50) {
             container.interactor.system.PushContentViewRouter(true)
         } content: {
             Image(systemName: "arrow.triangle.2.circlepath")
@@ -35,7 +35,7 @@ struct HomeHeader: View {
     
     @ViewBuilder
     private func settingButton() -> some View {
-        ButtonCustom(width: buttonSize, height: buttonSize) {
+        Button(width: buttonSize, height: buttonSize) {
             container.interactor.system.PushRouterView(.Setting(container, budget, current))
         } content: {
             Image(systemName: "gearshape")
@@ -45,7 +45,7 @@ struct HomeHeader: View {
     
     @ViewBuilder
     private func analysisButton() -> some View {
-        ButtonCustom(width: buttonSize, height: buttonSize) {
+        Button(width: buttonSize, height: buttonSize) {
             container.interactor.system.PushRouterView(.Analysis)
         } content: {
             Image(systemName: "chart.xyaxis.line")
@@ -56,7 +56,7 @@ struct HomeHeader: View {
     @ViewBuilder
     private func reorderButton() -> some View {
         if budget.book.count >= 2 {
-            ButtonCustom(width: buttonSize, height: buttonSize) {
+            Button(width: buttonSize, height: buttonSize) {
                 container.interactor.system.PushRouterView(.BookOrder(budget))
             } content: {
                 Image(systemName: "rectangle.stack")
@@ -69,7 +69,7 @@ struct HomeHeader: View {
     
     @ViewBuilder
     private func createCardButton() -> some View {
-        ButtonCustom(width: buttonSize, height: buttonSize) {
+        Button(width: buttonSize, height: buttonSize) {
             container.interactor.system.PushActionView(.CreateCard(budget))
         } content: {
             Image(systemName: "rectangle.fill.badge.plus")
@@ -79,7 +79,7 @@ struct HomeHeader: View {
     
     @ViewBuilder
     private func debugButton() -> some View {
-        ButtonCustom(width: buttonSize, height: buttonSize) {
+        Button(width: buttonSize, height: buttonSize) {
             container.interactor.system.PushRouterView(.Debug(budget))
         } content: {
             Image(systemName: "hammer")

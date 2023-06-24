@@ -1,8 +1,8 @@
 import SwiftUI
-import UIComponent
+import Ditto
 
 struct AddRecordButtonLayer: View {
-    @EnvironmentObject private var container: DIContainer
+    @Environment(\.injected) private var container: DIContainer
     
     @ObservedObject var budget: Budget
     @ObservedObject var card: Card
@@ -17,7 +17,7 @@ struct AddRecordButtonLayer: View {
                     Label("button.record.create", systemImage: "plus.square.dashed")
                         .font(.system(size: 28, weight: .light))
                         .kerning(2)
-                        .foregroundColor(card.color)
+                        .foregroundColor(card.bColor)
                         .padding(size*0.15)
                         .padding(.bottom)
                 }
@@ -32,7 +32,7 @@ struct AddRecordButtonLayer: View {
 // MARK: - Property
 extension AddRecordButtonLayer {
     var size: CGFloat {
-        System.device.screen.width*0.2
+        System.screen.width*0.2
     }
 }
 

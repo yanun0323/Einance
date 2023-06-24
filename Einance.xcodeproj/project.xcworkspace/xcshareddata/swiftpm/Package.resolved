@@ -1,6 +1,15 @@
 {
   "pins" : [
     {
+      "identity" : "ditto",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/yanun0323/Ditto",
+      "state" : {
+        "branch" : "master",
+        "revision" : "8fc53645713068fb98dd9606adecaa0bce4921f2"
+      }
+    },
+    {
       "identity" : "sqlite.swift",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/stephencelis/SQLite.swift.git",
@@ -16,15 +25,6 @@
       "state" : {
         "revision" : "937e904258d22af6e447a0b72c0bc67583ef64a2",
         "version" : "1.0.4"
-      }
-    },
-    {
-      "identity" : "uicomponent",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/yanun0323/UIComponent.git",
-      "state" : {
-        "branch" : "master",
-        "revision" : "4d3db6517c2811e312640b5de8fbeba3bdf88c87"
       }
     }
   ],

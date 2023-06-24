@@ -1,8 +1,8 @@
 import SwiftUI
-import UIComponent
+import Ditto
 
 struct BudgetPage: View {
-    @EnvironmentObject private var container: DIContainer
+    @Environment(\.injected) private var container: DIContainer
     @Environment(\.locale) private var locale: Locale
     @State private var aboveBudgetCategory: FinanceCategory = .cost
     @State private var belowBudgetCategory: FinanceCategory = .amount
@@ -45,11 +45,11 @@ struct BudgetPage: View {
                     CardRect(budget: budget, card: card)
                         .padding(.horizontal)
                         .tag(card)
-                        .offset(y: System.device.screen.height*0.01)
+                        .offset(y: System.screen.height*0.01)
                 }
             }
             .tabViewStyle(.page(indexDisplayMode: .always))
-            .frame(height: System.device.screen.height*0.34, alignment: .top)
+            .frame(height: System.screen.height*0.34, alignment: .top)
         }
         .ignoresSafeArea(.keyboard)
         .scrollDisabled(true)
@@ -59,7 +59,7 @@ struct BudgetPage: View {
     private func recordListView() -> some View {
         if current.hasRecord {
             List {
-                fixedRecordList()
+                pinnedRecordList()
                 dateRecordList()
             }
             .animation(.none, value: current)
@@ -74,10 +74,10 @@ struct BudgetPage: View {
     }
     
     @ViewBuilder
-    private func fixedRecordList() -> some View {
+    private func pinnedRecordList() -> some View {
         if current.hasFixRecord {
             HStack {
-                Text("view.record.row.title.fixed")
+                Text("view.record.row.title.pinned")
                 Block(height: 1, color: .section)
                     .padding(.horizontal)
                 Text("\(current.pinnedCost.description) $")
@@ -102,7 +102,7 @@ struct BudgetPage: View {
     private func dateRecordList() -> some View {
         ForEach(current.dateDict.keys.reversed(), id: \.self) { date in
             HStack {
-                Text(date.String("MM/dd EEEE", locale))
+                Text(date.string("MM/dd EEEE", locale))
                 Block(height: 1, color: .section)
                     .padding(.horizontal)
                 Text("\(current.dateDict[date]!.cost.description) $")
@@ -128,7 +128,7 @@ struct BudgetPage_Previews: PreviewProvider {
             .inject(DIContainer.preview)
             .preferredColorScheme(.light)
             .backgroundColor(.background)
-            .environment(\.locale, .US)
+            .environment(\.locale, .us)
     }
 }
 #endif

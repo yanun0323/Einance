@@ -1,13 +1,16 @@
 import SwiftUI
 import Combine
+import Ditto
 
 struct AppState {
-    var budgetPublisher: PassthroughSubject<Budget?, Never> = .init()
+    private static var `default`: AppState? = nil
+    
+    var budgetPublisher: CurrentValueSubject<Budget?, Never> = .init(nil)
     var monthlyCheckPublisher: PassthroughSubject<Bool, Never> = .init()
     
     var contentViewV2Publisher: PassthroughSubject<Bool, Never> = .init()
-    var routerViewPublisher: CurrentValueSubject<ViewRouter, Never> = .init(.Empty)
-    var actionViewPublisher: CurrentValueSubject<ActionRouter, Never> = .init(.Empty)
+    var routerViewPublisher: CurrentValueSubject<ViewRouter?, Never> = .init(nil)
+    var actionViewPublisher: CurrentValueSubject<ActionRouter?, Never> = .init(nil)
     
     var pickerPublisher: PassthroughSubject<Bool, Never> = .init()
     var appearancePublisher: PassthroughSubject<ColorScheme?, Never> = .init()
@@ -17,7 +20,8 @@ struct AppState {
     var belowBudgetCategoryPubliser: PassthroughSubject<FinanceCategory, Never> = .init()
     var leftBudgetCategoryPublisher: PassthroughSubject<FinanceCategory, Never> = .init()
     var rightBudgetCategoryPublisher: PassthroughSubject<FinanceCategory, Never> = .init()
-        
+       
+#if os(iOS)
     var keyboardPublisher: AnyPublisher<Bool, Never> {
         Publishers.Merge(
             NotificationCenter.default
@@ -30,44 +34,30 @@ struct AppState {
         )
         .eraseToAnyPublisher()
     }
+#endif
 }
 
 extension AppState {
-    enum ViewRouter {
-        case Empty
-        case Setting(DIContainer, Budget, Card)
-        case BookOrder(Budget)
-        case Statistic(Budget)
-        case Analysis
-        case Debug(Budget)
-        
-        var isEmpty: Bool {
-            switch self {
-                case .Empty:
-                    return true
-                default:
-                    return false
-            }
+    static func get() -> Self {
+        if Self.default.isNil {
+            Self.default = Self()
         }
+        return Self.default!
     }
 }
 
-extension AppState {
-    enum ActionRouter {
-        case Empty
-        case CreateCard(Budget)
-        case EditCard(Budget, Card)
-        case CreateRecord(Budget, Card)
-        case EditRecord(Budget, Card, Record)
-        
-        var isEmpty: Bool {
-            switch self {
-                case .Empty:
-                    return true
-                default:
-                    return false
-            }
-        }
-    }
+enum ViewRouter {
+    case Setting(DIContainer, Budget, Card)
+    case BookOrder(Budget)
+    case Statistic(Budget)
+    case Analysis
+    case Debug(Budget)
+}
+
+enum ActionRouter {
+    case CreateCard(Budget)
+    case EditCard(Budget, Card)
+    case CreateRecord(Budget, Card)
+    case EditRecord(Budget, Card, Record)
 }
 

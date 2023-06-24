@@ -1,154 +1,139 @@
 import SwiftUI
-import UIComponent
+import Ditto
 
 protocol UserSettingDao {}
 
 extension UserSettingDao where Self: UserSettingRepository {
-    func GetAppearance() -> Int? {
+    func GetAppearance() throws -> Int? {
         return UserDefaults.appearance
     }
     
-    func SetAppearance(_ appearance: Int?) {
+    func SetAppearance(_ appearance: Int?) throws {
         UserDefaults.appearance = appearance
     }
     
-    func GetBaseDateNumber() -> Int {
-        return UserDefaults.baseDateNumber ?? 5
+    func GetBaseDateNumber() throws -> Int? {
+        return UserDefaults.baseDateNumber
     }
     
-    func SetBaseDateNumber(_ value: Int?) {
+    func SetBaseDateNumber(_ value: Int?) throws {
         UserDefaults.baseDateNumber = value
     }
     
-    func GetFirstStartDate() -> Date {
-        let days = GetBaseDateNumber()
-        let prev =  Date.now.AddMonth(-1)
-        let prevDay1 = prev.firstDayOfMonth
-        var result = prevDay1.AddDay(days-1)
-        if prevDay1.daysOfMonth < days {
-            result = prevDay1.AddMonth(1).AddDay(-1)
-        }
-        
-        if result <= prev {
-            return result.AddMonth(1)
-        }
-        return result
-    }
-    
-    func GetCardBudgetCategoryAbove() -> Int? {
+    func GetCardBudgetCategoryAbove() throws -> Int? {
         return UserDefaults.cardBudgetCategoryAbove
     }
     
-    func SetCardBudgetCategoryAbove(_ value: Int?) {
+    func SetCardBudgetCategoryAbove(_ value: Int?) throws {
         UserDefaults.cardBudgetCategoryAbove = value
     }
     
-    func GetCardBudgetCategoryBelow() -> Int? {
+    func GetCardBudgetCategoryBelow() throws -> Int? {
         return UserDefaults.cardBudgetCategoryBelow
     }
     
-    func SetCardBudgetCategoryBelow(_ value: Int?) {
+    func SetCardBudgetCategoryBelow(_ value: Int?) throws {
         UserDefaults.cardBudgetCategoryBelow = value
     }
     
-    func GetDashboardBudgetCategoryRight() -> Int? {
+    func GetDashboardBudgetCategoryRight() throws -> Int? {
         return UserDefaults.dashboardBudgetCategoryRight
     }
     
-    func SetDashboardBudgetCategoryRight(_ value: Int?) {
+    func SetDashboardBudgetCategoryRight(_ value: Int?) throws {
         UserDefaults.dashboardBudgetCategoryRight = value
     }
     
-    func GetDashboardBudgetCategoryLeft() -> Int? {
+    func GetDashboardBudgetCategoryLeft() throws -> Int? {
     
         return UserDefaults.dashboardBudgetCategoryLeft
     }
     
-    func SetDashboardBudgetCategoryLeft(_ value: Int?) {
+    func SetDashboardBudgetCategoryLeft(_ value: Int?) throws {
         UserDefaults.dashboardBudgetCategoryLeft = value
     }
     
-    func GetLastUpdateDateKey() -> String? {
+    func GetLastUpdateDateKey() throws -> String? {
         return UserDefaults.lastUpdateDateKey
     }
     
-    func SetLastUpdateDateKey(_ value: String) {
+    func SetLastUpdateDateKey(_ value: String) throws {
         UserDefaults.lastUpdateDateKey = value
     }
     
-    func GetMockDBName() -> String {
-        return UserDefaults.mockDBName ?? "development"
+    func GetMockDBName() throws -> String? {
+        return UserDefaults.mockDBName
     }
     
-    func SetMockDBName(_ name: String) {
+    func SetMockDBName(_ name: String) throws {
         UserDefaults.mockDBName = name
     }
     
-    func GetLocale() -> Locale {
+    func GetLocale() throws -> Locale? {
         return Locale(data: UserDefaults.locale)
     }
     
-    func SetLocale(_ l: Locale) {
-        UserDefaults.locale = l.Int()
+    func SetLocale(_ l: Locale) throws {
+        UserDefaults.locale = l.int
     }
     
-    func GetPremium() -> Bool {
-        return UserDefaults.premiumUser ?? false
+    func GetPremium() throws -> Bool? {
+        return UserDefaults.premiumUser
     }
     
-    func SetPremium(_ value: Bool) {
+    func SetPremium(_ value: Bool) throws {
         UserDefaults.premiumUser =  value
     }
     
-    func GetTutorialHomePage() -> Bool {
-        return UserDefaults.tutorialHomePage ?? true
+    func GetTutorialHomePage() throws -> Bool? {
+        return UserDefaults.tutorialHomePage
     }
     
-    func SetTutorialHomePage(_ value: Bool) {
+    func SetTutorialHomePage(_ value: Bool) throws {
         UserDefaults.tutorialHomePage = value
     }
     
-    func GetTutorialCreateCard() -> Bool {
-        return UserDefaults.tutorialCreateCard ?? true
+    func GetTutorialCreateCard() throws -> Bool? {
+        return UserDefaults.tutorialCreateCard
     }
     
-    func SetTutorialCreateCard(_ value: Bool) {
+    func SetTutorialCreateCard(_ value: Bool) throws {
         UserDefaults.tutorialCreateCard = value
     }
     
-    func GetTutorialEditCard() -> Bool {
-        return UserDefaults.tutorialEditCard ?? true
+    func GetTutorialEditCard() throws -> Bool? {
+        return UserDefaults.tutorialEditCard
     }
     
-    func SetTutorialEditCard(_ value: Bool) {
+    func SetTutorialEditCard(_ value: Bool) throws {
         UserDefaults.tutorialEditCard = value
     }
     
-    func GetTutorialCreateRecord() -> Bool {
-        return UserDefaults.tutorialCreateRecord ?? true
+    func GetTutorialCreateRecord() throws -> Bool? {
+        return UserDefaults.tutorialCreateRecord
     }
     
-    func SetTutorialCreateRecord(_ value: Bool) {
+    func SetTutorialCreateRecord(_ value: Bool) throws {
         UserDefaults.tutorialCreateRecord = value
     }
     
-    func GetTutorialEditRecord() -> Bool {
-        return UserDefaults.tutorialEditRecord ?? true
+    func GetTutorialEditRecord() throws -> Bool? {
+        return UserDefaults.tutorialEditRecord
     }
     
-    func SetTutorialEditRecord(_ value: Bool) {
+    func SetTutorialEditRecord(_ value: Bool) throws {
         UserDefaults.tutorialEditRecord = value
     }
     
-    func GetTutorialSetting() -> Bool {
-        return UserDefaults.tutorialSetting ?? true
+    func GetTutorialSetting() throws -> Bool? {
+        return UserDefaults.tutorialSetting
     }
     
-    func SetTutorialSetting(_ value: Bool) {
+    func SetTutorialSetting(_ value: Bool) throws {
         UserDefaults.tutorialSetting = value
     }
     
-    func SetAllTutorial(_ value: Bool) {
+    func SetAllTutorial(_ value: Bool) throws {
         UserDefaults.tutorialCreateCard = value
         UserDefaults.tutorialEditCard = value
         UserDefaults.tutorialCreateRecord = value
@@ -157,11 +142,11 @@ extension UserSettingDao where Self: UserSettingRepository {
         UserDefaults.tutorialSetting = value
     }
     
-//    func GetTutorial() -> Bool {
-//        return UserDefaults.tutorial ?? true
+//    func GetTutorial() throws -> Bool {
+//        return UserDefaults.tutorial
 //    }
 //
-//    func SetTutorial(_ value: Bool) {
+//    func SetTutorial(_ value: Bool) throws {
 //        UserDefaults.tutorial = value
 //    }
     
@@ -170,23 +155,23 @@ extension Locale {
     public init(data: Int?) {
         switch data {
             case 1:
-                self = .TW
+                self = .tw
             case 2:
-                self = .US
+                self = .us
             case 3:
-                self = .JP
+                self = .jp
             default:
                 self = .current
         }
     }
     
-    public func Int() -> Int {
+    public var int: Int {
         switch self {
-            case .TW:
+            case .tw:
                 return 1
-            case .US:
+            case .us:
                 return 2
-            case .JP:
+            case .jp:
                 return 3
             default:
                 return 0

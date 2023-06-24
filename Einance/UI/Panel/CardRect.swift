@@ -1,8 +1,8 @@
 import SwiftUI
-import UIComponent
+import Ditto
 
 struct CardRect: View {
-    @EnvironmentObject private var container: DIContainer
+    @Environment(\.injected) private var container: DIContainer
     @State private var showDeleteAlert = false
     @State private var showArchiveAlert = false
     @State private var aboveCategory: FinanceCategory = .cost
@@ -35,7 +35,7 @@ struct CardRect: View {
             .monospacedDigit()
             .padding(.horizontal, size(p)*0.06)
             .frame(width: size(p), height: size(p)*0.66)
-            .backgroundColor(cardBackgroundColor())
+            .backgroundLinearGradient(cardBackgroundColor())
             .cornerRadius(15)
             .contextMenu {
                 if Active && !isPreview && !isOrder {
@@ -88,7 +88,7 @@ struct CardRect: View {
                 .font(.system(size: size(p)*0.05, weight: .light, design: .rounded))
                 .foregroundColor(cardTitleColor())
             
-            if card.fixed {
+            if card.pinned {
                 Image(systemName: "pin.fill")
                     .font(.system(size: size(p)*0.04, weight: .light, design: .rounded))
                     .foregroundColor(cardTitleColor())
@@ -102,7 +102,7 @@ struct CardRect: View {
     private func categoryValue(_ p: GeometryProxy, _ category: FinanceCategory, opacity: CGFloat) -> some View {
         Text(getCardMoney(category).description)
             .font(.system(size: size(p)*0.13, weight: .semibold, design: .rounded))
-            .foregroundColor(card.fontColor)
+            .foregroundColor(card.fColor)
             .opacity(opacity)
     }
     
@@ -181,18 +181,18 @@ extension CardRect {
         return proxy.size.width
     }
     
-    func cardBackgroundColor() -> Color {
+    func cardBackgroundColor() -> [Color] {
         if isPreview {
-            return .section
+            return [.section]
         }
-        return card.color
+        return card.bgColor
     }
     
     func cardTitleColor() -> Color {
         if isPreview {
             return .section
         }
-        return card.fontColor
+        return card.fColor
     }
     
     func getCardMoney(_ category: FinanceCategory) -> Decimal {
@@ -214,15 +214,15 @@ struct CardRect_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
             CardRect(budget: .preview, card: .preview, isPreview: true, previewColor: .cyan)
-                .frame(width: System.device.screen.width, height: System.device.screen.width*0.66)
+                .frame(width: System.screen.width, height: System.screen.width*0.66)
                 .padding()
                 .inject(DIContainer.preview)
             CardRect(budget: .preview, card: .preview)
-                .frame(width: System.device.screen.width*1.3, height: System.device.screen.width*0.66*1.3)
+                .frame(width: System.screen.width*1.3, height: System.screen.width*0.66*1.3)
                 .padding()
                 .inject(DIContainer.preview)
             CardRect(budget: .preview, card: .preview2)
-                .frame(width: System.device.screen.width, height: System.device.screen.width*0.66)
+                .frame(width: System.screen.width, height: System.screen.width*0.66)
                 .padding()
                 .inject(DIContainer.preview)
         }
