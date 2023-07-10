@@ -22,6 +22,7 @@ struct CreateCardPanel: View {
                 .ignoresSafeArea(.keyboard)
             externalKeyboardClosePanel()
         }
+        .background(Color.background)
         .onAppeared { focus = .input }
     }
     

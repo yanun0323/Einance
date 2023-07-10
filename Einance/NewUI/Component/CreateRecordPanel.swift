@@ -33,6 +33,7 @@ struct CreateRecordPanel: View {
                 .ignoresSafeArea(.keyboard)
             externalKeyboardPanel()
         }
+        .background(Color.background)
         .animation(.quick, value: focus)
         .sheet(isPresented: $showDatePicker) {
             focus = .number

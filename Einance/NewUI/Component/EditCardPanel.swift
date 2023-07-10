@@ -39,6 +39,7 @@ struct EditCardPanel: View {
                 .ignoresSafeArea(.keyboard)
             externalKeyboardClosePanel()
         }
+        .background(Color.background)
         .onAppeared { focus = .input }
     }
     

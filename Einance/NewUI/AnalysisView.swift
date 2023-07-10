@@ -9,9 +9,11 @@ struct AnalysisView: View {
     
     var body: some View {
         NavigationStack {
-            chartBlock()
-                .padding(.bottom, 10)
-            statisticBlock()
+            VStack(spacing: 10) {
+                chartBlock()
+                statisticBlock()
+            }
+            .background(Color.background)
         }
         .navigationTitle("view.header.analysis")
         .onAppeared {

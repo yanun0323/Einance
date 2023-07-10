@@ -37,6 +37,7 @@ struct EditRecordPanel: View {
                 .ignoresSafeArea(.keyboard)
             externalKeyboardPanel()
         }
+        .background(Color.background)
         .sheet(isPresented: $showDatePicker) {
             focus = .number
         } content: {

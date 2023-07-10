@@ -3,12 +3,14 @@ import SwiftUI
 
 struct HomeViewV2: View {
     @Environment(\.injected) private var container: DIContainer
+    @Environment(\.presentationMode) private var presentation
     @State private var title: String? = nil
     @State private var debug: String = "-"
-    @State private var bColor: Color = .cyan
-    @State private var gColor: Color = Color(hex: "#2cc")
+    @State private var bColor: Color = .gray
+    @State private var gColor: Color = .section
     @State private var showDeleteAlert = false
     @State private var showArchiveAlert = false
+    @State private var showBookOrderView: Bool = false
 
     @ObservedObject var budget: Budget
     @ObservedObject var current: Card
@@ -33,17 +35,22 @@ struct HomeViewV2: View {
                 }
                 .ignoresSafeArea(.all, edges: .bottom)
                 .frame(size: System.screen)
+                .background(Color.background)
 
                 if !selected.isBlank {
                     adder()
                         .padding(.bottom, 30)
+                        .ignoresSafeArea(.all, edges: .bottom)
                         .frame(size: System.screen)
-                        .ignoresSafeArea(.all)
                 }
             }
-
+            .navigationDestination(isPresented: $showBookOrderView) {
+                BookOrderView(budget: budget)
+            }
+            .navigationTitle("view.header.home")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar(.hidden, for: .navigationBar)
         }
-        .background(Color.background)
         .animation(.default, value: bColor)
         .animation(.default, value: gColor)
         .confirmationDialog(
@@ -92,9 +99,13 @@ struct HomeViewV2: View {
     private func overview() -> some View {
         VStack(spacing: 0) {
             HStack(spacing: 0) {
-                Text("statistic.overview.lable")
-                    .font(.system(size: 30, weight: .medium))
-                    .foregroundLinearGradient([bColor, gColor])
+                NavigationLink {
+                    SettingRouterView(budget: budget, current: current)
+                } label: {
+                    Text("statistic.overview.lable")
+                        .font(.system(size: 30, weight: .medium))
+                        .foregroundLinearGradient([bColor, gColor])
+                }
 
                 Spacer()
 
@@ -105,16 +116,6 @@ struct HomeViewV2: View {
                         .font(.system(size: 28, weight: .light))
                         .opacity(0.2)
                 }
-                NavigationLink {
-                    SettingRouterView(budget: budget, current: current)
-                } label: {
-                    Image(systemName: "line.3.horizontal")
-                        .font(.system(size: 30, weight: .light))
-                        .scaleEffect(y: 1.3)
-                        .opacity(0.2)
-                }
-                .foregroundColor(.primary)
-                .frame(width: 50, height: 50)
             }
         }
     }
@@ -141,21 +142,17 @@ struct HomeViewV2: View {
                     }
                     .cornerRadius(radius)
             }
-            .ignoresSafeArea()
             
             VStack(spacing: 0) {
                 Spacer()
                 RoundedRectangle(cornerRadius: radius)
-                    .foregroundColor(.primary)
+                    .foregroundColor(.background)
                     .frame(height: System.screen(.height, 0.5))
-                    .blendMode(.destinationOut)
                     .overlay {
                         detailList()
                     }
             }
-            .ignoresSafeArea()
         }
-        .compositingGroup()
         .ignoresSafeArea()
     }
 
@@ -176,18 +173,6 @@ struct HomeViewV2: View {
                         .padding(.trailing, pTrailing)
                         .tag(card)
                     }
-                    VStack {
-                        Spacer()
-                        Button(width: 50, height: 50, color: .green, radius: 50) {
-                            
-                        } content: {
-                            Image(systemName: "plus")
-                                .font(.system(size: 30))
-                                .foregroundColor(.white)
-                        }
-                        Spacer()
-                    }
-                    .tag(Card.blank())
                 }
                 .tabViewStyle(.page(indexDisplayMode: .always))
 
@@ -212,29 +197,23 @@ struct HomeViewV2: View {
     private func cardEditButton() -> some View {
         Menu {
             Button {
-                container.interactor.system.PushActionView(.EditCard(budget, selected))
+                container.interactor.system.PushActionView(.EditCard(budget, current))
             } label: {
                 Label("global.edit", systemImage: "pencil")
             }
-
-            NavigationLink {
-                BookOrderView(budget: budget)
+            
+            Button {
+                showBookOrderView = true
             } label: {
                 Label("view.header.book.order", systemImage: "arrow.up.arrow.down")
             }
-
-//            Button {
-//                container.interactor.system.PushRouterView(.BookOrder(budget))
-//            } label: {
-//                Label("view.header.book.order", systemImage: "arrow.up.arrow.down")
-//            }
-
+            
             Button(role: .destructive) {
                 showDeleteAlert = true
             } label: {
                 Label("global.delete", systemImage: "trash")
             }
-
+            
             if selected.isForever {
                 Button(role: .destructive) {
                     showArchiveAlert = true
@@ -326,7 +305,7 @@ struct HomeViewV2: View {
         } header: {
             HStack {
                 Text(LocalizedStringKey(title))
-                    .font(.system(size: 28, weight: .medium))
+                    .font(.system(size: 26, weight: .medium))
                     .foregroundLinearGradient([bColor, gColor])
                     .monospacedDigit()
                 Spacer()
@@ -336,7 +315,7 @@ struct HomeViewV2: View {
 
             }
             .padding(.horizontal)
-            .background()
+            .background(Color.background)
         }
         .listRowBackground(Color.clear)
         .listRowInsets(EdgeInsets(top: 0, leading: -16, bottom: 0, trailing: -16))
@@ -373,11 +352,13 @@ extension HomeViewV2 {
 
 #if DEBUG
 struct HomeViewV2_Previews: PreviewProvider {
+    @State static var card: Card = .preview
     static var previews: some View {
-        HomeViewV2(budget: .preview, current: .preview, selected: .constant(.preview))
+        HomeViewV2(budget: .preview, current: card, selected: $card)
             .inject(DIContainer.preview)
             .environment(\.locale, .us)
             .preferredColorScheme(.light)
+            .background(Color.background)
     }
 }
 #endif

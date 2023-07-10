@@ -74,6 +74,8 @@ struct SettingViewV2: View {
             calculatedNextDate = container.interactor.common.CalculateNextDate(
                 budget.startAt, days: $0)
         }
+        .padding(.horizontal, 30)
+        .background(Color.background)
     }
 
     @ViewBuilder

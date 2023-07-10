@@ -9,31 +9,26 @@ struct SettingRouterView: View {
 
     var body: some View {
         NavigationStack {
-            #if DEBUG
-            Button(width: 250, height: 50, colors: [.blue, .glue], radius: 15) {
-                container.interactor.watch.sendMessage()
-            } content: {
-                Text("Send Message To Watch")
-                    .foregroundColor(.white)
-            }
-            #endif
-
-            List {
-                targetView("view.header.setting") {
-                    SettingViewV2(injector: container, budget: budget, current: current)
-                }
-
-                targetView("view.header.analysis") {
-                    AnalysisView()
-                }
-
-                #if DEBUG
+            VStack {
+                List {
+                    targetView("view.header.setting") {
+                        SettingViewV2(injector: container, budget: budget, current: current)
+                    }
+                    
+                    targetView("view.header.analysis") {
+                        AnalysisView()
+                    }
+                    
+                    #if DEBUG
                     targetView("Debug") {
                         DebugView(budget: budget)
                     }
-                #endif
+                    #endif
+                }
+                .listStyle(.plain)
+                .navigationTitle("statistic.overview.lable")
             }
-            .listStyle(.plain)
+            .background(Color.background)
         }
     }
 
@@ -46,6 +41,7 @@ struct SettingRouterView: View {
         } label: {
             Text(title)
         }
+        .listRowBackground(Color.clear)
         .listRowSeparator(.hidden)
         .listSectionSeparator(.hidden)
         .frame(width: System.screen(.width, 0.9), alignment: .center)

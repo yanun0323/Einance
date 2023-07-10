@@ -26,7 +26,6 @@ struct StatisticPage: View {
         self.costSums = []
         self.balanceSums = []
         self.showableData = 0
-//        self.chainedCards = injecter.interactor.data.ListChainableCards(by: budget)
         self._chainedCards = .init(initialValue: injecter.interactor.data.ListChainableCards())
         
         var amount: Decimal = 0
@@ -58,6 +57,7 @@ struct StatisticPage: View {
                 }
                 Spacer()
             }
+            .background(Color.background)
         }
     }
     

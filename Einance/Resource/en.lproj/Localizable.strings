@@ -12,6 +12,7 @@
 "label.balance" = "Balance";
 
 /* view header */
+"view.header.home" = "Home";
 "view.header.setting" = "Setting";
 "view.header.history" = "History";
 "view.header.book.order" = "Cards Order";

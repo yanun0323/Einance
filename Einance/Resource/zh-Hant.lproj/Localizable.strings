@@ -12,6 +12,7 @@
 "label.balance" = "餘額";
 
 /* view header */
+"view.header.home" = "首頁";
 "view.header.setting" = "設定";
 "view.header.history" = "歷史";
 "view.header.book.order" = "調整卡片順序";

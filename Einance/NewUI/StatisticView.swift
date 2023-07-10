@@ -10,6 +10,8 @@ struct StatisticView: View {
         StatisticPage(injecter: container, budget: budget)
             .navigationTitle("view.header.statistic")
             .transition(.scale(scale: 0.95, anchor: .top).combined(with: .opacity))
+            .padding(.horizontal, 30)
+            .background(Color.background)
     }
 
 }

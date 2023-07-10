@@ -25,7 +25,7 @@ struct CardContent: View {
                 values()
             }
         }
-        .foregroundColor(isPreview ? .section : .white)
+        .foregroundColor(isPreview ? .section : card.fColor)
         .onChange(of: main) { container.interactor.setting.SetCardBudgetCategoryAbove($0) }
         .onChange(of: secondary) { container.interactor.setting.SetCardBudgetCategoryBelow($0) }
         .onReceived(container.appstate.aboveBudgetCategoryPubliser) { if !isPreview { main = $0 } }

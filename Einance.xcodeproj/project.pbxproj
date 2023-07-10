@@ -440,6 +440,7 @@
 				A8A403B229E86017007A1DD0 /* AnalysisView.swift */,
 				F6EA069F29AFEDC2005D08D7 /* DebugView.swift */,
 				F6EA06A229B200F5005D08D7 /* WelcomeView.swift */,
+				A8BDCC2E29B7167B0021309B /* BookOrderView.swift */,
 			);
 			path = NewUI;
 			sourceTree = "<group>";
@@ -579,7 +580,6 @@
 				A8A75AEA291CCCBC00EF9D8A /* ContentView.swift */,
 				A8357FD929293F010086720F /* HomeView.swift */,
 				A87219EE2968131F00D52995 /* SettingView.swift */,
-				A8BDCC2E29B7167B0021309B /* BookOrderView.swift */,
 				A8E52C66295AF2F100AC80B0 /* Panel */,
 				A8B09025291D69CC008D9B33 /* Component */,
 				A8258D3029F3C509002BD202 /* Tutorial */,

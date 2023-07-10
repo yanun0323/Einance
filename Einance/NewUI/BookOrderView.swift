@@ -26,7 +26,9 @@ struct BookOrderView: View {
             }
         }
         .navigationTitle("view.header.book.order")
+        .navigationBarTitleDisplayMode(.inline)
         .transition(.scale(scale: 0.95, anchor: .topTrailing).combined(with: .opacity))
+        .background(Color.background)
     }
     
     @ViewBuilder
