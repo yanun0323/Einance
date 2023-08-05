@@ -6,7 +6,7 @@
       "location" : "https://github.com/yanun0323/Ditto",
       "state" : {
         "branch" : "master",
-        "revision" : "8fc53645713068fb98dd9606adecaa0bce4921f2"
+        "revision" : "1d2b5a889061ffdc9e9fb1f3cd51aaf0ff48d76c"
       }
     },
     {
@@ -23,8 +23,17 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-collections.git",
       "state" : {
-        "revision" : "937e904258d22af6e447a0b72c0bc67583ef64a2",
-        "version" : "1.0.4"
+        "revision" : "f504716c27d2e5d4144fa4794b12129301d17729",
+        "version" : "1.0.3"
+      }
+    },
+    {
+      "identity" : "sworm",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/yanun0323/Sworm",
+      "state" : {
+        "revision" : "f85aa46e4f824248145ecf17833fcb6443150459",
+        "version" : "0.1.4"
       }
     }
   ],

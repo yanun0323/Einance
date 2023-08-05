@@ -223,6 +223,14 @@
 		A8BDCC2F29B7167B0021309B /* BookOrderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8BDCC2E29B7167B0021309B /* BookOrderView.swift */; };
 		A8C0A101291D88B800AD5E97 /* DataDao.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8C0A100291D88B800AD5E97 /* DataDao.swift */; };
 		A8C0A103291D892700AD5E97 /* DataInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8C0A102291D892700AD5E97 /* DataInteractor.swift */; };
+		A8D276EE2A71ACA9002AC8EB /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8D276ED2A71ACA9002AC8EB /* Config.swift */; };
+		A8D276EF2A71B5D2002AC8EB /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8D276ED2A71ACA9002AC8EB /* Config.swift */; };
+		A8D276F02A71B5D2002AC8EB /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8D276ED2A71ACA9002AC8EB /* Config.swift */; };
+		A8D276F12A71B5D3002AC8EB /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8D276ED2A71ACA9002AC8EB /* Config.swift */; };
+		A8DACE642A7AAEE300B073C2 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8DACE632A7AAEE300B073C2 /* DashboardView.swift */; };
+		A8DACE652A7AAF8E00B073C2 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8DACE632A7AAEE300B073C2 /* DashboardView.swift */; };
+		A8DACE662A7AAF8E00B073C2 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8DACE632A7AAEE300B073C2 /* DashboardView.swift */; };
+		A8DACE672A7AAF8F00B073C2 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8DACE632A7AAEE300B073C2 /* DashboardView.swift */; };
 		A8E52C68295B063F00AC80B0 /* ActionPanelCloseButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E52C67295B063F00AC80B0 /* ActionPanelCloseButton.swift */; };
 		A8E52C6A295B342E00AC80B0 /* CreateRecordPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E52C69295B342E00AC80B0 /* CreateRecordPanel.swift */; };
 		A8E52C6C295BE62E00AC80B0 /* ActionPanelConfirmButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E52C6B295BE62E00AC80B0 /* ActionPanelConfirmButton.swift */; };
@@ -234,6 +242,22 @@
 		A8F43BFC2951600400C89EDE /* CreateCardPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8F43BFB2951600400C89EDE /* CreateCardPanel.swift */; };
 		A8F43BFF2951C52E00C89EDE /* Setting.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8F43BFE2951C52E00C89EDE /* Setting.swift */; };
 		A8F43C01295208DC00C89EDE /* FocusField.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8F43C00295208DB00C89EDE /* FocusField.swift */; };
+		A8F6315B2A7526650066820E /* ConceptView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8F6315A2A7526650066820E /* ConceptView.swift */; };
+		A8F6315D2A7526A10066820E /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8F6315C2A7526A10066820E /* MainView.swift */; };
+		A8F6315E2A7526BD0066820E /* ConceptView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8F6315A2A7526650066820E /* ConceptView.swift */; };
+		A8F6315F2A7526BE0066820E /* ConceptView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8F6315A2A7526650066820E /* ConceptView.swift */; };
+		A8F631602A7526BE0066820E /* ConceptView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8F6315A2A7526650066820E /* ConceptView.swift */; };
+		A8F631612A7526C10066820E /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8F6315C2A7526A10066820E /* MainView.swift */; };
+		A8F631622A7526C10066820E /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8F6315C2A7526A10066820E /* MainView.swift */; };
+		A8F631632A7526C20066820E /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8F6315C2A7526A10066820E /* MainView.swift */; };
+		A8F631652A7526F70066820E /* FinanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8F631642A7526F70066820E /* FinanceView.swift */; };
+		A8F631662A7527370066820E /* FinanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8F631642A7526F70066820E /* FinanceView.swift */; };
+		A8F631672A7527380066820E /* FinanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8F631642A7526F70066820E /* FinanceView.swift */; };
+		A8F631682A7527380066820E /* FinanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8F631642A7526F70066820E /* FinanceView.swift */; };
+		A8F6316C2A7527F20066820E /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8F6316B2A7527F20066820E /* CardView.swift */; };
+		A8F6316D2A7527F80066820E /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8F6316B2A7527F20066820E /* CardView.swift */; };
+		A8F6316E2A7527F90066820E /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8F6316B2A7527F20066820E /* CardView.swift */; };
+		A8F6316F2A7527F90066820E /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8F6316B2A7527F20066820E /* CardView.swift */; };
 		A8FF946A29222BFE00C628BD /* RecordRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8FF946929222BFE00C628BD /* RecordRow.swift */; };
 		A8FF94702922BCFB00C628BD /* Dashboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8FF946F2922BCFB00C628BD /* Dashboard.swift */; };
 		F62C884D2928C2960059F914 /* HomeHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = F62C884C2928C2960059F914 /* HomeHeader.swift */; };
@@ -346,6 +370,8 @@
 		A8BDCC2E29B7167B0021309B /* BookOrderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookOrderView.swift; sourceTree = "<group>"; };
 		A8C0A100291D88B800AD5E97 /* DataDao.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataDao.swift; sourceTree = "<group>"; };
 		A8C0A102291D892700AD5E97 /* DataInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataInteractor.swift; sourceTree = "<group>"; };
+		A8D276ED2A71ACA9002AC8EB /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
+		A8DACE632A7AAEE300B073C2 /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
 		A8E52C67295B063F00AC80B0 /* ActionPanelCloseButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionPanelCloseButton.swift; sourceTree = "<group>"; };
 		A8E52C69295B342E00AC80B0 /* CreateRecordPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateRecordPanel.swift; sourceTree = "<group>"; };
 		A8E52C6B295BE62E00AC80B0 /* ActionPanelConfirmButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionPanelConfirmButton.swift; sourceTree = "<group>"; };
@@ -358,6 +384,10 @@
 		A8F43BFB2951600400C89EDE /* CreateCardPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateCardPanel.swift; sourceTree = "<group>"; };
 		A8F43BFE2951C52E00C89EDE /* Setting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Setting.swift; sourceTree = "<group>"; };
 		A8F43C00295208DB00C89EDE /* FocusField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocusField.swift; sourceTree = "<group>"; };
+		A8F6315A2A7526650066820E /* ConceptView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConceptView.swift; sourceTree = "<group>"; };
+		A8F6315C2A7526A10066820E /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
+		A8F631642A7526F70066820E /* FinanceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinanceView.swift; sourceTree = "<group>"; };
+		A8F6316B2A7527F20066820E /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		A8FF946929222BFE00C628BD /* RecordRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordRow.swift; sourceTree = "<group>"; };
 		A8FF946F2922BCFB00C628BD /* Dashboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dashboard.swift; sourceTree = "<group>"; };
 		F62C884C2928C2960059F914 /* HomeHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeHeader.swift; sourceTree = "<group>"; };
@@ -556,8 +586,9 @@
 			children = (
 				A8F1CE2229D6A82A008DD113 /* Info.plist */,
 				A8A75AE8291CCCBC00EF9D8A /* EinanceApp.swift */,
+				A8D276F22A7525F6002AC8EB /* UI */,
 				A83E46302A15BB6B00FF19AE /* NewUI */,
-				A8A75AF7291CCCD300EF9D8A /* UI */,
+				A8A75AF7291CCCD300EF9D8A /* UI_Old */,
 				A8A75AF8291CCCDB00EF9D8A /* Internal */,
 				A8A75AF6291CCCC500EF9D8A /* Resource */,
 				A890D0F1293B017300D7267B /* Preview Content */,
@@ -574,7 +605,7 @@
 			path = Resource;
 			sourceTree = "<group>";
 		};
-		A8A75AF7291CCCD300EF9D8A /* UI */ = {
+		A8A75AF7291CCCD300EF9D8A /* UI_Old */ = {
 			isa = PBXGroup;
 			children = (
 				A8A75AEA291CCCBC00EF9D8A /* ContentView.swift */,
@@ -584,7 +615,7 @@
 				A8B09025291D69CC008D9B33 /* Component */,
 				A8258D3029F3C509002BD202 /* Tutorial */,
 			);
-			path = UI;
+			path = UI_Old;
 			sourceTree = "<group>";
 		};
 		A8A75AF8291CCCDB00EF9D8A /* Internal */ = {
@@ -739,6 +770,17 @@
 			path = UI;
 			sourceTree = "<group>";
 		};
+		A8D276F22A7525F6002AC8EB /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				A8F631692A75274A0066820E /* Component */,
+				A8F6315A2A7526650066820E /* ConceptView.swift */,
+				A8F6315C2A7526A10066820E /* MainView.swift */,
+				A8F631642A7526F70066820E /* FinanceView.swift */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
 		A8E52C66295AF2F100AC80B0 /* Panel */ = {
 			isa = PBXGroup;
 			children = (
@@ -756,8 +798,18 @@
 			isa = PBXGroup;
 			children = (
 				A8F43BFE2951C52E00C89EDE /* Setting.swift */,
+				A8D276ED2A71ACA9002AC8EB /* Config.swift */,
 			);
 			path = Config;
+			sourceTree = "<group>";
+		};
+		A8F631692A75274A0066820E /* Component */ = {
+			isa = PBXGroup;
+			children = (
+				A8F6316B2A7527F20066820E /* CardView.swift */,
+				A8DACE632A7AAEE300B073C2 /* DashboardView.swift */,
+			);
+			path = Component;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -947,6 +999,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A80F9A182A3DBA0700946210 /* ContentViewV2.swift in Sources */,
+				A8F631612A7526C10066820E /* MainView.swift in Sources */,
 				A80F9A192A3DBA0700946210 /* Delivery.swift in Sources */,
 				A80F9A1A2A3DBA0700946210 /* SettingViewV2.swift in Sources */,
 				A80F9A1B2A3DBA0700946210 /* Helper.swift in Sources */,
@@ -959,11 +1012,14 @@
 				A80F9A222A3DBA0700946210 /* ContentView.swift in Sources */,
 				A80F9A232A3DBA0700946210 /* LoadingSymbol.swift in Sources */,
 				A80F9A242A3DBA0700946210 /* CommonWatchInteractor.swift in Sources */,
+				A8F6316D2A7527F80066820E /* CardView.swift in Sources */,
 				A80F9A252A3DBA0700946210 /* Mock.swift in Sources */,
 				A80F9A262A3DBA0700946210 /* Animation.swift in Sources */,
+				A8DACE652A7AAF8E00B073C2 /* DashboardView.swift in Sources */,
 				A80F9A272A3DBA0700946210 /* UserSettingDao.swift in Sources */,
 				A80F9A282A3DBA0700946210 /* Table.swift in Sources */,
 				A80F9A292A3DBA0700946210 /* SectionCustom.swift in Sources */,
+				A8F6315E2A7526BD0066820E /* ConceptView.swift in Sources */,
 				A80F9A2A2A3DBA0700946210 /* String.swift in Sources */,
 				A80F9A2B2A3DBA0700946210 /* EditRecordPanel.swift in Sources */,
 				A80F9A2C2A3DBA0700946210 /* WatchInteractor.swift in Sources */,
@@ -1006,6 +1062,7 @@
 				A80F9A522A3DBA0700946210 /* TextFieldCustom.swift in Sources */,
 				A80F9A532A3DBA0700946210 /* Repository.swift in Sources */,
 				A80F9A542A3DBA0700946210 /* AnalysisView.swift in Sources */,
+				A8D276EF2A71B5D2002AC8EB /* Config.swift in Sources */,
 				A80F9A552A3DBA0700946210 /* SettingRouterView.swift in Sources */,
 				A80F9A562A3DBA0700946210 /* EinanceApp.swift in Sources */,
 				A80F9A572A3DBA0700946210 /* HomeView.swift in Sources */,
@@ -1018,6 +1075,7 @@
 				A80F9A5E2A3DBA0700946210 /* StatisticView.swift in Sources */,
 				A80F9A5F2A3DBA0700946210 /* CreateRecordPanel.swift in Sources */,
 				A80F9A602A3DBA0700946210 /* Card.swift in Sources */,
+				A8F631662A7527370066820E /* FinanceView.swift in Sources */,
 				A80F9A612A3DBA0700946210 /* CardAnalysisPage.swift in Sources */,
 				A80F9A622A3DBA0700946210 /* SystemInteractor.swift in Sources */,
 			);
@@ -1030,14 +1088,19 @@
 				A80F9A7A2A3DBA3500946210 /* Budget.swift in Sources */,
 				A80F9A7B2A3DBA3500946210 /* String.swift in Sources */,
 				A80F9AAF2A3F8B5600946210 /* DigitTextField.swift in Sources */,
+				A8F631682A7527380066820E /* FinanceView.swift in Sources */,
 				A80F9A7C2A3DBA3500946210 /* WatchIntarcator.swift in Sources */,
 				A80F9A7D2A3DBA3500946210 /* TimeInterval.swift in Sources */,
 				A80F9AAB2A3F811600946210 /* CardView.swift in Sources */,
 				A80F9A7E2A3DBA3500946210 /* Record.swift in Sources */,
+				A8F631602A7526BE0066820E /* ConceptView.swift in Sources */,
 				A80F9A7F2A3DBA3500946210 /* Mock.swift in Sources */,
+				A8F6316F2A7527F90066820E /* CardView.swift in Sources */,
 				A80F9A802A3DBA3500946210 /* FinanceCategory.swift in Sources */,
 				A80F9A812A3DBA3500946210 /* AppState.swift in Sources */,
+				A8F631632A7526C20066820E /* MainView.swift in Sources */,
 				A80F9A822A3DBA3500946210 /* Dao.swift in Sources */,
+				A8DACE672A7AAF8F00B073C2 /* DashboardView.swift in Sources */,
 				A80F9A832A3DBA3500946210 /* DependencyInjection.swift in Sources */,
 				A80F9A842A3DBA3500946210 /* WatchDataDao.swift in Sources */,
 				A80F9A852A3DBA3500946210 /* Card.swift in Sources */,
@@ -1052,6 +1115,7 @@
 				A80F9A8E2A3DBA3500946210 /* ContentView.swift in Sources */,
 				A80F9A8F2A3DBA3500946210 /* ConnectivityKey.swift in Sources */,
 				A80F9A902A3DBA3500946210 /* Date.swift in Sources */,
+				A8D276F12A71B5D3002AC8EB /* Config.swift in Sources */,
 				A80F9A912A3DBA3500946210 /* WatchEinanceApp.swift in Sources */,
 				A80F9A922A3DBA3500946210 /* Table.swift in Sources */,
 				A80F9A932A3DBA3500946210 /* Helper.swift in Sources */,
@@ -1068,14 +1132,19 @@
 				A8671FAC2A3A360A0007B047 /* Budget.swift in Sources */,
 				A8B360F22A3A458400479F50 /* String.swift in Sources */,
 				A80F9AAE2A3F8B5500946210 /* DigitTextField.swift in Sources */,
+				A8F631672A7527380066820E /* FinanceView.swift in Sources */,
 				A8B360FE2A3AA81900479F50 /* WatchIntarcator.swift in Sources */,
 				A8B360F12A3A458400479F50 /* TimeInterval.swift in Sources */,
 				A80F9AAA2A3F811500946210 /* CardView.swift in Sources */,
 				A8671FB82A3A360A0007B047 /* Record.swift in Sources */,
+				A8F6315F2A7526BE0066820E /* ConceptView.swift in Sources */,
 				A8671FC22A3A36300007B047 /* Mock.swift in Sources */,
+				A8F6316E2A7527F90066820E /* CardView.swift in Sources */,
 				A8671FB32A3A360A0007B047 /* FinanceCategory.swift in Sources */,
 				A8B360FB2A3AA78400479F50 /* AppState.swift in Sources */,
+				A8F631622A7526C10066820E /* MainView.swift in Sources */,
 				A8B361042A3AA87900479F50 /* Dao.swift in Sources */,
+				A8DACE662A7AAF8E00B073C2 /* DashboardView.swift in Sources */,
 				A8B360F92A3AA77100479F50 /* DependencyInjection.swift in Sources */,
 				A81D4BF22A3BFACC0098A614 /* WatchDataDao.swift in Sources */,
 				A8671FAD2A3A360A0007B047 /* Card.swift in Sources */,
@@ -1090,6 +1159,7 @@
 				A8B360E92A3A3D8C00479F50 /* ContentView.swift in Sources */,
 				A8B361082A3AB53B00479F50 /* ConnectivityKey.swift in Sources */,
 				A8B360F02A3A457000479F50 /* Date.swift in Sources */,
+				A8D276F02A71B5D2002AC8EB /* Config.swift in Sources */,
 				A8B360EA2A3A3D8C00479F50 /* WatchEinanceApp.swift in Sources */,
 				A81D4BEF2A3B6FC40098A614 /* Table.swift in Sources */,
 				A81D4BEE2A3B6FC40098A614 /* Helper.swift in Sources */,
@@ -1104,6 +1174,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A83E46322A15BB8800FF19AE /* ContentViewV2.swift in Sources */,
+				A8F6315D2A7526A10066820E /* MainView.swift in Sources */,
 				A8B3610D2A3B18D700479F50 /* Delivery.swift in Sources */,
 				A8671F902A3979D60007B047 /* SettingViewV2.swift in Sources */,
 				F691B87029AE233F00E05E05 /* Helper.swift in Sources */,
@@ -1116,10 +1187,13 @@
 				A8A75AEB291CCCBC00EF9D8A /* ContentView.swift in Sources */,
 				A8BDCC2D29B6431D0021309B /* LoadingSymbol.swift in Sources */,
 				A8B361102A3B190800479F50 /* CommonWatchInteractor.swift in Sources */,
+				A8F6316C2A7527F20066820E /* CardView.swift in Sources */,
 				A8B09022291CFF2B008D9B33 /* Mock.swift in Sources */,
 				A86F24EB2A35EA3200EEFA1E /* Animation.swift in Sources */,
+				A8DACE642A7AAEE300B073C2 /* DashboardView.swift in Sources */,
 				A87219F32968149C00D52995 /* UserSettingDao.swift in Sources */,
 				F6EA06A929B2276E005D08D7 /* Table.swift in Sources */,
+				A8F6315B2A7526650066820E /* ConceptView.swift in Sources */,
 				A81AD25A2A1CC9B70002620D /* SectionCustom.swift in Sources */,
 				A86F24F32A35EA8D00EEFA1E /* String.swift in Sources */,
 				A8E52C76296477C200AC80B0 /* EditRecordPanel.swift in Sources */,
@@ -1163,6 +1237,7 @@
 				A8F1CE2729D6B4F3008DD113 /* TextFieldCustom.swift in Sources */,
 				A8A75B09291CD1D800EF9D8A /* Repository.swift in Sources */,
 				A8A403B329E86017007A1DD0 /* AnalysisView.swift in Sources */,
+				A8D276EE2A71ACA9002AC8EB /* Config.swift in Sources */,
 				A8671F8C2A3757520007B047 /* SettingRouterView.swift in Sources */,
 				A8A75AE9291CCCBC00EF9D8A /* EinanceApp.swift in Sources */,
 				A8357FDA29293F010086720F /* HomeView.swift in Sources */,
@@ -1175,6 +1250,7 @@
 				A839C78A29BAF3AA0036C096 /* StatisticView.swift in Sources */,
 				A8E52C6A295B342E00AC80B0 /* CreateRecordPanel.swift in Sources */,
 				A8A75B0F291CF24A00EF9D8A /* Card.swift in Sources */,
+				A8F631652A7526F70066820E /* FinanceView.swift in Sources */,
 				A8A403B529ED1AA8007A1DD0 /* CardAnalysisPage.swift in Sources */,
 				A890D0F52942E03100D7267B /* SystemInteractor.swift in Sources */,
 			);

@@ -1,5 +1,6 @@
 import SwiftUI
 import Ditto
+import Sworm
 
 struct DataInteractor {
     private var appstate: AppState

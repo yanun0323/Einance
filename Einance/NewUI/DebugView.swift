@@ -1,6 +1,7 @@
 import Ditto
 import SQLite
 import SwiftUI
+import Sworm
 
 struct DebugView: SwiftUI.View {
     @Environment(\.injected) private var container: DIContainer

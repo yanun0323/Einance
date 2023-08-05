@@ -1,6 +1,6 @@
 import SwiftUI
 import SQLite
-import Ditto
+import Sworm
 
 extension SQL {
     static func listSchema(_ tableName: String) throws {
